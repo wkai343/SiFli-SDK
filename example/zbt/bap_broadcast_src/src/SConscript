@@ -1,0 +1,10 @@
+import os
+from building import *
+
+# Add source code
+src = Glob('main.c')
+#src = Glob('main_pcm.c')
+
+group = DefineGroup('Applications', src, depend = [''])
+
+Return('group')
