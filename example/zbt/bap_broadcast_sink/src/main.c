@@ -48,6 +48,7 @@
     #include <zephyr/sys/ring_buffer.h>
 #endif /* defined(CONFIG_USB_DEVICE_AUDIO) */
 
+#include "log.h"
 
 BUILD_ASSERT(IS_ENABLED(CONFIG_SCAN_SELF) || IS_ENABLED(CONFIG_SCAN_OFFLOAD),
              "Either SCAN_SELF or SCAN_OFFLOAD must be enabled");
@@ -197,12 +198,12 @@ static void lc3_decoder_thread(void *arg1, void *arg2, void *arg3)
     audio_parameter_t pa = {0};
     pa.write_bits_per_sample = 16;
     pa.write_channnel_num = 1;
-    pa.write_samplerate = 16000;//48000;
+    pa.write_samplerate = 48000;
     pa.read_bits_per_sample = 16;
     pa.read_channnel_num = 1;
     pa.read_samplerate = LC3_MAX_SAMPLE_RATE;
     pa.read_cache_size = 0;
-    pa.write_cache_size = LC3_MAX_NUM_SAMPLES_STEREO * 2;
+    pa.write_cache_size = LC3_MAX_NUM_SAMPLES_STEREO * 10;
     audio_client_t client = NULL;
     audio_server_set_private_volume(AUDIO_TYPE_BT_MUSIC, DEFAULT_VOLUME);
 
@@ -263,10 +264,10 @@ static void lc3_decoder_thread(void *arg1, void *arg2, void *arg3)
             if (buf->len !=
                     (frames_per_block * octets_per_frame * frames_blocks_per_sdu))
             {
-                printk("Expected %u frame blocks with %u frames of size %u, but "
-                       "length is %u\n",
-                       frames_blocks_per_sdu, frames_per_block, octets_per_frame,
-                       buf->len);
+                LOG_D("Expected %u frame blocks with %u frames of size %u, but "
+                      "length is %u\n",
+                      frames_blocks_per_sdu, frames_per_block, octets_per_frame,
+                      buf->len);
 
                 net_buf_unref(buf);
 
@@ -1278,7 +1279,6 @@ static void connected(struct bt_conn *conn, uint8_t err)
         broadcast_assistant_conn = NULL;
         return;
     }
-
     printk("Connected: %s\n", addr);
     broadcast_assistant_conn = bt_conn_ref(conn);
 

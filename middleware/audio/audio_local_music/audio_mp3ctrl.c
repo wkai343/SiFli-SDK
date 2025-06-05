@@ -782,6 +782,30 @@ static void mp3ctrl_thread_entry_file(void *parameter)
             {
                 LOG_D("mp3 try write again");
                 MP3GetLastFrameInfo(hMP3Decoder, &mp3FrameInfo);
+                if (get_server_current_device() == AUDIO_DEVICE_BLE_BAP_SINK)
+                {
+                    uint32_t bytes;
+                    if (mp3FrameInfo.samprate != 48000)
+                    {
+                        if (ctrl->resample)
+                        {
+                            ret = audio_write(ctrl->client, (uint8_t *)sifli_resample_get_output(ctrl->resample), ctrl->resample->dst_bytes);
+                            goto look_write_result;
+                        }
+                        else
+                        {
+                            ctrl->resample = sifli_resample_open(mp3FrameInfo.nChans, mp3FrameInfo.samprate, 48000);
+                            RT_ASSERT(ctrl->resample);
+                        }
+                        bytes = sifli_resample_process(ctrl->resample, (int16_t *)outBuf, mp3FrameInfo.outputSamps * 2, 0);
+                        ret = audio_write(ctrl->client, (uint8_t *)sifli_resample_get_output(ctrl->resample), bytes);
+                    }
+                    else
+                    {
+                        ret = audio_write(ctrl->client, (uint8_t *)outBuf, mp3FrameInfo.outputSamps * 2);
+                    }
+                }
+                else
 #if !TWS_MIX_ENABLE
                 if (audio_device_is_a2dp_sink())
                 {
@@ -958,6 +982,26 @@ look_write_result:
                       ctrl, ctrl->client, mp3FrameInfo.nChans, mp3FrameInfo.samprate, mp3FrameInfo.outputSamps);
             }
             LOG_D("nFrames=%d", nFrames);
+            if (get_server_current_device() == AUDIO_DEVICE_BLE_BAP_SINK)
+            {
+                uint32_t bytes;
+                if (mp3FrameInfo.samprate != 48000)
+                {
+                    if (!ctrl->resample)
+                    {
+                        LOG_I("resample open %d", mp3FrameInfo.samprate);
+                        ctrl->resample = sifli_resample_open(mp3FrameInfo.nChans, mp3FrameInfo.samprate, 48000);
+                        RT_ASSERT(ctrl->resample);
+                    }
+                    bytes = sifli_resample_process(ctrl->resample, (int16_t *)outBuf, mp3FrameInfo.outputSamps * 2, 0);
+                    ret = audio_write(ctrl->client, (uint8_t *)sifli_resample_get_output(ctrl->resample), bytes);
+                }
+                else
+                {
+                    ret = audio_write(ctrl->client, (uint8_t *)outBuf, mp3FrameInfo.outputSamps * 2);
+                }
+            }
+            else
 #if !TWS_MIX_ENABLE
             if (audio_device_is_a2dp_sink())
             {

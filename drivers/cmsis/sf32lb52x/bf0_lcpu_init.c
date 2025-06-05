@@ -99,14 +99,15 @@ void lcpu_rom_config_default(void)
     HAL_LCPU_CONFIG_set(HAL_LCPU_CONFIG_WDT_STATUS, &wdt_staus, 4);
     HAL_LCPU_CONFIG_set(HAL_LCPU_CONFIG_WDT_TIME, &wdt_time, 4);
     HAL_LCPU_CONFIG_set(HAL_LCPU_CONFIG_WDT_CLK_FEQ, &wdt_clk, 2);
-    HAL_LCPU_CONFIG_set(HAL_LCPU_CONFIG_BT_RC_CAL_IN_L, &is_lcpu_rccal, 1);
+    HAL_LCPU_CONFIG_set(HAL_LCPU_CONFIG_BT_RC_CAL_IN_L, &is_lcpu_rccal, 0);
 
 #if defined(SF32LB52X_REV_B) || defined(SF32LB52X_REV_AUTO)
     if (rev_id >= HAL_CHIP_REV_ID_A4)
     {
         uint32_t tx_queue = HCPU2LCPU_MB_CH1_BUF_START_ADDR;
         hal_lcpu_bluetooth_rom_config_t config = {0};
-        config.bit_valid |= 1 << 10 | 1 << 6;
+        config.bit_valid |= 1 << 10 | 1 << 6 | 1 << 2;
+        config.lld_prog_delay = 3;
         config.is_fpga = 0;
         config.default_xtal_enabled = is_enable_lxt;
         HAL_LCPU_CONFIG_set(HAL_LCPU_CONFIG_HCPU_TX_QUEUE, &tx_queue, 4);

@@ -150,6 +150,8 @@ static device_open_parameter_t g_device_param;
 static audio_device_input_callback g_callback;
 static mp3ctrl_handle g_handle1 = NULL;
 static int g_from_a2dp = -1;
+static int g_a2dp_opened;
+static int g_is_callingback;
 
 
 
@@ -346,11 +348,13 @@ static void init_lc3_thread(void *arg1)
     uint32_t cache_read_len, readed;
 
     cache_read_len = lc3_frame_samples(frame_duration_us, freq_hz) * sizeof(int16_t);
+    RT_ASSERT(cache_read_len <= sizeof(send_pcm_data));
+
     if (g_device_param.tx_channels == 2)
     {
         cache_read_len <<= 1;
     }
-    printk("ch=%d %d size_before_encode\n", g_device_param.tx_channels, cache_read_len);
+    printk("\r\nch=%d %d size_before_encode\n", g_device_param.tx_channels, cache_read_len);
     while (!stopping)
     {
         rt_uint32_t evt;
@@ -377,18 +381,34 @@ static void init_lc3_thread(void *arg1)
             break;
         }
 
-        if (rt_ringbuffer_data_len(g_device_param.p_write_cache) < cache_read_len)
+        readed = -1;
+        rt_enter_critical();
+
+        if (0 == g_a2dp_opened)
         {
-            printk("cache empty\n");
             memset(send_pcm_data, 0, sizeof(send_pcm_data));
+            readed = 0;
+        }
+        else if (rt_ringbuffer_data_len(g_device_param.p_write_cache) < cache_read_len)
+        {
+            memset(send_pcm_data, 0, sizeof(send_pcm_data));
+            readed = 0;
         }
         else
         {
-            RT_ASSERT(cache_read_len <= sizeof(send_pcm_data));
             readed = rt_ringbuffer_get(g_device_param.p_write_cache, (uint8_t *)send_pcm_data, cache_read_len);
-            RT_ASSERT(readed == cache_read_len);
         }
 
+        rt_exit_critical();
+
+        if (readed == 0)
+        {
+            rt_kprintf("--no audio, send zero pcm\r\n");
+        }
+        else
+        {
+            RT_ASSERT(readed == cache_read_len);
+        }
         for (size_t i = 0U; i < ARRAY_SIZE(streams); i++)
         {
             k_sem_take(&lc3_encoder_sem, K_FOREVER);
@@ -400,9 +420,20 @@ static void init_lc3_thread(void *arg1)
             if (ret != 0)
                 k_sem_give(&lc3_encoder_sem);
         }
-        if (rt_ringbuffer_data_len(g_device_param.p_write_cache) <= rt_ringbuffer_get_size(g_device_param.p_write_cache) / 2)
+        g_is_callingback = 0;
+        rt_enter_critical();
+        if (g_a2dp_opened)
+        {
+            if (rt_ringbuffer_data_len(g_device_param.p_write_cache) <= rt_ringbuffer_get_size(g_device_param.p_write_cache) / 2)
+            {
+                g_is_callingback = 1;
+            }
+        }
+        rt_exit_critical();
+        if (g_is_callingback && g_callback)
         {
             g_callback(as_callback_cmd_cache_half_empty, NULL, 0);
+            g_is_callingback = 0;
         }
     }
 
@@ -497,22 +528,45 @@ static int setup_broadcast_source(struct bt_bap_broadcast_source **source)
 
 static int ble_audio_open(void *user_data, audio_device_input_callback callback)
 {
+    rt_kprintf("%s\r\n", __FUNCTION__);
     device_open_parameter_t *p = user_data;
     RT_ASSERT(p && callback);
     g_callback = callback;
     memcpy(&g_device_param, p, sizeof(g_device_param));
-
+    g_a2dp_opened = 1;
     rt_event_send(g_run_event, BAP_EVENT_THREAD_START);
 
     return 0;
 }
+
+static uint8_t is_closed()
+{
+    uint8_t done = 0;
+    rt_enter_critical();
+    if (!g_is_callingback)
+    {
+        g_a2dp_opened = 0;
+        g_callback = NULL;
+        done = 1;
+    }
+    rt_exit_critical();
+    return done;
+}
 static int ble_audio_close(void *user_data)
 {
+    rt_kprintf("%s\r\n", __FUNCTION__);
+    while (1)
+    {
+        if (is_closed())
+            break;
+        rt_thread_mdelay(5);
+        rt_kprintf("%s wait callback done\r\n", __FUNCTION__);
+    }
+    rt_kprintf("%s exit\r\n", __FUNCTION__);
     return 0;
 }
 static uint32_t ble_audio_output(void *user_data, struct rt_ringbuffer *rb)
 {
-
     return 0;
 }
 static int ble_audio_ioctl(void *user_data, int cmd, void *val)
@@ -666,6 +720,11 @@ int main(void)
     bt_interface_register_bt_event_notify_callback(bt_app_interface_event_handle);
 
 
+    /*register ble audio bap sink device*/
+    int ret = audio_server_register_audio_device(AUDIO_DEVICE_BLE_BAP_SINK, &ble_audio_device);
+    RT_ASSERT(!ret);
+    audio_server_select_public_audio_device(AUDIO_DEVICE_BLE_BAP_SINK);
+
     err = bt_enable(NULL);
     if (err)
     {
@@ -690,7 +749,7 @@ int main(void)
     rt_tick_t tick = rt_tick_get();
 
     bool inputted = false;
-    for (int i = 0; i < 20; i++)
+    for (int i = 0; i < 5; i++)
     {
         rt_thread_mdelay(1000);
         if (g_from_a2dp != -1)
@@ -706,11 +765,6 @@ int main(void)
 
     const char *file_name = FILE_NAME;
 
-
-
-    /*register ble audio bap sink device*/
-    int ret = audio_server_register_audio_device(AUDIO_DEVICE_BLE_BAP_SINK, &ble_audio_device);
-    RT_ASSERT(!ret);
 
     g_run_event = rt_event_create("bap_run", RT_IPC_FLAG_FIFO);
 
@@ -823,8 +877,6 @@ int main(void)
         }
         printk("Broadcast source started\n");
 
-        audio_server_select_public_audio_device(AUDIO_DEVICE_BLE_BAP_SINK);
-
         if (!g_from_a2dp)
         {
             g_handle1 = mp3ctrl_open(AUDIO_TYPE_LOCAL_MUSIC, file_name, NULL, NULL);
@@ -902,11 +954,11 @@ int main(void)
         }
     }
     while (0);
-    rt_event_send(g_run_event, BAP_EVENT_THREAD_START);
     rt_event_send(g_run_event, BAP_EVENT_THREAD_EXIT);
     rt_event_recv(g_run_event, BAP_EVENT_THREAD_EXIT_DONE, RT_EVENT_FLAG_OR | RT_EVENT_FLAG_CLEAR, RT_WAITING_FOREVER, NULL);
     rt_thread_mdelay(100);
     rt_event_delete(g_run_event);
+    printk("\r\nmain exit\r\n");
     return 0;
 }
 
