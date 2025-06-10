@@ -1,6 +1,12 @@
 if BSP_USING_LCD
+
+config BSP_USING_BUILTIN_LCD
+    bool "Built-in LCD module driver"
+    default y
+
+if BSP_USING_BUILTIN_LCD
     choice
-        prompt "Select LCD"
+        prompt "Built-in LCD module driver"
         default LCD_USING_ED_LB55DSI17801
 
 
@@ -626,7 +632,7 @@ if BSP_USING_LCD
         default 300 if H0198S005AMT005_V0_195_410x502
         default 213 if LCD_USING_GC9107_128x128_SPI
 
-        
+endif
 
 
     config BSP_USING_LCD_FRAMEBUFFER
