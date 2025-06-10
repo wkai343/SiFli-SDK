@@ -16,11 +16,11 @@
     #define UART2_DMA_RX_IRQHandler          DMAC1_CH6_IRQHandler
 #elif defined (BSP_USING_BOARD_SF32LB58_LCD_N16R64N4)
     #define UART2_DMA_RX_IRQHandler          DMAC1_CH5_IRQHandler
+#elif defined (BSP_USING_BOARD_SF32LB56_LCD_N16R12N1)
+    #define UART2_DMA_RX_IRQHandler          DMAC1_CH5_IRQHandler
 #endif
 #define UART2_RX_DMA_RCC                 0
-#define UART2_RX_DMA_INSTANCE            DMA1_Channel6
 #define UART2_RX_DMA_REQUEST             DMA_REQUEST_7
-#define UART2_RX_DMA_IRQ                 DMAC1_CH6_IRQn
 
 #define UART_INSTANCE           hwp_usart2
 #define UART_INTERRUPT          USART2_IRQn
@@ -206,6 +206,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
   */
 PUTCHAR_PROTOTYPE
 {
+
     /* Place your implementation of fputc here */
     /* e.g. write a character to the USART1 and Loop until the end of transmission */
     HAL_UART_Transmit(&UartHandle, (uint8_t *)&ch, 1, 0xFFFF);
@@ -256,6 +257,9 @@ int main(void)
 #elif defined (BSP_USING_BOARD_SF32LB58_LCD_N16R64N4)
     HAL_PIN_Set(PAD_PA29, USART2_RXD, PIN_PULLUP, 1);
     HAL_PIN_Set(PAD_PA28, USART2_TXD, PIN_PULLUP, 1);
+#elif defined (BSP_USING_BOARD_SF32LB56_LCD_N16R12N1)
+    HAL_PIN_Set(PAD_PA36, USART2_RXD, PIN_PULLUP, 1);
+    HAL_PIN_Set(PAD_PA37, USART2_TXD, PIN_PULLUP, 1);
 #endif
     /* 2, open uart2 clock source  */
     HAL_RCC_EnableModule(RCC_MOD_USART2);
