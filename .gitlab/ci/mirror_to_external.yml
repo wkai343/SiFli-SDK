@@ -14,8 +14,8 @@ mirror_to_external:
     - echo "$SSH_PRIVATE_KEY" | base64 -d > ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\tIdentityFile ~/.ssh/id_rsa\n\n" > ~/.ssh/config
-    - git config --global user.email "sf-bot@sifli.com"
-    - git config --global user.name "SiFli Bot"
+    - git config --global user.email "$GIT_CI_USER_NAME"
+    - git config --global user.name "$GIT_CI_USER_EMAIL"
     # 添加目标仓库作为远程仓库
     - git remote add mirror $TARGET_REPO_SSH_URL
   script:
