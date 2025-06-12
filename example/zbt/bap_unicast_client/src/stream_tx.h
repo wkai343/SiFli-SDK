@@ -20,7 +20,7 @@ struct tx_stream
 {
     struct bt_bap_stream *bap_stream;
     uint16_t seq_num;
-
+    size_t bytes_cnt;
 #if defined(CONFIG_LIBLC3)
     struct stream_lc3_tx lc3_tx;
 #endif /* CONFIG_LIBLC3 */

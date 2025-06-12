@@ -28,6 +28,8 @@
 #include "stream_lc3.h"
 #include "stream_tx.h"
 
+#define LOG_INTERVAL 1000U
+
 LOG_MODULE_REGISTER(stream_tx, LOG_LEVEL_INF);
 
 static struct tx_stream tx_streams[CONFIG_BT_BAP_UNICAST_CLIENT_ASE_SRC_COUNT];
@@ -116,6 +118,7 @@ static void tx_thread_func(void *arg1, void *arg2, void *arg3)
                             bap_stream->codec_cfg->id == BT_HCI_CODING_FORMAT_LC3)
                     {
                         stream_lc3_add_data(&tx_streams[i], buf);
+                        tx_streams[i].bytes_cnt += buf->len;
                     }
                     else
                     {
@@ -125,6 +128,12 @@ static void tx_thread_func(void *arg1, void *arg2, void *arg3)
                     if (err == 0)
                     {
                         tx_streams[i].seq_num++;
+
+                        if ((tx_streams[i].seq_num % LOG_INTERVAL) == 0U)
+                        {
+                            printk("Stream %p: Sent %u total ISO packets, %u bytes\n",
+                                   &(tx_streams[i]), tx_streams[i].seq_num, tx_streams[i].bytes_cnt);
+                        }
                     }
                     else
                     {
@@ -143,7 +152,6 @@ static void tx_thread_func(void *arg1, void *arg2, void *arg3)
             k_sleep(K_MSEC(10));
         else
         {
-            k_msleep(LC3_MAX_FRAME_DURATION_US / USEC_PER_MSEC);
             for (size_t i = 0U; i < ARRAY_SIZE(tx_streams); i++)
                 k_sem_take(&lc3_encoder_sem, K_FOREVER);
         }
@@ -163,6 +171,7 @@ int stream_tx_register(struct bt_bap_stream *bap_stream)
         {
             tx_streams[i].bap_stream = bap_stream;
             tx_streams[i].seq_num = 0U;
+            tx_streams[i].bytes_cnt = 0U;
 
             if (IS_ENABLED(CONFIG_LIBLC3) &&
                     bap_stream->codec_cfg->id == BT_HCI_CODING_FORMAT_LC3)

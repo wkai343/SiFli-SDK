@@ -34,6 +34,7 @@
 #include <zephyr/types.h>
 #include <zephyr/logging/log.h>
 
+#define LOG_INTERVAL 1000U
 
 #define AVAILABLE_SINK_CONTEXT  (BT_AUDIO_CONTEXT_TYPE_UNSPECIFIED | \
                  BT_AUDIO_CONTEXT_TYPE_CONVERSATIONAL | \
@@ -57,7 +58,16 @@ static const struct bt_audio_codec_cap lc3_codec_cap = BT_AUDIO_CODEC_CAP_LC3(
 
 static struct bt_conn *default_conn;
 static struct k_work_delayable audio_send_work;
-static struct bt_bap_stream sink_streams[CONFIG_BT_ASCS_MAX_ASE_SNK_COUNT];
+
+static struct audio_sink
+{
+    struct bt_bap_stream stream;
+    size_t recv_cnt;
+    size_t loss_cnt;
+    size_t error_cnt;
+    size_t valid_cnt;
+    size_t bytes_cnt;
+} sink_streams[CONFIG_BT_ASCS_MAX_ASE_SNK_COUNT];
 static audio_client_t client = NULL;
 static struct audio_source
 {
@@ -300,7 +310,7 @@ static enum bt_audio_dir stream_dir(const struct bt_bap_stream *stream)
 
     for (size_t i = 0U; i < ARRAY_SIZE(sink_streams); i++)
     {
-        if (stream == &sink_streams[i])
+        if (stream == (const struct bt_bap_stream *)&sink_streams[i])
         {
             return BT_AUDIO_DIR_SINK;
         }
@@ -328,7 +338,7 @@ static struct bt_bap_stream *stream_alloc(enum bt_audio_dir dir)
     {
         for (size_t i = 0; i < ARRAY_SIZE(sink_streams); i++)
         {
-            struct bt_bap_stream *stream = &sink_streams[i];
+            struct bt_bap_stream *stream = (struct bt_bap_stream *)&sink_streams[i];
 
             if (!stream->conn)
             {
@@ -573,6 +583,7 @@ static void stream_recv_lc3_codec(struct bt_bap_stream *stream,
     pa.read_samplerate = 16000;
     pa.read_cache_size = 0;
     pa.write_cache_size = 16000;
+    struct audio_sink *sink_stream = (struct audio_sink *) stream;
 
     const uint8_t *in_buf;
     uint8_t err = -1;
@@ -584,19 +595,38 @@ static void stream_recv_lc3_codec(struct bt_bap_stream *stream,
         return;
     }
 
-    if ((info->flags & BT_ISO_FLAGS_VALID) == 0)
+    sink_stream->recv_cnt++;
+    if (info->flags & BT_ISO_FLAGS_LOST)
+    {
+        sink_stream->loss_cnt++;
+        in_buf = NULL;
+    }
+    else if (info->flags & BT_ISO_FLAGS_ERROR)
+    {
+        sink_stream->error_cnt++;
+        in_buf = NULL;
+    }
+    else if ((info->flags & (BT_ISO_FLAGS_VALID)) == 0)
     {
         printk("Bad packet: 0x%02X\n", info->flags);
-
+        sink_stream->error_cnt++;
         in_buf = NULL;
     }
     else
     {
+        sink_stream->valid_cnt++;
         in_buf = buf->data;
+        sink_stream->bytes_cnt += buf->len;
+    }
+    if ((sink_stream->recv_cnt % LOG_INTERVAL) == 0U)
+    {
+        printk("Stream %p: received %u total ISO packets: Valid %u | Error %u | Loss %u | bytes %u\n",
+               &sink_stream->stream, sink_stream->recv_cnt, sink_stream->valid_cnt,
+               sink_stream->error_cnt, sink_stream->loss_cnt, sink_stream->bytes_cnt);
     }
 
 #if 1
-    if (buf->len)
+    if (buf->len && in_buf)
     {
         // printk("RX stream %p len %u\n", stream, buf->len);
         /* This code is to demonstrate the use of the LC3 codec. On an actual implementation
@@ -671,6 +701,15 @@ static void stream_stopped(struct bt_bap_stream *stream, uint8_t reason)
 static void stream_started(struct bt_bap_stream *stream)
 {
     printk("Audio Stream %p started\n", stream);
+    if (stream_dir(stream) == BT_AUDIO_DIR_SINK)
+    {
+        struct audio_sink *sink_stream = (struct audio_sink *)stream;
+        sink_stream->recv_cnt = 0;
+        sink_stream->loss_cnt = 0;
+        sink_stream->error_cnt = 0;
+        sink_stream->valid_cnt = 0;
+        sink_stream->bytes_cnt = 0;
+    }
 }
 
 static void stream_enabled_cb(struct bt_bap_stream *stream)
@@ -882,7 +921,7 @@ int main(void)
 
     for (size_t i = 0; i < ARRAY_SIZE(sink_streams); i++)
     {
-        bt_bap_stream_cb_register(&sink_streams[i], &stream_ops);
+        bt_bap_stream_cb_register((struct bt_bap_stream *)&sink_streams[i], &stream_ops);
     }
 
     for (size_t i = 0; i < ARRAY_SIZE(source_streams); i++)
@@ -951,9 +990,11 @@ int main(void)
         }
 
         /* reset data */
-        configured_source_stream_count = 0U;
-        k_work_cancel_delayable_sync(&audio_send_work, &sync);
-
+        if (configured_source_stream_count)
+        {
+            configured_source_stream_count = 0U;
+            k_work_cancel_delayable_sync(&audio_send_work, &sync);
+        }
     }
     audio_close(client);
     return 0;
