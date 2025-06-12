@@ -3,7 +3,7 @@ from building import *
 
 # Add source code
 src = Glob('main.c')
-src += Glob('bap_broadcast_src.c')
+src += Glob('bap_broadcast_src_api.c')
 
 group = DefineGroup('Applications', src, depend = [''])
 

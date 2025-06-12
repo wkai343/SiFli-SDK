@@ -1,4 +1,4 @@
-#include "bap_broadcast_src.h"
+#include "bap_broadcast_src_api.h"
 
 /********* classis bt section start *****/
 #include "bf0_sibles.h"

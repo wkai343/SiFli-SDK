@@ -1,5 +1,5 @@
 #include <audio_server.h>
-#include "bap_broadcast_src.h"
+#include "bap_broadcast_src_api.h"
 #include "lc3.h"
 
 #define BLE_AUDIO_API

@@ -1,4 +1,4 @@
-#include "bap_broadcast_src.h"
+#include "bap_broadcast_src_api.h"
 #include <audio_server.h>
 #include <audio_mp3ctrl.h>
 

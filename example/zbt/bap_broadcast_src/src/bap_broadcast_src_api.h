@@ -1,5 +1,5 @@
-#ifndef BLE_AUDIO_SRC_H
-#define BLE_AUDIO_SRC_H
+#ifndef BLE_AUDIO_SRC_API_H
+#define BLE_AUDIO_SRC_API_H
 #include <errno.h>
 #include <stddef.h>
 #include <stdint.h>
