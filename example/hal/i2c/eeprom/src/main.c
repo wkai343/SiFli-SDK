@@ -58,6 +58,11 @@ void EEPROM_init(void)
 #define EXAMPLE_I2C_IRQ I2C6_IRQn // i2c number of interruput when using interrupte mode 
     HAL_PIN_Set(PAD_PB28, I2C6_SCL, PIN_PULLUP, 0); // i2c io select
     HAL_PIN_Set(PAD_PB29, I2C6_SDA, PIN_PULLUP, 0);
+#elif defined(SF32LB56X)
+#define EXAMPLE_I2C I2C3 // i2c number of cpu
+#define EXAMPLE_I2C_IRQ I2C3_IRQn // i2c number of interruput when using interrupte mode 
+    HAL_PIN_Set(PAD_PA20, I2C3_SCL, PIN_PULLUP, 1); // i2c io select
+    HAL_PIN_Set(PAD_PA12, I2C3_SDA, PIN_PULLUP, 1);
 #endif
 
     // 2. i2c init
@@ -69,7 +74,6 @@ void EEPROM_init(void)
     ret = HAL_I2C_Init(&i2c_Handle);
     rt_kprintf("EEPROM_init%d\n", ret);
 }
-
 
 /// @brief write data to eeprom
 /// @param addr data address
