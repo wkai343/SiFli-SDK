@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: 2016 STMicroelectronics
+ * SPDX-FileCopyrightText: 2019-2025 SiFli Technologies(Nanjing) Co., Ltd
+ *
+ * SPDX-License-Identifier: BSD-3-Clause AND Apache-2.0
+ */
 
 /* Includes ------------------------------------------------------------------*/
 #include "bf0_hal.h"
@@ -1704,5 +1710,3 @@ static void HCD_RXQLVL_IRQHandler(HCD_HandleTypeDef *hhcd)
 /**
   * @}
   */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

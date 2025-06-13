@@ -67,4 +67,5 @@ HAL_StatusTypeDef HAL_EPIC_Adv(EPIC_HandleTypeDef *hepic,
 
 #endif /* BF0_HAL_EPIC_EX_H */
 
-/************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
+
+

@@ -1,5 +1,8 @@
 /*
-*/
+ * SPDX-FileCopyrightText: 2019-2025 SiFli Technologies(Nanjing) Co., Ltd
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
 #ifndef __SIF_NAND_BBM_H__
 #define __SIF_NAND_BBM_H__
@@ -113,4 +116,3 @@ typedef struct
 #endif  //BBM_TABLE_AUTO_TEST
 
 #endif //__SIF_NAND_BBM_H__
-

@@ -1,10 +1,8 @@
-/**
-  ******************************************************************************
-  * @file   flash_table.c
-  * @author Sifli software development team
-  * @brief Flash command table list
-  ******************************************************************************
-*/
+/*
+ * SPDX-FileCopyrightText: 2019-2025 SiFli Technologies(Nanjing) Co., Ltd
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
 #include <string.h>
 #include "flash_table.h"
@@ -681,5 +679,3 @@ int spi_flash_is_support_dtr(uint8_t fid, uint8_t did, uint8_t type)
 
     return res;
 }
-
-

@@ -1,3 +1,8 @@
+/*
+ * SPDX-FileCopyrightText: 2019-2025 SiFli Technologies(Nanjing) Co., Ltd
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
 #ifndef _SIF_FLASH_CMD_TABLE_H__
 #define _SIF_FLASH_CMD_TABLE_H__
