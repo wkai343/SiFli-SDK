@@ -4413,6 +4413,8 @@ HAL_StatusTypeDef HAL_EPIC_Copy_IT(EPIC_HandleTypeDef *epic, EPIC_BlendingDataTy
     EPIC_TransResultInit(&trans_result, &src_bak);
     EPIC_ClipLayerSrcByOutput(&src_bak, NULL, &dst_bak, &trans_result);
 
+    EPIC_MakeAllLayerCoordValid(&src_bak, &dst_bak, NULL);
+
     ret = EPIC_ConfigLayer(epic, src_layer_idx, &src_bak, true, 255);
 
     if (HAL_OK != ret)
