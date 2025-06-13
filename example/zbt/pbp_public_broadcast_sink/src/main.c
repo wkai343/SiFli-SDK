@@ -258,6 +258,7 @@ static bool pa_decode_base(struct bt_data *data, void *user_data)
     uint32_t base_bis_index_bitfield = 0U;
     int err;
 
+
     /* Base is NULL if the data does not contain a valid BASE */
     if (base == NULL)
     {
@@ -291,6 +292,7 @@ static void syncable_cb(struct bt_bap_broadcast_sink *sink, const struct bt_iso_
 static void base_recv_cb(struct bt_bap_broadcast_sink *sink, const struct bt_bap_base *base,
                          size_t base_size)
 {
+    printk("base_recv_cb\n");
     k_sem_give(&sem_base_received);
 }
 
@@ -432,16 +434,20 @@ int bap_broadcast_sink_run(void)
         }
 
         /* Sync to broadcast source */
+sync_again:
         printk("Syncing to broadcast\n");
         err = bt_bap_broadcast_sink_sync(broadcast_sink, bis_index_bitfield,
                                          streams_p, NULL);
-        if (err != 0)
+        if (err == -EIO)
+        {
+            err = k_sem_take(&sem_base_received, SEM_TIMEOUT);
+            goto sync_again;
+        }
+        else if (err != 0)
         {
             printk("Unable to sync to broadcast source: %d\n", err);
-
             return err;
         }
-
         k_sem_take(&sem_pa_sync_lost, K_FOREVER);
     }
 
