@@ -415,11 +415,17 @@ int bap_broadcast_sink_run(void)
             return err;
         }
 
+sync_again:
         /* Sync to broadcast source */
         printk("Syncing to broadcast\n");
         err = bt_bap_broadcast_sink_sync(broadcast_sink, bis_index_bitfield,
                                          streams_p, NULL);
-        if (err != 0)
+        if (err == -EIO)
+        {
+            err = k_sem_take(&sem_base_received, SEM_TIMEOUT);
+            goto sync_again;
+        }
+        else if (err != 0)
         {
             printk("Unable to sync to broadcast source: %d\n", err);
             return err;
