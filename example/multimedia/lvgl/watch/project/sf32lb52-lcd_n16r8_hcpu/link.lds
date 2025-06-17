@@ -554,12 +554,14 @@ SECTIONS
   .rom2 :
   {
     *(.ROM1_IMG)
-    *(.ROM3_IMG)
+    *(.ROM3_IMG*.*)
+    *(.ROM3_IMG*)
   } > ROM2
 
   .rom3 :
   {
     *lvsf_font_*(.rodata*)
+    *(.SECTION_TTF*.*)
   } > ROM3
 #endif
 }

@@ -26,7 +26,7 @@
             }, 
             {
                 "offset": "0x00020000", 
-                "max_size": "0x00600000", 
+                "max_size": "0x00300000", 
                 "tags": [
                     "HCPU_FLASH_CODE"
                 ], 
@@ -37,9 +37,25 @@
                         "xip"
                     ]
                 }, 
-                "img": "main",
+                "img": "main:ER_IROM1.bin",
                 "exec": "main"
             }, 
+            {
+                "offset": "0x00320000", 
+                "max_size": "0x00100000", 
+                "tags": [
+                    "HCPU_FLASH2_IMG"
+                ], 
+                "img": "main:ER_IROM2.bin"
+            },
+            {
+                "offset": "0x00420000", 
+                "max_size": "0x00200000", 
+                "tags": [
+                    "HCPU_FLASH2_FONT"
+                ], 
+                "img": "main:ER_IROM3.bin"
+            },
             {
                 "offset": "0x00620000", 
                 "max_size": "0x00400000", 
