@@ -782,11 +782,10 @@ static void mp3ctrl_thread_entry_file(void *parameter)
             {
                 LOG_D("mp3 try write again");
                 MP3GetLastFrameInfo(hMP3Decoder, &mp3FrameInfo);
-#if !TWS_MIX_ENABLE
-                if (audio_device_is_a2dp_sink())
+                if (get_server_current_device() == AUDIO_DEVICE_BLE_BAP_SINK)
                 {
                     uint32_t bytes;
-                    if (mp3FrameInfo.samprate != 44100)
+                    if (mp3FrameInfo.samprate != 48000)
                     {
                         if (ctrl->resample)
                         {
@@ -795,25 +794,11 @@ static void mp3ctrl_thread_entry_file(void *parameter)
                         }
                         else
                         {
-                            ctrl->resample = sifli_resample_open(2, mp3FrameInfo.samprate, 44100);
+                            ctrl->resample = sifli_resample_open(mp3FrameInfo.nChans, mp3FrameInfo.samprate, 48000);
                             RT_ASSERT(ctrl->resample);
                         }
-                        if (mp3FrameInfo.nChans == 2)
-                        {
-                            bytes = sifli_resample_process(ctrl->resample, (int16_t *)outBuf, mp3FrameInfo.outputSamps * 2, 0);
-                            ret = audio_write(ctrl->client, (uint8_t *)sifli_resample_get_output(ctrl->resample), bytes);
-                        }
-                        else
-                        {
-                            mono2stereo((int16_t *)outBuf, mp3FrameInfo.outputSamps, (int16_t *)outBuf2);
-                            bytes = sifli_resample_process(ctrl->resample, (int16_t *)outBuf2, mp3FrameInfo.outputSamps * 4, 0);
-                            ret = audio_write(ctrl->client, (uint8_t *)sifli_resample_get_output(ctrl->resample), bytes);
-                        }
-                    }
-                    else if (mp3FrameInfo.nChans == 1)
-                    {
-                        mono2stereo((int16_t *)outBuf, mp3FrameInfo.outputSamps, (int16_t *)outBuf2);
-                        ret = audio_write(ctrl->client, (uint8_t *)outBuf2, mp3FrameInfo.outputSamps * 4);
+                        bytes = sifli_resample_process(ctrl->resample, (int16_t *)outBuf, mp3FrameInfo.outputSamps * 2, 0);
+                        ret = audio_write(ctrl->client, (uint8_t *)sifli_resample_get_output(ctrl->resample), bytes);
                     }
                     else
                     {
@@ -821,14 +806,53 @@ static void mp3ctrl_thread_entry_file(void *parameter)
                     }
                 }
                 else
+#if !TWS_MIX_ENABLE
+                    if (audio_device_is_a2dp_sink())
+                    {
+                        uint32_t bytes;
+                        if (mp3FrameInfo.samprate != 44100)
+                        {
+                            if (ctrl->resample)
+                            {
+                                ret = audio_write(ctrl->client, (uint8_t *)sifli_resample_get_output(ctrl->resample), ctrl->resample->dst_bytes);
+                                goto look_write_result;
+                            }
+                            else
+                            {
+                                ctrl->resample = sifli_resample_open(2, mp3FrameInfo.samprate, 44100);
+                                RT_ASSERT(ctrl->resample);
+                            }
+                            if (mp3FrameInfo.nChans == 2)
+                            {
+                                bytes = sifli_resample_process(ctrl->resample, (int16_t *)outBuf, mp3FrameInfo.outputSamps * 2, 0);
+                                ret = audio_write(ctrl->client, (uint8_t *)sifli_resample_get_output(ctrl->resample), bytes);
+                            }
+                            else
+                            {
+                                mono2stereo((int16_t *)outBuf, mp3FrameInfo.outputSamps, (int16_t *)outBuf2);
+                                bytes = sifli_resample_process(ctrl->resample, (int16_t *)outBuf2, mp3FrameInfo.outputSamps * 4, 0);
+                                ret = audio_write(ctrl->client, (uint8_t *)sifli_resample_get_output(ctrl->resample), bytes);
+                            }
+                        }
+                        else if (mp3FrameInfo.nChans == 1)
+                        {
+                            mono2stereo((int16_t *)outBuf, mp3FrameInfo.outputSamps, (int16_t *)outBuf2);
+                            ret = audio_write(ctrl->client, (uint8_t *)outBuf2, mp3FrameInfo.outputSamps * 4);
+                        }
+                        else
+                        {
+                            ret = audio_write(ctrl->client, (uint8_t *)outBuf, mp3FrameInfo.outputSamps * 2);
+                        }
+                    }
+                    else
 #endif
-                {
+                    {
 #if PKG_USING_VBE_DRC
-                    ret = vbe_audio_write(ctrl->client, vbe_out, ctrl->last_veb_out_bytes);
+                        ret = vbe_audio_write(ctrl->client, vbe_out, ctrl->last_veb_out_bytes);
 #else
-                    ret = audio_write(ctrl->client, (uint8_t *)outBuf, mp3FrameInfo.outputSamps * 2);
+                        ret = audio_write(ctrl->client, (uint8_t *)outBuf, mp3FrameInfo.outputSamps * 2);
 #endif
-                }
+                    }
 
 look_write_result:
                 if (ret == 0)
@@ -958,34 +982,19 @@ look_write_result:
                       ctrl, ctrl->client, mp3FrameInfo.nChans, mp3FrameInfo.samprate, mp3FrameInfo.outputSamps);
             }
             LOG_D("nFrames=%d", nFrames);
-#if !TWS_MIX_ENABLE
-            if (audio_device_is_a2dp_sink())
+            if (get_server_current_device() == AUDIO_DEVICE_BLE_BAP_SINK)
             {
                 uint32_t bytes;
-                if (mp3FrameInfo.samprate != 44100)
+                if (mp3FrameInfo.samprate != 48000)
                 {
                     if (!ctrl->resample)
                     {
                         LOG_I("resample open %d", mp3FrameInfo.samprate);
-                        ctrl->resample = sifli_resample_open(2, mp3FrameInfo.samprate, 44100);
+                        ctrl->resample = sifli_resample_open(mp3FrameInfo.nChans, mp3FrameInfo.samprate, 48000);
                         RT_ASSERT(ctrl->resample);
                     }
-                    if (mp3FrameInfo.nChans == 2)
-                    {
-                        bytes = sifli_resample_process(ctrl->resample, (int16_t *)outBuf, mp3FrameInfo.outputSamps * 2, 0);
-                        ret = audio_write(ctrl->client, (uint8_t *)sifli_resample_get_output(ctrl->resample), bytes);
-                    }
-                    else
-                    {
-                        mono2stereo((int16_t *)outBuf, mp3FrameInfo.outputSamps, (int16_t *)outBuf2);
-                        bytes = sifli_resample_process(ctrl->resample, (int16_t *)outBuf2, mp3FrameInfo.outputSamps * 4, 0);
-                        ret = audio_write(ctrl->client, (uint8_t *)sifli_resample_get_output(ctrl->resample), bytes);
-                    }
-                }
-                else if (mp3FrameInfo.nChans == 1)
-                {
-                    mono2stereo((int16_t *)outBuf, mp3FrameInfo.outputSamps, (int16_t *)outBuf2);
-                    ret = audio_write(ctrl->client, (uint8_t *)outBuf2, mp3FrameInfo.outputSamps * 4);
+                    bytes = sifli_resample_process(ctrl->resample, (int16_t *)outBuf, mp3FrameInfo.outputSamps * 2, 0);
+                    ret = audio_write(ctrl->client, (uint8_t *)sifli_resample_get_output(ctrl->resample), bytes);
                 }
                 else
                 {
@@ -993,15 +1002,50 @@ look_write_result:
                 }
             }
             else
+#if !TWS_MIX_ENABLE
+                if (audio_device_is_a2dp_sink())
+                {
+                    uint32_t bytes;
+                    if (mp3FrameInfo.samprate != 44100)
+                    {
+                        if (!ctrl->resample)
+                        {
+                            LOG_I("resample open %d", mp3FrameInfo.samprate);
+                            ctrl->resample = sifli_resample_open(2, mp3FrameInfo.samprate, 44100);
+                            RT_ASSERT(ctrl->resample);
+                        }
+                        if (mp3FrameInfo.nChans == 2)
+                        {
+                            bytes = sifli_resample_process(ctrl->resample, (int16_t *)outBuf, mp3FrameInfo.outputSamps * 2, 0);
+                            ret = audio_write(ctrl->client, (uint8_t *)sifli_resample_get_output(ctrl->resample), bytes);
+                        }
+                        else
+                        {
+                            mono2stereo((int16_t *)outBuf, mp3FrameInfo.outputSamps, (int16_t *)outBuf2);
+                            bytes = sifli_resample_process(ctrl->resample, (int16_t *)outBuf2, mp3FrameInfo.outputSamps * 4, 0);
+                            ret = audio_write(ctrl->client, (uint8_t *)sifli_resample_get_output(ctrl->resample), bytes);
+                        }
+                    }
+                    else if (mp3FrameInfo.nChans == 1)
+                    {
+                        mono2stereo((int16_t *)outBuf, mp3FrameInfo.outputSamps, (int16_t *)outBuf2);
+                        ret = audio_write(ctrl->client, (uint8_t *)outBuf2, mp3FrameInfo.outputSamps * 4);
+                    }
+                    else
+                    {
+                        ret = audio_write(ctrl->client, (uint8_t *)outBuf, mp3FrameInfo.outputSamps * 2);
+                    }
+                }
+                else
 #endif
-            {
+                {
 #if PKG_USING_VBE_DRC
-                ctrl->last_veb_out_bytes = vbe_drc_process(ctrl->vbe, outBuf, mp3FrameInfo.outputSamps, vbe_out, VBE_OUT_BUFFER_SIZE);
-                ret = vbe_audio_write(ctrl->client, vbe_out, ctrl->last_veb_out_bytes);
+                    ctrl->last_veb_out_bytes = vbe_drc_process(ctrl->vbe, outBuf, mp3FrameInfo.outputSamps, vbe_out, VBE_OUT_BUFFER_SIZE);
+                    ret = vbe_audio_write(ctrl->client, vbe_out, ctrl->last_veb_out_bytes);
 #else
-                ret = audio_write(ctrl->client, (uint8_t *)outBuf, mp3FrameInfo.outputSamps * 2);
+                    ret = audio_write(ctrl->client, (uint8_t *)outBuf, mp3FrameInfo.outputSamps * 2);
 #endif
-            }
+                }
 
             if (ret == -1)
             {
