@@ -3706,7 +3706,7 @@ AUDIO_API int audio_ioctl(audio_client_t handle, int cmd, void *parameter)
     {
         return -1;
     }
-    LOG_I("audio_ioctl: cmd=%d", cmd);
+    LOG_D("audio_ioctl: cmd=%d", cmd);
     if (cmd == 0)
     {
         handle->is_factory_loopback = gain | 0x80;
@@ -3735,6 +3735,16 @@ AUDIO_API int audio_ioctl(audio_client_t handle, int cmd, void *parameter)
         }
 #endif
     }
+    else if (cmd == 3)
+    {
+        uint32_t *byte_left = (uint32_t *)parameter;
+        ret = -1;
+        if (parameter)
+        {
+            *byte_left = rt_ringbuffer_data_len(&handle->ring_buf);
+            ret = 0;
+        }
+    }
     else if (cmd == -1)
     {
 #if !SOFTWARE_TX_MIX_ENABLE
@@ -3749,7 +3759,7 @@ AUDIO_API int audio_ioctl(audio_client_t handle, int cmd, void *parameter)
         unlock();
 #endif
     }
-    LOG_I("audio_ioctl: cmd=%d ret=%d", cmd, ret);
+    LOG_D("audio_ioctl: cmd=%d ret=%d", cmd, ret);
     return ret;
 }
 
