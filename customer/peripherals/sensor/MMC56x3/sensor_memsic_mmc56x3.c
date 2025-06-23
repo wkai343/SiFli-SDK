@@ -59,6 +59,13 @@ static rt_err_t mmc56x3_control(struct rt_sensor_device *sensor, int cmd, void *
             result =  -RT_EINVAL;
             break;
         }
+        case RT_SENSOR_CTRL_SET_ODR:
+        {
+            uint16_t odr = (uint16_t)args;
+            MMC56x3_SetDataRate(odr);
+            result = RT_EOK;
+            break;
+        }
         default:
         {
             result = RT_EOK;
