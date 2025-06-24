@@ -131,8 +131,8 @@ __WEAK void mpu_config(void)
 //#if defined (__DCACHE_PRESENT) && (__DCACHE_PRESENT == 1U)
     uint32_t rnr, rbar, rlar;
 
-    SCB_InvalidateDCache();
-    SCB_InvalidateICache();
+    SCB_DisableDCache();
+    SCB_DisableICache();
 
     ARM_MPU_Disable();
 
@@ -203,6 +203,9 @@ __WEAK void mpu_config(void)
     HAL_ASSERT(rnr <= MPU_REGION_NUM);
     ARM_MPU_Enable(MPU_CTRL_HFNMIENA_Msk);
 //#endif
+
+    SCB_EnableDCache();
+    SCB_EnableICache();
 
 }
 #else

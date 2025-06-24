@@ -79,8 +79,8 @@ __WEAK void mpu_config(void)
     uint32_t rnr, rbar, rlar;
 
 
-    SCB_InvalidateDCache();
-    SCB_InvalidateICache();
+    SCB_DisableDCache();
+    SCB_DisableICache();
 
     ARM_MPU_Disable();
 
@@ -133,6 +133,9 @@ __WEAK void mpu_config(void)
 
     HAL_ASSERT(rnr <= MPU_REGION_NUM);
     ARM_MPU_Enable(MPU_CTRL_HFNMIENA_Msk);
+
+    SCB_EnableDCache();
+    SCB_EnableICache();
 }
 #elif defined(SOC_BF0_HCPU)
 #define DCACHE_SIZE 32768
@@ -141,8 +144,8 @@ __WEAK void mpu_config(void)
 //#if defined (__DCACHE_PRESENT) && (__DCACHE_PRESENT == 1U)
     uint32_t rnr, rbar, rlar;
 
-    SCB_InvalidateDCache();
-    SCB_InvalidateICache();
+    SCB_DisableDCache();
+    SCB_DisableICache();
 
     ARM_MPU_Disable();
 
@@ -215,6 +218,8 @@ __WEAK void mpu_config(void)
     ARM_MPU_Enable(MPU_CTRL_HFNMIENA_Msk);
 //#endif
 
+    SCB_EnableDCache();
+    SCB_EnableICache();
 }
 #else
 #define DCACHE_SIZE 16384

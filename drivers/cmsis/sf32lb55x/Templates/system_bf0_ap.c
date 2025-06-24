@@ -131,8 +131,8 @@ __WEAK void mpu_config(void)
     uint32_t rnr, rbar, rlar;
 
 
-    SCB_InvalidateDCache();
-    SCB_InvalidateICache();
+    SCB_DisableDCache();
+    SCB_DisableICache();
 
     ARM_MPU_Disable();
 
@@ -210,6 +210,8 @@ __WEAK void mpu_config(void)
     ARM_MPU_Enable(MPU_CTRL_HFNMIENA_Msk);
 //#endif
 
+    SCB_EnableDCache();
+    SCB_EnableICache();
 }
 #else
 __WEAK void mpu_config(void)
