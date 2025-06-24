@@ -289,6 +289,10 @@ SECTIONS
 #endif
   } > ROM 
   
+#ifdef ZBT
+#include "zbt_rom.lds"  
+#endif
+
 #ifndef FLASH_TABLE_ONLY      
   .rom_ex :
   {
@@ -443,6 +447,10 @@ SECTIONS
     KEEP(*(.fini_array))
     PROVIDE_HIDDEN (__fini_array_end = .);
     PROVIDE(__dtors_end__ = .);
+    
+#ifdef ZBT
+#include "zbt_data.lds"
+#endif
 
     KEEP(*(.jcr*))
     . = ALIGN(4);
