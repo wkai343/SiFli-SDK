@@ -573,7 +573,7 @@ int rt_bf0_i2s_mic_init(void)
         hi2s->Instance = bf0_i2s_audio_obj[0].i2s_handle;
 
         // init dma handle and request, other parameters configure in HAL driver
-        hi2s->hdmarx = calloc(sizeof(DMA_HandleTypeDef));
+        hi2s->hdmarx = calloc(1, sizeof(DMA_HandleTypeDef));
         hi2s->hdmarx->Instance = bf0_i2s_audio_obj[0].dma_handle;
         hi2s->hdmarx->Init.Request = bf0_i2s_audio_obj[0].dma_request;
 

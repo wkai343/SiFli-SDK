@@ -908,11 +908,11 @@ int rt_bf0_i2s_audio_init(void)
             hi2s->Instance = bf0_i2s_audio_obj[i].i2s_handle;
 
             // init dma handle and request, other parameters configure in HAL driver
-            hi2s->hdmarx = calloc(sizeof(DMA_HandleTypeDef));
+            hi2s->hdmarx = calloc(1, sizeof(DMA_HandleTypeDef));
             hi2s->hdmarx->Instance = bf0_i2s_audio_obj[i].dma_handle;
             hi2s->hdmarx->Init.Request = bf0_i2s_audio_obj[i].dma_request;
 
-            hi2s->hdmatx = calloc(sizeof(DMA_HandleTypeDef));
+            hi2s->hdmatx = calloc(1, sizeof(DMA_HandleTypeDef));
             hi2s->hdmatx->Instance = bf0_i2s_audio_obj[i].hdma_tx;
             hi2s->hdmatx->Init.Request = bf0_i2s_audio_obj[i].reqdma_tx;
 
