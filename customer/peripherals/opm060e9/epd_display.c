@@ -1,8 +1,8 @@
 /**
   ******************************************************************************
-  * @file   opm060e9.c
+  * @file   epd_display.c
   * @author Sifli software development team
-  * @brief   This file includes the LCD driver for opm060e9 LCD.
+  * @brief   This file includes the LCD driver for epd_display LCD.
   * @attention
   ******************************************************************************
 */
@@ -48,16 +48,16 @@
 #include "string.h"
 #include "board.h"
 #include "drv_lcd.h"
-
+#include "drv_epic.h"
 #include "epd_pin_defs.h"
-#include "epd_wave_tables.h"
+#include "epd_configs.h"
 #include "epd_tps.h"
 #include "mem_section.h"
-#include "wfmlib.h"
+
 
 #define  DBG_LEVEL            DBG_INFO  //DBG_LOG //
 
-#define LOG_TAG                "opm060e9"
+#define LOG_TAG                "epd_display"
 #include "log.h"
 
 #define LCD_ID                  0x85
@@ -65,13 +65,13 @@
 
 #define DISPLAY_LINE_CLOCKS   (LCD_HOR_RES_MAX/4)     //每列刷新所需次数，362*4像素
 #define DISPLAY_ROWS   LCD_VER_RES_MAX
-
+#define DISPLAY_LINE_CLOCKS_ALIGNED  ((DISPLAY_LINE_CLOCKS + 3) & ~0x03) // align to 4 bytes
 
 
 static LCDC_InitTypeDef lcdc_int_cfg =
 {
     .lcd_itf = LCDC_INTF_DBI_8BIT_B,
-    .freq = 24 * 1000 * 1000,
+    .freq = 0, //Overridden by epd_get_clk_freq()
     .color_mode = LCDC_PIXEL_FORMAT_RGB332,
 
     .cfg = {
@@ -85,8 +85,12 @@ static LCDC_InitTypeDef lcdc_int_cfg =
 };
 
 static uint8_t  lcdc_input_idx = 0;
-ALIGN(4) static uint8_t  lcdc_input_buffer[2][DISPLAY_LINE_CLOCKS];
+ALIGN(4) static uint8_t  lcdc_input_buffer[2][DISPLAY_LINE_CLOCKS_ALIGNED];
+static uint32_t wait_lcd_ticks;
 
+static uint16_t epic_out_buffer_idx = 0;
+static uint16_t epic_out_buffer[2][LCD_HOR_RES_MAX];
+static uint32_t lut_copy_ticks;
 /*
 Define a mixed grey framebuffer on PSRAM
 high 4 bits for old pixel and low 4 bits for new pixel in every byte.
@@ -104,12 +108,13 @@ static void LCD_Init(LCDC_HandleTypeDef *hlcdc)
 {
     uint8_t   parameter[14];
 
+    lcdc_int_cfg.freq = epd_get_clk_freq();
     /* Initialize LCD low level bus layer ----------------------------------*/
     memcpy(&hlcdc->Init, &lcdc_int_cfg, sizeof(LCDC_InitTypeDef));
     HAL_LCDC_Init(hlcdc);
 
     //Initialize power supply chip
-    oedtps_init(1050);
+    oedtps_init(epd_get_vcom_voltage());
 
 
     hlcdc->Instance->LAYER0_CONFIG = (4   << LCD_IF_LAYER0_CONFIG_FORMAT_Pos) |       //RGB332
@@ -139,8 +144,9 @@ static void LCD_Init(LCDC_HandleTypeDef *hlcdc)
     EPD_CPV_L_hs();
     EPD_GMODE_H_hs();
 
-    epd_wave_table();
 
+
+    epd_wave_table();
 
 }
 
@@ -179,15 +185,110 @@ static void LCD_SetRegion(LCDC_HandleTypeDef *hlcdc, uint16_t Xpos0, uint16_t Yp
 
 }
 
-static uint32_t wait_lcd_ticks;
+
+static void lock_epic(void)
+{
+    EPIC_LayerConfigTypeDef input_layer;
+    EPIC_LayerConfigTypeDef output_canvas;
+    drv_gpu_open();
+
+    //Configure layer registers by blending a dummy line.
+    HAL_EPIC_LayerConfigInit(&input_layer);
+    input_layer.data = (uint8_t *)&mixed_framebuffer[0];
+    input_layer.color_mode = EPIC_INPUT_L8;
+    input_layer.total_width = LCD_HOR_RES_MAX >> 1;
+    input_layer.height = 2;
+    input_layer.width = input_layer.total_width;
+    input_layer.lookup_table = (uint8_t *)&epic_out_buffer[0]; //Any LUT for dummy blending
+
+    HAL_EPIC_LayerConfigInit(&output_canvas);
+    output_canvas.data = (uint8_t *)&epic_out_buffer[0];
+    output_canvas.color_mode = EPIC_OUTPUT_RGB565;
+    output_canvas.width = input_layer.width;
+    output_canvas.total_width = input_layer.total_width;
+    output_canvas.height = input_layer.height;
+
+    //Flush cache
+    mpu_dcache_clean(&mixed_framebuffer[0], sizeof(mixed_framebuffer));
+    drv_gpu_take(500);
+
+    RT_ASSERT(HAL_OK == HAL_EPIC_BlendStartEx(drv_get_epic_handle(), &input_layer, 1, &output_canvas));
+}
+
+static void unlock_epic(void)
+{
+    drv_gpu_release();
+}
 
 
-L1_RET_CODE_SECT(epd_codes, void epd_load_and_send_pic(LCDC_HandleTypeDef *hlcdc, const uint8_t *gray_buffer, uint8_t frame))
+static int prepare_epic_lut(uint8_t frame)
+{
+    HAL_RCC_EnableModule(RCC_MOD_EPIC);
+    hwp_epic->L0_CFG |= (1 << EPIC_L0_CFG_ACTIVE_Pos) | (1 << EPIC_L0_CFG_ALPHA_SEL_Pos);
+    hwp_epic->L0_CFG &= ~(1 << EPIC_L0_CFG_ALPHA_BLEND_Pos);
+
+    uint32_t start_tick = HAL_DBG_DWT_GetCycles();
+    epd_wave_table_fill_lut((uint32_t *)drv_get_epic_handle()->LTab[0], frame);
+    lut_copy_ticks += HAL_GetElapsedTick(start_tick, HAL_DBG_DWT_GetCycles());
+    return 0;
+}
+
+
+static uint16_t *mixed_gray_to_epic_out(unsigned char *gray_buffer, uint32_t gray_buffer_size)
+{
+    uint16_t *p_epic_out = &epic_out_buffer[epic_out_buffer_idx][0];
+    RT_ASSERT(gray_buffer_size <= sizeof(epic_out_buffer[0]));
+    while (hwp_epic->STATUS != 0); //Wait for EPIC idle
+    hwp_epic->AHB_MEM = (uint32_t)p_epic_out;
+    hwp_epic->L0_SRC = (uint32_t)gray_buffer;
+    hwp_epic->COMMAND = 1;
+
+    epic_out_buffer_idx = !epic_out_buffer_idx;
+
+    return p_epic_out;
+}
+
+static int epic_buf_to_wave_form_buffer(uint16_t *p_epic_out_buffer, uint32_t *wfm_buffer, uint32_t epic_out_buffer_len)
+{
+    int index = 0;
+
+    for (int i = 0; i < epic_out_buffer_len; i += 16)
+    {
+        int out_v = 0;
+
+        out_v |= p_epic_out_buffer[0] << 6;
+        out_v |= p_epic_out_buffer[1] << 4;
+        out_v |= p_epic_out_buffer[2] << 2;
+        out_v |= p_epic_out_buffer[3] << 0;
+
+        out_v |= p_epic_out_buffer[4] << 14;
+        out_v |= p_epic_out_buffer[5] << 12;
+        out_v |= p_epic_out_buffer[6] << 10;
+        out_v |= p_epic_out_buffer[7] << 8;
+
+        out_v |= p_epic_out_buffer[8] << 22;
+        out_v |= p_epic_out_buffer[9] << 20;
+        out_v |= p_epic_out_buffer[10] << 18;
+        out_v |= p_epic_out_buffer[11] << 16;
+
+        out_v |= p_epic_out_buffer[12] << 30;
+        out_v |= p_epic_out_buffer[13] << 28;
+        out_v |= p_epic_out_buffer[14] << 26;
+        out_v |= p_epic_out_buffer[15] << 24;
+
+        wfm_buffer[index++] = out_v;
+        p_epic_out_buffer += 16;
+    }
+
+    return 0;
+}
+
+L1_RET_CODE_SECT(epd_codes, void epd_load_and_send_pic(LCDC_HandleTypeDef *hlcdc, const uint16_t *epic_buf, uint32_t epic_buf_len))
 {
 
     uint8_t *p_lcdc_input = (uint8_t *) &lcdc_input_buffer[lcdc_input_idx][0];
 
-    get_waveform((uint8_t *)gray_buffer, (int *)p_lcdc_input, LCD_HOR_RES_MAX, 1, frame);
+    epic_buf_to_wave_form_buffer((uint16_t *)epic_buf, (uint32_t *)p_lcdc_input, epic_buf_len);
 
     //Wait previous LCDC done.
     uint32_t start_tick = HAL_DBG_DWT_GetCycles();
@@ -202,7 +303,6 @@ L1_RET_CODE_SECT(epd_codes, void epd_load_and_send_pic(LCDC_HandleTypeDef *hlcdc
     HAL_Delay_us(1);
     EPD_OE_H_hs();
     EPD_CPV_H_hs();
-
 
 
     hlcdc->Instance->LCD_SINGLE = LCD_IF_LCD_SINGLE_WR_TRIG;
@@ -222,7 +322,7 @@ L1_RET_CODE_SECT(epd_codes, static void CopyToMixedGrayBuffer(LCDC_HandleTypeDef
     //Convert layer data to 4bit gray data
     if (hlcdc->Layer[HAL_LCDC_LAYER_DEFAULT].data_format == LCDC_PIXEL_FORMAT_MONO)
     {
-        RT_ASSERT(0);//Fix me!
+        RT_ASSERT(0);//Not implemented yet
     }
     else if (hlcdc->Layer[HAL_LCDC_LAYER_DEFAULT].data_format == LCDC_PIXEL_FORMAT_A4)
     {
@@ -286,8 +386,7 @@ L1_RET_CODE_SECT(epd_codes, static void CopyToMixedGrayBuffer(LCDC_HandleTypeDef
         RT_ASSERT(0);
 }
 
-#define PART_DISP_TIMES       10        //局刷PART_DISP_TIMES-1次后全刷一次
-int reflesh_times = 0;
+
 
 L1_RET_CODE_SECT(epd_codes, static void LCD_WriteMultiplePixels(LCDC_HandleTypeDef *hlcdc, const uint8_t *RGBCode, uint16_t Xpos0, uint16_t Ypos0, uint16_t Xpos1, uint16_t Ypos1))
 {
@@ -297,7 +396,6 @@ L1_RET_CODE_SECT(epd_codes, static void LCD_WriteMultiplePixels(LCDC_HandleTypeD
 
 
 
-    // __disable_irq();
     uint32_t start_tick = rt_tick_get();
     oedtps_source_gate_enable();
     LCD_DRIVER_DELAY_MS(50);
@@ -309,27 +407,21 @@ L1_RET_CODE_SECT(epd_codes, static void LCD_WriteMultiplePixels(LCDC_HandleTypeD
 
     uint8_t temperature = 26;
 
-    if (reflesh_times % PART_DISP_TIMES == 0)
-    {
-        frame_times = get_frame(2, temperature); //Full refresh
-    }
-    else
-    {
-        frame_times = get_frame(1, temperature); //Partial refresh
-    }
-    reflesh_times++;
+
+    frame_times = epd_wave_table_get_frames(temperature, EPD_DRAW_MODE_AUTO);
 
     CopyToMixedGrayBuffer(hlcdc, RGBCode, Xpos0, Ypos0, Xpos1, Ypos1);
     LOG_I("Convert layer data take=%d(ms) \r\n", rt_tick_get() - start_tick);
 
-
+    lock_epic();
 
     line_bytes = LCD_HOR_RES_MAX;
     wait_lcd_ticks = 0;
+    lut_copy_ticks = 0;
     EPD_GMODE_H_hs();
     for (uint32_t frame = 0; frame < frame_times; frame++)
     {
-        uint32_t frame_start_tick = rt_tick_get();
+        prepare_epic_lut(frame);
         EPD_STV_H_hs();
         EPD_STV_L_hs();
         HAL_Delay_us(1);
@@ -355,23 +447,35 @@ L1_RET_CODE_SECT(epd_codes, static void LCD_WriteMultiplePixels(LCDC_HandleTypeD
         EPD_OE_H_hs();
         EPD_CPV_H_hs();
 
-
+        uint16_t *cur_line_epic_out = NULL;
+        uint16_t *next_line_epic_out = NULL;
         for (line = 0; line < DISPLAY_ROWS; line++)                 //共有DISPLAY_ROWS列数据
         {
-            epd_load_and_send_pic(hlcdc, &mixed_framebuffer[line * line_bytes], frame); //传完一列数据后传下一列，一列数据有
+            if (NULL == next_line_epic_out)
+                cur_line_epic_out = mixed_gray_to_epic_out(&mixed_framebuffer[line * line_bytes], LCD_HOR_RES_MAX);
+            else
+            {
+                cur_line_epic_out = next_line_epic_out; //如果下一行已经转换过了，就复用它
+                next_line_epic_out = NULL; //复用后就清空下一行
+            }
+
+            if (line < DISPLAY_ROWS - 1)
+                next_line_epic_out = mixed_gray_to_epic_out(&mixed_framebuffer[(line + 1) * line_bytes], LCD_HOR_RES_MAX);
+            else
+                next_line_epic_out = NULL; //最后一行没有下一行了
+
+
+            epd_load_and_send_pic(hlcdc, cur_line_epic_out, LCD_HOR_RES_MAX); //传完一列数据后传下一列，一列数据有
         }
-        epd_load_and_send_pic(hlcdc, &mixed_framebuffer[(line - 1) * line_bytes], frame); //最后一行还需GATE CLK,故再传一行没用数据
-
-
-
-
+        epd_load_and_send_pic(hlcdc, cur_line_epic_out, LCD_HOR_RES_MAX); //最后一行还需GATE CLK,故再传一行没用数据
         while (hlcdc->Instance->STATUS & LCD_IF_STATUS_LCD_BUSY) {;}
+
+
         EPD_CPV_L_hs();
         HAL_Delay_us(1);
         EPD_OE_L_hs();
-
-        //LOG_I("Frame%02d take=%d(ms) \r\n", frame, rt_tick_get() - frame_start_tick);
     }
+    unlock_epic();
     EPD_GMODE_L_hs();
     EPD_LE_L_hs();
     EPD_CLK_L_hs();
@@ -384,8 +488,10 @@ L1_RET_CODE_SECT(epd_codes, static void LCD_WriteMultiplePixels(LCDC_HandleTypeD
     oedtps_vcom_disable();
     LCD_DRIVER_DELAY_MS(10);
     oedtps_source_gate_disable();
-    LOG_I("Total %d frames, take time=%dms wait_lcd=%d(us)\r\n", frame_times, rt_tick_get() - start_tick, wait_lcd_ticks / 240);
-    // __enable_irq();
+    LOG_I("Total %d frames, take time=%dms wait_lcd=%d(us), lut_copy=%d(us)\r\n", frame_times,
+          rt_tick_get() - start_tick, wait_lcd_ticks / 240,
+          lut_copy_ticks / 240);
+
 
     /* Simulate LCDC IRQ handler, call user callback */
     if (hlcdc->XferCpltCallback)
@@ -438,5 +544,5 @@ static const LCD_DrvOpsDef LCD_drv =
     NULL
 };
 
-LCD_DRIVER_EXPORT2(opm060e9, LCD_ID, &lcdc_int_cfg, &LCD_drv, 1);
+LCD_DRIVER_EXPORT2(epd_display, LCD_ID, &lcdc_int_cfg, &LCD_drv, 1);
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
