@@ -66,16 +66,6 @@
     #define  free(p)        app_sram_free(p)
 #endif
 
-enum PLL_SET_GRADE
-{
-    PLL_ADD_ONE_HUND_PPM,
-    PLL_ADD_TWO_HUND_PPM,
-    PLL_SUB_ONE_HUND_PPM,
-    PLL_SUB_TWO_HUND_PPM,
-    PLL_ADD_TEN_PPM,
-    PLL_SUB_TEN_PPM,
-};
-
 void pll_freq_fine_tuning(int delta)
 {
     uint32_t  pll_value = 0;

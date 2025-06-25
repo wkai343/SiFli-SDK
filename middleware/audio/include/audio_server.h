@@ -32,12 +32,9 @@ typedef struct
 
 typedef struct
 {
-    void    *device_user_data;
-    struct rt_ringbuffer    *p_write_cache;
+    struct rt_ringbuffer *device_rb;
     uint16_t tx_sample_rate;
     uint16_t tx_channels;
-    uint16_t rx_sample_rate;
-    uint16_t rx_channels;
 } device_open_parameter_t;
 
 typedef enum
@@ -307,6 +304,9 @@ void audio_3a_set_bypass(uint8_t is_bypass, uint8_t mic, uint8_t down);
 /*micbias using as GPIO power only*/
 void micbias_power_off();
 void micbias_power_on();
+
+#define BAP_BROADCAST_SINK_CACHE_SIZE        (960 * 4)  // 10ms * 4
+void audio_server_seup_ble_bap_src(struct rt_ringbuffer *rb, void (*ble_src_callback)());
 
 #endif
 

@@ -164,7 +164,13 @@ enum
 #if defined(SOFTWARE_TX_MIX_ENABLE) || defined(AUDIO_RX_USING_I2S) || defined(AUDIO_TX_USING_I2S)
     #define TX_DMA_SIZE         (CODEC_DATA_UNIT_LEN)
 #else
-    #define TX_DMA_SIZE         (CODEC_DATA_UNIT_LEN * 5)
+    #if defined(BT_BAP_BROADCAST_SINK)
+        #define TX_DMA_SIZE         (CODEC_DATA_UNIT_LEN)     //48k mono 10ms/3
+    #elif defined(BT_BAP_BROADCAST_SOURCE)
+        #define TX_DMA_SIZE         (CODEC_DATA_UNIT_LEN * 3) //48k mono 10ms
+    #else
+        #define TX_DMA_SIZE         (CODEC_DATA_UNIT_LEN * 5)
+    #endif
 #endif
 
 #define AUDIO_API
@@ -409,7 +415,21 @@ audio_dump_ctrl_t audio_dump_debug[ADUMP_NUM];
 
 static bool a2dp_sink_need_trigger = 1;
 
-device_open_parameter_t g_ble_bap_sink_parameter;
+static void (*ble_tx_dma_callback)();
+static device_open_parameter_t g_ble_bap_sink_parameter;
+static bool ble_bap_src_enabled = 0;
+struct rt_ringbuffer *ble_bap_src_enabled_ring;
+static uint32_t ble_sink_low_water_level_times;
+static uint32_t ble_sink_high_water_level_times;
+static int ble_sink_pll_speed_up;
+static rt_tick_t ble_sink_change_ticks;
+
+void audio_server_seup_ble_bap_src(struct rt_ringbuffer *rb, void (*ble_src_callback)())
+{
+    ble_bap_src_enabled_ring = rb;
+    ble_bap_src_enabled = 1;
+    ble_tx_dma_callback = ble_src_callback;
+}
 
 /*
  if could not mix, than check priority, if priority is same, then new audio suspend old audio
@@ -513,6 +533,9 @@ static inline audio_server_t *get_server()
 }
 uint8_t get_server_current_device(void)
 {
+    if (ble_bap_src_enabled)
+        return AUDIO_DEVICE_A2DP_SINK;
+
     return current_audio_device;
 }
 uint8_t get_server_current_play_status(void)
@@ -1968,6 +1991,14 @@ static int hardware_device_open(audio_device_ctrl_t *device, audio_client_t clie
     {
     case AUDIO_DEVICE_SPEAKER:
         ret = device->device.open(device->device.user_data, NULL);
+        audio_device_ctrl_t *sink = &g_server.devices_ctrl[AUDIO_DEVICE_BLE_BAP_SINK];
+        if (sink->is_registerd && !device->tx_count && ble_bap_src_enabled)
+        {
+            LOG_I("speaker to ble");
+            g_ble_bap_sink_parameter.tx_sample_rate = client->parameter.write_samplerate;
+            g_ble_bap_sink_parameter.tx_channels = client->parameter.write_channnel_num;
+            sink->device.open(&g_ble_bap_sink_parameter, NULL);
+        }
         break;
     case AUDIO_DEVICE_A2DP_SINK:
         if (device->tx_count)
@@ -2004,10 +2035,9 @@ static int hardware_device_open(audio_device_ctrl_t *device, audio_client_t clie
             LOG_I("ble share open");
             break;
         }
-        g_ble_bap_sink_parameter.device_user_data = device->device.user_data;
+        g_ble_bap_sink_parameter.device_rb = &client->ring_buf;
         g_ble_bap_sink_parameter.tx_sample_rate = client->parameter.write_samplerate;
         g_ble_bap_sink_parameter.tx_channels = client->parameter.write_channnel_num;
-        g_ble_bap_sink_parameter.p_write_cache = &client->ring_buf;
         ret = device->device.open(&g_ble_bap_sink_parameter, ble_bap_sink_device_input_callback);
         break;
     default:
@@ -2855,12 +2885,23 @@ inline static int audio_process_cmd(audio_server_t *server)
     return ret;
 }
 
+extern void notify_dma_done_to_a2dp();
+RT_WEAK void notify_dma_done_to_a2dp()
+{
+}
 static rt_err_t speaker_tx_done(rt_device_t dev, void *buffer)
 {
     //in inturrupt
     audio_server_t *server = get_server();
     //rt_kprintf("-tx done\n");
     process_speaker_tx(server, &server->device_speaker_private);
+#if BT_BAP_BROADCAST_SOURCE
+    if (ble_tx_dma_callback)
+    {
+        ble_tx_dma_callback();
+    }
+    notify_dma_done_to_a2dp();
+#endif
     return RT_EOK;
 }
 
@@ -3612,6 +3653,68 @@ AUDIO_API audio_client_t audio_open2(audio_type_t audio_type,
     return audio_client_init(audio_type, rwflag, parameter, callback, callback_userdata, device);
 }
 
+#if BT_BAP_BROADCAST_SINK
+#define WATER_LEVEL_LOW_THRESHOLD       (BAP_BROADCAST_SINK_CACHE_SIZE/3)
+#define WATER_LEVEL_HIGH_THRESHOLD      (BAP_BROADCAST_SINK_CACHE_SIZE * 2 / 3)
+#define WATER_LEVEL_CONTIMUE_LIMITS     6
+#define PLL_ADJUST_TIME_LIMITS          3   //100ppm
+#define PLL_ADJUST_INTERVAL_LIMITS      30   //seconds
+
+static inline void ble_sink_adjust_pll(struct rt_ringbuffer *rb)
+{
+    uint32_t len, size;
+    len = rt_ringbuffer_data_len(rb);
+    size = rt_ringbuffer_get_size(rb);
+
+    //rt_kprintf("\r\nlen=%d/%d l=%d h=%d\r\n", len, size, ble_sink_low_water_level_times, ble_sink_high_water_level_times);
+
+    if (len <= WATER_LEVEL_LOW_THRESHOLD)
+    {
+        ble_sink_high_water_level_times = 0;
+        ble_sink_low_water_level_times++;
+        //rt_kprintf("\r\nlen=%d/%d, l=%d\r\n", len, size, ble_sink_low_water_level_times);
+    }
+
+    if (len >= WATER_LEVEL_HIGH_THRESHOLD)
+    {
+        ble_sink_high_water_level_times++;
+        ble_sink_low_water_level_times = 0;
+        //rt_kprintf("\r\nlen=%d/%d, h=%d\r\n", len, size, ble_sink_high_water_level_times);
+    }
+
+    if (rt_tick_get_millisecond() - ble_sink_change_ticks < (1000 * PLL_ADJUST_INTERVAL_LIMITS))
+    {
+        return;
+    }
+
+    if (ble_sink_high_water_level_times > WATER_LEVEL_CONTIMUE_LIMITS)
+    {
+        ble_sink_high_water_level_times = 0;
+        //rt_kprintf("pll add need add, cur=%d\r\n", ble_sink_pll_speed_up);
+        if (ble_sink_pll_speed_up < PLL_ADJUST_TIME_LIMITS)
+        {
+            ble_sink_change_ticks = rt_tick_get_millisecond();
+            ble_sink_pll_speed_up++;
+            pll_freq_grade_set(PLL_ADD_TEN_PPM);
+            rt_kprintf("pll add %d * 10 PPM\r\n", ble_sink_pll_speed_up);
+        }
+    }
+    if (ble_sink_low_water_level_times > WATER_LEVEL_CONTIMUE_LIMITS)
+    {
+        ble_sink_low_water_level_times = 0;
+        //rt_kprintf("pll add need sub, cur=%d\r\n", ble_sink_pll_speed_up);
+        if (ble_sink_pll_speed_up > -PLL_ADJUST_TIME_LIMITS)
+        {
+            ble_sink_change_ticks = rt_tick_get_millisecond();
+            ble_sink_pll_speed_up--;
+            pll_freq_grade_set(PLL_SUB_TEN_PPM);
+            rt_kprintf("pll add to %d * 10 PPM\r\n", ble_sink_pll_speed_up);
+        }
+    }
+}
+#endif
+
+
 /**
   * @brief  write pcm data to downlink cache buffer
   * @param  handle value return by audio_open
@@ -3677,7 +3780,18 @@ put_raw:
     }
 #endif
     handle->debug_full = 0;
+
+#if BT_BAP_BROADCAST_SINK
+    ble_sink_adjust_pll(&handle->ring_buf);
+#endif
+
     len = rt_ringbuffer_put(&handle->ring_buf, data, data_len);
+#if defined(BT_BAP_BROADCAST_SINK) || defined(BT_BAP_BROADCAST_SOURCE)
+    if (len != data_len)
+    {
+        LOG_I("--spk cache full");
+    }
+#endif
     return data_len;
 }
 

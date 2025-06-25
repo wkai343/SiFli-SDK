@@ -62,6 +62,8 @@ static uint32_t broadcaster_broadcast_id;
 static int g_ply_stream_idx;
 static rt_event_t g_run_event;
 static int g_exit;
+static rt_tick_t last_write_tick;
+static const uint8_t zero[80] = {0}; //5ms
 static struct broadcast_sink_stream
 {
     struct bt_bap_stream stream;
@@ -221,7 +223,34 @@ static void lc3_decoder_thread(void *arg1, void *arg2, void *arg3)
                     {
                         uint32_t num_of_sample = LC3_NS(stream->lc3_decoder->dt, stream->lc3_decoder->sr_pcm);
                         RT_ASSERT(client);
+                        rt_tick_t cur = rt_tick_get_millisecond();
+                        if (cur - last_write_tick > 200)
+                        {
+                            printk("sink got new data after mute\r\n");
+                            uint32_t bytes = BAP_BROADCAST_SINK_CACHE_SIZE * 3 / 8;
+                            while (1)
+                            {
+                                audio_ioctl(client, 3, &bytes);
+                                if (bytes < BAP_BROADCAST_SINK_CACHE_SIZE  * 3 / 8)
+                                {
+                                    audio_write(client, zero, sizeof(zero));
+                                    bytes += sizeof(zero);
+                                }
+                                break;
+                            }
+                        }
+                        if (rt_tick_get_millisecond() - last_write_tick > 200)
+                        {
+                            uint32_t bytes = 0;
+                            printk("cache tigger\r\n");
+                            while (bytes < BAP_BROADCAST_SINK_CACHE_SIZE * 3 / 8)
+                            {
+                                audio_write(client, zero, sizeof(zero));
+                                bytes += sizeof(zero);
+                            }
+                        }
                         audio_write(client, (uint8_t *)lc3_audio_buf, num_of_sample * 2);
+                        last_write_tick = rt_tick_get_millisecond();
                     }
                 }
 
@@ -385,7 +414,7 @@ static void stream_started_cb(struct bt_bap_stream *stream)
         pa.write_bits_per_sample = 16;
         pa.write_channnel_num = 1;
         pa.read_bits_per_sample = 16;
-        pa.write_cache_size = 32000;
+        pa.write_cache_size = BAP_BROADCAST_SINK_CACHE_SIZE;;
         pa.write_samplerate = get_samplerate(sink_stream->lc3_decoder->sr_pcm);
         client = audio_open(AUDIO_TYPE_BT_MUSIC, AUDIO_TX, &pa, audio_callback_play, &client);
         RT_ASSERT(client);
@@ -463,6 +492,10 @@ static void stream_recv_cb(struct bt_bap_stream *stream, const struct bt_iso_rec
     {
         sink_stream->loss_cnt++;
         printk("---recv a lost\n");
+        for (int i = 0; i < 960 / sizeof(zero); i++)
+        {
+            audio_write(client, zero, sizeof(zero));
+        }
     }
 
     if (info->flags & BT_ISO_FLAGS_VALID)
@@ -1144,7 +1177,7 @@ static bool is_substring(const char *substr, const char *str)
             return false;
         }
 
-        if (strncasecmp(substr, &str[pos], sub_str_len) == 0)
+        if (strncmp(substr, &str[pos], sub_str_len) == 0)
         {
             return true;
         }

@@ -69,14 +69,6 @@
     #define  free(p)        app_sram_free(p)
 #endif
 
-enum PLL_SET_GRADE
-{
-    PLL_ADD_ONE_HUND_PPM,
-    PLL_ADD_TWO_HUND_PPM,
-    PLL_SUB_ONE_HUND_PPM,
-    PLL_SUB_TWO_HUND_PPM,
-};
-
 void pll_freq_fine_tuning(int delta)
 {
     uint32_t  pll_value = 0;
@@ -140,6 +132,12 @@ void pll_freq_grade_set(uint8_t gr)
         break;
     case PLL_SUB_TWO_HUND_PPM:
         grade = -grade * 0xFFFFF / 5000;
+        break;
+    case PLL_ADD_TEN_PPM:
+        grade = grade * 0xFFFFF / 100000; //10PPM
+        break;
+    case PLL_SUB_TEN_PPM:
+        grade = -grade * 0xFFFFF / 100000; // 10PPM
         break;
     default:
         RT_ASSERT(0);

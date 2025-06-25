@@ -963,6 +963,10 @@ look_write_result:
                 pa.write_bits_per_sample = 16;
                 pa.write_channnel_num = mp3FrameInfo.nChans;
                 pa.write_samplerate = mp3FrameInfo.samprate;
+                if (get_server_current_device() == AUDIO_DEVICE_BLE_BAP_SINK)
+                {
+                    pa.write_samplerate = 48000;
+                }
                 pa.write_cache_size = MP3_FRAME_CACHE_SIZE;
                 old_channels = mp3FrameInfo.nChans;
                 old_samplerate = mp3FrameInfo.samprate;
