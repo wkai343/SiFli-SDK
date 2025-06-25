@@ -112,7 +112,6 @@
 
 #define rl_flag_commit         0x01
 #define rl_flag_rendering     0x02
-#define rl_flag_overwritting     0x04
 
 #define debug_rl_hist_num  8 //Set '0' to disable history
 
@@ -211,7 +210,8 @@ typedef struct
 
     struct rt_semaphore rl_sema;
     priv_render_list_t *render_list_pool;
-    priv_render_list_t *using_rl; //Committing rl
+    priv_render_list_t *using_rl_stack[render_list_pool_max]; //Committing rl stack
+    uint32_t using_rl_count; //Committing rl stack depth
 #if debug_rl_hist_num > 0
     uint32_t           hist_idx;
     priv_render_hist_t hist[debug_rl_hist_num];
@@ -2332,6 +2332,23 @@ static rt_err_t rl_sem_release(void)
     return err;
 }
 
+static void push_rl_stack(priv_render_list_t *rl)
+{
+    RT_ASSERT(drv_epic.using_rl_count < render_list_pool_max);
+    drv_epic.using_rl_stack[drv_epic.using_rl_count++] = rl;
+}
+
+static priv_render_list_t *pop_rl_stack(void)
+{
+    RT_ASSERT(drv_epic.using_rl_count > 0);
+    return drv_epic.using_rl_stack[--drv_epic.using_rl_count];
+}
+
+static priv_render_list_t *get_rl_from_stack(void)
+{
+    RT_ASSERT(drv_epic.using_rl_count > 0);
+    return drv_epic.using_rl_stack[drv_epic.using_rl_count - 1];
+}
 
 static void epic_cplt_callback(EPIC_HandleTypeDef *epic)
 {
@@ -4310,10 +4327,7 @@ static rt_err_t lock_render_list(drv_epic_render_list_t list)
     priv_render_list_t *rl = (priv_render_list_t *) list;
 
     rt_enter_critical();
-    if (0 == (rl->flag & rl_flag_overwritting))
-        rl->flag |= rl_flag_rendering;
-    else
-        rl->flag &= ~rl_flag_commit;
+    rl->flag |= rl_flag_rendering;
     rt_exit_critical();
     return RT_EOK;
 }
@@ -4543,6 +4557,18 @@ static void epic_task(void *param)
                             p_drv_epic->cur_buf = (uint8_t *)p_drv_epic->buf1;
 
                         p_dst->data = p_drv_epic->cur_buf;
+                    }
+                    else
+                    {
+                        LOG_E("Render list failed, the render list has not intersect with the dst layer area typically.");
+                        print_rl(rl);
+
+                        if (p_RenderDrawctx->partial_done_cb)
+                        {
+                            uint32_t usr_cb_start_ms = rt_tick_get_millisecond();
+                            p_RenderDrawctx->partial_done_cb(rl, p_dst, p_RenderDrawctx->usr_data, last);
+                            p_drv_epic->rd_usr_cb_total += rt_tick_get_millisecond() - usr_cb_start_ms;
+                        }
                     }
                 }
 
@@ -4881,7 +4907,6 @@ rt_err_t drv_epic_setup_render_buffer(uint8_t *buf1, uint8_t *buf2, uint32_t buf
 
 drv_epic_render_list_t drv_epic_alloc_render_list(drv_epic_render_buf *p_buf, EPIC_AreaTypeDef *p_ow_area)
 {
-    priv_render_list_t *rl_overwrite = NULL;
     priv_render_list_t *rl_ret = NULL;
 
     rl_sem_take(GPU_BLEND_EXP_MS);
@@ -4899,21 +4924,9 @@ drv_epic_render_list_t drv_epic_alloc_render_list(drv_epic_render_buf *p_buf, EP
             rl_ret = rl;
             break;
         }
-        else if (0 == (rl_flag_rendering & rl->flag))
-        {
-            //Make sure all operations were commited.
-            RT_ASSERT(rl->src_list_len == rl->src_list_alloc_len);
-            rl->src_list_alloc_len = 0;
-            rl->src_list_len = 0;
-            rl->letter_pool_free = 0;
-            rl->flag |= rl_flag_overwritting;
-            rl_overwrite = rl;
-        }
     }
     rt_exit_critical();
     RT_ASSERT(rl_ret);
-
-    if (rl_overwrite && !rl_ret) rl_ret = rl_overwrite;
 
     if (rl_ret)
     {
@@ -4929,9 +4942,15 @@ drv_epic_render_list_t drv_epic_alloc_render_list(drv_epic_render_buf *p_buf, EP
         rl_ret->dst.y_offset    = p_buf->area.y0;
 
         if (p_ow_area) HAL_EPIC_AreaCopy(p_ow_area, &rl_ret->commit_area);
+        push_rl_stack(rl_ret);
+    }
+    else
+    {
+        LOG_E("Render list pool is full!");
+        return NULL;
     }
 
-    drv_epic.using_rl = rl_ret;
+
     return (drv_epic_render_list_t)rl_ret;
 }
 
@@ -4969,7 +4988,7 @@ drv_epic_operation *drv_epic_alloc_op(drv_epic_render_buf *p_buf)
         }
     }
 #else
-    rl = drv_epic.using_rl;
+    rl = get_rl_from_stack();
     RT_ASSERT(rl);
     RT_ASSERT(0 == (rl->flag & rl_flag_rendering));
 
@@ -5072,7 +5091,7 @@ drv_epic_operation *drv_epic_alloc_op(drv_epic_render_buf *p_buf)
 
 rt_err_t drv_epic_commit_op(drv_epic_operation *op)
 {
-    priv_render_list_t *rl = drv_epic.using_rl;
+    priv_render_list_t *rl = get_rl_from_stack();
 
     RT_ASSERT(rl);
     RT_ASSERT(0 == (rl->flag & (rl_flag_rendering)));
@@ -5207,7 +5226,7 @@ __COMMIT_OPERATION:
 
 drv_epic_letter_type_t *drv_epic_op_alloc_letter(drv_epic_operation *op)
 {
-    priv_render_list_t *rl = drv_epic.using_rl;
+    priv_render_list_t *rl = get_rl_from_stack();
 
     RT_ASSERT(rl);
     RT_ASSERT(0 == (rl->flag & (rl_flag_rendering)));
@@ -5240,6 +5259,7 @@ rt_err_t drv_epic_render_msg_commit(EPIC_MsgTypeDef *p_msg)
     bool send_msg;
     priv_render_list_t *rl = (priv_render_list_t *)p_msg->render_list;
     RT_ASSERT(rl->src_list_len == rl->src_list_alloc_len);
+    RT_ASSERT(rl == get_rl_from_stack());
 
     rt_enter_critical();
     if (rl_flag_commit & rl->flag)
@@ -5250,7 +5270,6 @@ rt_err_t drv_epic_render_msg_commit(EPIC_MsgTypeDef *p_msg)
     else
         send_msg = true;
     rl->flag |= rl_flag_commit;
-    rl->flag &= ~rl_flag_overwritting;
     rt_exit_critical();
 
     if (EPIC_MSG_RENDER_DRAW == p_msg->id)
@@ -5258,6 +5277,7 @@ rt_err_t drv_epic_render_msg_commit(EPIC_MsgTypeDef *p_msg)
         HAL_EPIC_AreaCopy(&rl->commit_area, &p_msg->content.rd.area);
     }
 
+    pop_rl_stack();
     if (send_msg)
     {
         rt_err_t err;
