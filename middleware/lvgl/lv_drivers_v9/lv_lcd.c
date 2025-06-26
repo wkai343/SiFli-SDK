@@ -52,7 +52,7 @@
 #ifdef RT_USING_DFS
     #include <dfs_posix.h>
 #endif
-
+#include "drv_epic.h"
 #include "lvsf_perf.h"
 
 #include "cpu_usage_profiler.h"
@@ -540,5 +540,23 @@ void lv_lcd_init(const char *name)
 
 }
 
+/*
+    * @brief Check if the refreshing is done(Including LCD flushing, GPU rendering, etc.)
+    * @return true if done, false if not done
+*/
+bool lv_refreshing_done(void)
+{
+    bool lcd_drawing;
+    rt_device_control(device, RTGRAPHIC_CTRL_GET_BUSY, &lcd_drawing);
+    if (lcd_drawing) return false;
+
+
+    if (drv_epic_is_busy())
+    {
+        return false;
+    }
+
+    return true;
+}
 
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/

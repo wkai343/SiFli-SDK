@@ -53,6 +53,9 @@ static int32_t button_handle;
 
 extern void ui_datac_init(void);
 
+#ifdef BSP_USING_PM
+    extern bool lv_refreshing_done(void);
+#endif /* BSP_USING_PM */
 /**
  * return to MAIN_APP or CLOCK_APP
  * \n
@@ -442,9 +445,7 @@ void app_watch_entry(void *parameter)
 #ifdef BSP_USING_PM
         if (gui_is_force_close())
         {
-            bool lcd_drawing;
-            rt_device_control(lcd_device, RTGRAPHIC_CTRL_GET_BUSY, &lcd_drawing);
-            if (!lcd_drawing)
+            if (lv_refreshing_done())
             {
                 LOG_I("no input:%d", lv_disp_get_inactive_time(NULL));
                 gui_suspend();

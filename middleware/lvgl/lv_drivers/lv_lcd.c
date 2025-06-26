@@ -917,4 +917,23 @@ bool lv_lcd_draw_error()
         return false;
     }
 }
+
+/*
+    * @brief Check if the refreshing is done(Including LCD flushing, GPU rendering, etc.)
+    * @return true if done, false if not done
+*/
+bool lv_refreshing_done(void)
+{
+    bool lcd_drawing;
+    rt_device_control(device, RTGRAPHIC_CTRL_GET_BUSY, &lcd_drawing);
+    if (lcd_drawing) return false;
+
+
+    if (drv_epic_is_busy())
+    {
+        return false;
+    }
+
+    return true;
+}
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
