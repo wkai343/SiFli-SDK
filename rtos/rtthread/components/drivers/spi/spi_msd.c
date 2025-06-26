@@ -16,6 +16,13 @@
 #include <string.h>
 #include "spi_msd.h"
 
+#ifndef CONFIG_MSD_SPI_BUS_NAME
+    #define SPI_BUS_NAME      "spi1"
+#else
+    #define __TO_STR(name) #name
+    #define _TO_STR(name) __TO_STR(name)
+    #define SPI_BUS_NAME _TO_STR(CONFIG_MSD_SPI_BUS_NAME)
+#endif
 //#define MSD_TRACE
 
 #if 1//def MSD_TRACE
@@ -1863,7 +1870,7 @@ int rt_spi_msd_init(void)
     rt_device_t spi_bus = rt_device_find("sdcard");
     if (spi_bus == RT_NULL)
     {
-        if (rt_hw_spi_device_attach("spi1", "sdcard") == RT_EOK)
+        if (rt_hw_spi_device_attach(SPI_BUS_NAME, "sdcard") == RT_EOK)
         {
             rt_kprintf("[BUS]SPI1 probe sdcard...\n");
         }
