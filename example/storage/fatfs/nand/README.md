@@ -1,6 +1,6 @@
-# file_system示例
+# FatFs NAND 示例
 ## 使用指南
-file_system应用会在板子flash上面验证文件系统的功能，文件系统采用FAT格式，在UART console可以调用常用的文件命令，如:
+本示例演示FatFs的文件系统功能，文件系统采用FAT格式，在UART console可以调用常用的文件命令，如:
 
 ```
 df               - Disk free

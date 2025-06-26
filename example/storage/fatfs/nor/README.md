@@ -1,6 +1,6 @@
-# file_system示例
+# FatFs NOR 示例
 ## 使用指南
-file_system应用会在板子flash上面验证文件系统的功能，文件系统采用FAT格式，在UART console可以调用常用的文件命令，如:
+本示例演示FatFs的文件系统功能，文件系统采用FAT格式，在UART console可以调用常用的文件命令，如:
 
 ```
 df               - Disk free
@@ -55,9 +55,9 @@ mount fs on flash root success//说明文件系统挂载成功
 ```
 1、串口发送ls查看根目录下的文件
 
-2、在输入mkdir XXX，创建XXX文件夹（目录）
+2、输入mkdir test2，创建test2文件夹（目录）
 
-3、再次输入ls，看XXX文件夹（目录）是否创建成功
+3、再次输入ls，看test2文件夹（目录）是否创建成功
 
 4、输入pwd查看当前工作路径
 ![alt text](assets/file_system_log_1.png)
