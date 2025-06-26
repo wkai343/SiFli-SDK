@@ -2065,6 +2065,7 @@ static char *operation_name(drv_epic_op_type_t op)
         OP_TO_NAME_CASE(DRV_EPIC_DRAW_RECT);
         OP_TO_NAME_CASE(DRV_EPIC_DRAW_LINE);
         OP_TO_NAME_CASE(DRV_EPIC_DRAW_BORDER);
+        OP_TO_NAME_CASE(DRV_EPIC_DRAW_POLYGON);
 
     default:
         return "UNKNOW";
@@ -2167,6 +2168,12 @@ static void print_operation(const char *name, const drv_epic_operation *op)
               op->desc.border.top_side, op->desc.border.bot_side,
               op->desc.border.left_side, op->desc.border.right_side
              );
+    }
+    break;
+
+    case DRV_EPIC_DRAW_POLYGON:
+    {
+        LOG_E("argb:0x%08x, cnt:%d ", op->desc.polygon.argb8888, op->desc.polygon.point_cnt);
     }
     break;
 
@@ -4194,7 +4201,7 @@ static void render_layer(drv_epic_operation *p_operation, EPIC_LayerConfigTypeDe
         LOG_E(FORMATED_LAYER_INFO(dst, "DST"));
     }
 
-    if (HAL_EPIC_AreaWidth(p_clip_area) <= EPIC_COORDINATES_MAX_BACK)
+    if (HAL_EPIC_AreaWidth(p_clip_area) <= EPIC_COORDINATES_MAX)
     {
         render_image(p_operation, dst, p_clip_area);
     }
@@ -4206,17 +4213,144 @@ static void render_layer(drv_epic_operation *p_operation, EPIC_LayerConfigTypeDe
         final_layer_clip_area.y1 = p_clip_area->y1;
 
         /* Horizontal block rendering */
-        for (int16_t start_column = p_clip_area->x0; start_column <= p_clip_area->x1; start_column += EPIC_COORDINATES_MAX_BACK)
+        for (int16_t start_column = p_clip_area->x0; start_column <= p_clip_area->x1; start_column += EPIC_COORDINATES_MAX)
         {
             final_layer_clip_area.x0 = start_column;
-            if (start_column + EPIC_COORDINATES_MAX_BACK - 1 >= p_clip_area->x1)
+            if (start_column + EPIC_COORDINATES_MAX - 1 >= p_clip_area->x1)
                 final_layer_clip_area.x1 = p_clip_area->x1;
             else
-                final_layer_clip_area.x1 = start_column + EPIC_COORDINATES_MAX_BACK - 1;
+                final_layer_clip_area.x1 = start_column + EPIC_COORDINATES_MAX - 1;
 
             render_image(p_operation, dst, &final_layer_clip_area);
         }
     }
+}
+
+static rt_err_t render_polygon(drv_epic_operation *p_operation, EPIC_LayerConfigTypeDef *dst, const EPIC_AreaTypeDef *p_clip_area)
+{
+    uint32_t point_cnt = p_operation->desc.polygon.point_cnt;
+
+    EPIC_AreaTypeDef clip_area;
+    if (!HAL_EPIC_AreaIntersect(&clip_area, &p_operation->clip_area, p_clip_area)) return RT_EOK;
+
+    void **mask_list = rt_malloc((point_cnt + 1) * sizeof(void *));
+    drv_epic_mask_line_param_t *mp = rt_malloc(point_cnt * sizeof(drv_epic_mask_line_param_t));
+    drv_epic_mask_line_param_t *mp_next = mp;
+    RT_ASSERT(mask_list);
+    RT_ASSERT(mp);
+    EPIC_PointTypeDef *points = p_operation->desc.polygon.points;
+    /*Find the lowest point*/
+    int16_t y_min = points[0].y;
+    int16_t y_min_i = 0;
+
+    for (int16_t i = 1; i < point_cnt; i++)
+    {
+        if (points[i].y < y_min)
+        {
+            y_min = points[i].y;
+            y_min_i = i;
+        }
+    }
+
+    int32_t i_prev_left = y_min_i;
+    int32_t i_prev_right = y_min_i;
+    int32_t i_next_left;
+    int32_t i_next_right;
+    uint32_t mask_cnt = 0;
+
+    /*Get the index of the left and right points*/
+    i_next_left = y_min_i - 1;
+    if (i_next_left < 0) i_next_left = point_cnt + i_next_left;
+
+    i_next_right = y_min_i + 1;
+    if (i_next_right > point_cnt - 1) i_next_right = 0;
+
+    /**
+     * Check if the order of points is inverted or not.
+     * The normal case is when the left point is on `y_min_i - 1`
+     * Explanation:
+     *   if angle(p_left) < angle(p_right) -> inverted
+     *   dy_left/dx_left < dy_right/dx_right
+     *   dy_left * dx_right < dy_right * dx_left
+     */
+    int16_t dxl = points[i_next_left].x - points[y_min_i].x;
+    int16_t dxr = points[i_next_right].x - points[y_min_i].x;
+    int16_t dyl = points[i_next_left].y - points[y_min_i].y;
+    int16_t dyr = points[i_next_right].y - points[y_min_i].y;
+
+    bool inv = false;
+    if (dyl * dxr < dyr * dxl) inv = true;
+    uint16_t make_index = 0;
+    do
+    {
+        if (!inv)
+        {
+            i_next_left = i_prev_left - 1;
+            if (i_next_left < 0) i_next_left = point_cnt + i_next_left;
+
+            i_next_right = i_prev_right + 1;
+            if (i_next_right > point_cnt - 1) i_next_right = 0;
+        }
+        else
+        {
+            i_next_left = i_prev_left + 1;
+            if (i_next_left > point_cnt - 1) i_next_left = 0;
+
+            i_next_right = i_prev_right - 1;
+            if (i_next_right < 0) i_next_right = point_cnt + i_next_right;
+        }
+
+        if (points[i_next_left].y >= points[i_prev_left].y)
+        {
+            if (points[i_next_left].y != points[i_prev_left].y &&
+                    points[i_next_left].x != points[i_prev_left].x)
+            {
+                drv_epic_mask_line_points_init(mp_next, points[i_prev_left].x, points[i_prev_left].y,
+                                               points[i_next_left].x, points[i_next_left].y,
+                                               DRAW_MASK_LINE_SIDE_RIGHT);
+                mask_list[make_index++] = mp_next;
+                mp_next++;
+            }
+            mask_cnt++;
+            i_prev_left = i_next_left;
+        }
+
+        if (mask_cnt == point_cnt) break;
+
+        if (points[i_next_right].y >= points[i_prev_right].y)
+        {
+            if (points[i_next_right].y != points[i_prev_right].y &&
+                    points[i_next_right].x != points[i_prev_right].x)
+            {
+
+                drv_epic_mask_line_points_init(mp_next, points[i_prev_right].x, points[i_prev_right].y,
+                                               points[i_next_right].x, points[i_next_right].y,
+                                               DRAW_MASK_LINE_SIDE_LEFT);
+                mask_list[make_index++] = mp_next;
+                mp_next++;
+            }
+            mask_cnt++;
+            i_prev_right = i_next_right;
+        }
+
+    }
+    while (mask_cnt < point_cnt);
+    mask_list[make_index] = NULL;
+
+    if (p_operation->mask.data) render_lock(p_operation->op, 0, 0, (uint32_t)(p_operation->mask.data));
+
+    draw_masked_rect(dst, &p_operation->mask,
+                     mask_list, &clip_area, p_operation->desc.polygon.argb8888,
+                     NULL, NULL, NULL, 0);
+
+    if (p_operation->mask.data) render_unlock();
+
+    for (int16_t i = 0; i < make_index; i++) drv_epic_mask_free_param(mask_list[i]);
+
+    rt_free(mask_list);
+    rt_free(mp);
+
+    return RT_EOK;
 }
 
 static rt_err_t render(drv_epic_render_list_t list)
@@ -4298,6 +4432,10 @@ static rt_err_t render(drv_epic_render_list_t list)
                     render_border(p_operation, dst, &intersect_area);
                     break;
 
+                case DRV_EPIC_DRAW_POLYGON:
+                    render_polygon(p_operation, dst, &intersect_area);
+                    break;
+
                 default:
                     RT_ASSERT(0);
                     break;
@@ -4338,7 +4476,7 @@ static rt_err_t render_list(priv_render_list_t *rl)
     rt_err_t ret;
 
     /* If both the width and height do not exceed the maximum values, render directly. */
-    if (rl->dst.width <= EPIC_COORDINATES_MAX_BACK && rl->dst.height <= EPIC_COORDINATES_MAX_BACK)
+    if (rl->dst.width <= EPIC_COORDINATES_MAX && rl->dst.height <= EPIC_COORDINATES_MAX)
     {
         return render((drv_epic_render_list_t)rl);
     }
@@ -4355,24 +4493,24 @@ static rt_err_t render_list(priv_render_list_t *rl)
         int16_t max_rows = rl->dst.y_offset + rl->dst.height - 1;
 
         /* Vertical block rendering */
-        for (int16_t start_rows = dst.y_offset; start_rows <= max_rows; start_rows += EPIC_COORDINATES_MAX_BACK)
+        for (int16_t start_rows = dst.y_offset; start_rows <= max_rows; start_rows += EPIC_COORDINATES_MAX)
         {
             render_area.y0 = start_rows;
 
-            if (start_rows + EPIC_COORDINATES_MAX_BACK - 1 >= max_rows)
+            if (start_rows + EPIC_COORDINATES_MAX - 1 >= max_rows)
                 render_area.y1 = max_rows;
             else
-                render_area.y1 = start_rows + EPIC_COORDINATES_MAX_BACK - 1;
+                render_area.y1 = start_rows + EPIC_COORDINATES_MAX - 1;
 
             /* Horizontal block rendering */
-            for (int16_t start_columns = dst.x_offset; start_columns <= max_columns; start_columns += EPIC_COORDINATES_MAX_BACK)
+            for (int16_t start_columns = dst.x_offset; start_columns <= max_columns; start_columns += EPIC_COORDINATES_MAX)
             {
                 render_area.x0 = start_columns;
 
-                if (start_columns + EPIC_COORDINATES_MAX_BACK - 1 >= max_columns)
+                if (start_columns + EPIC_COORDINATES_MAX - 1 >= max_columns)
                     render_area.x1 = max_columns;
                 else
-                    render_area.x1 = start_columns + EPIC_COORDINATES_MAX_BACK - 1;
+                    render_area.x1 = start_columns + EPIC_COORDINATES_MAX - 1;
 
                 clip_layer_to_area((EPIC_BlendingDataType *)&rl->dst, (const uint8_t *)dst.data, dst.x_offset, dst.y_offset, &render_area);
 

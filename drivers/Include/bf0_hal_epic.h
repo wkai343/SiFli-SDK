@@ -161,7 +161,7 @@ extern "C" {
 /*
  EPIC input/output maximum coordinates
 */
-#define EPIC_COORDINATES_MAX 1024
+#define EPIC_COORDINATES_MAX 1010
 
 /**
   * @brief EPIC Init structure definition
