@@ -63,7 +63,7 @@ static int g_ply_stream_idx;
 static rt_event_t g_run_event;
 static int g_exit;
 static rt_tick_t last_write_tick;
-static const uint8_t zero[80] = {0}; //5ms
+static uint8_t zero[80] = {0}; // 1/12 *10ms
 static struct broadcast_sink_stream
 {
     struct bt_bap_stream stream;
