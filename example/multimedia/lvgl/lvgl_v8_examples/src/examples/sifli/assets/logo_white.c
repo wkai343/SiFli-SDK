@@ -5,6 +5,7 @@
 */
 #include "lvgl.h"
 
+#ifndef _MSC_VER
 #ifndef LV_ATTRIBUTE_MEM_ALIGN_EZIP
     #define LV_ATTRIBUTE_MEM_ALIGN_EZIP ALIGN(4)
 #endif
@@ -211,3 +212,5 @@ LV_ATTRIBUTE_MEM_ALIGN_EZIP_HEADER const eZIP_RGBARGB565A  lv_img_dsc_t logo_whi
     .data_size  = 5737,
     .data = logo_white_map
 };
+
+#endif /* _MSC_VER*/

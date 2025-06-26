@@ -1,5 +1,5 @@
 #include "../../lv_examples.h"
-#if LV_USE_IMAGE && LV_BUILD_EXAMPLES
+#if LV_USE_IMAGE && LV_BUILD_EXAMPLES && !defined(_MSC_VER)
 
 void lv_example_ezip_1(void)
 {
