@@ -690,7 +690,7 @@ void audio_3a_data_process(audio_3a_t *p_3a_env, uint8_t *fifo, uint16_t fifo_si
     RT_ASSERT(fifo_size == p_3a_env->frame_len)
 
     memcpy(outframe2, fifo, fifo_size);
-
+    audio_dump_data(ADUMP_AUDPRC, fifo, fifo_size);
     if (g_bypass)
     {
         goto bypass_3a;

@@ -1,6 +1,6 @@
-# MP3 本地音乐播放器
+# Ble Audio播放器
 
-源码路径：example/zbt/bap_broadcast_src
+源码路径：example/zbt/bap_broadcast_src_with_classic_bt
 
 ## 支持的平台
 <!-- 支持哪些板子和芯片平台 -->

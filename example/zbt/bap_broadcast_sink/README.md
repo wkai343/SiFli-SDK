@@ -1,4 +1,4 @@
-# MP3 本地音乐播放器
+# Ble Audio播放器
 
 源码路径：example/zbt/bap_broadcast_sink
 
