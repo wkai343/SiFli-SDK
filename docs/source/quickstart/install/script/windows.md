@@ -145,6 +145,27 @@ $env:PIP_INDEX_URL="https://mirrors.ustc.edu.cn/pypi/simple"
 
 ````
 
+### 自定义工具安装路径（可选）
+
+本步骤中介绍的脚本将 SiFli-SDK 所需的编译工具默认安装在用户的根目录中，即 *inx 系统中的 `$HOME/.sifli` 目录，或者是windows下的`C:\Users\<name>\.sifli`。我们可以选择将工具安装到其他目录中，但请在运行安装脚本前，导出环境变量 `SIFLI_SDK_TOOLS_PATH`。注意，请确保用户账号已经具备了读写该路径的权限。
+
+```powershell
+$env:SIFLI_SDK_TOOLS_PATH="D:\SIFLI\tools"
+.\install.ps1
+
+.\export.ps1
+```
+
+如果修改了 `SIFLI_SDK_TOOLS_PATH` 变量，请在运行任意 SiFli-SDK 工具或脚本前，将该变量导出到环境变量中。
+
+```{note}
+对Windows用户来说，如果你的用户名中包含空格、汉字等非英文字符，则强烈建议设置`SIFLI_SDK_TOOLS_PATH`用来指定工具安装路径，否则可能会导致安装失败或编译错误。建议将该路径设置为纯英文路径，例如 `D:\SIFLI\tools`。
+```
+
+```{note}
+如未导出环境变量，大多数 shell 将不支持在变量赋值中使用 `SIFLI_SDK_TOOLS_PATH`，例如 `SIFLI_SDK_TOOLS_PATH="$HOME/required_sdk_tools_path" ./install.ps1`。因为即便在源脚本中导出或修改了该变量，当前的执行环境也不受变量赋值影响。
+```
+
 ## 设置环境变量
 
 通过以上步骤，SDK和相关工具就安装好了，但是他们的路径并不在环境变量里，没办法在任意目录使用。因此，必须设置一些环境变量。这可以通过 SiFli-SDK 提供的另一个脚本进行设置。
@@ -155,6 +176,15 @@ $env:PIP_INDEX_URL="https://mirrors.ustc.edu.cn/pypi/simple"
 cd C:\OpenSiFli\SiFli-SDK
 .\export.ps1
 ```
+
+````{note}
+如果按照上述说明设置过自定义工具安装路径，那么在运行 `export.ps1` 脚本之前**必须**设置`SIFLI_SDK_TOOLS_PATH` 变量
+```powershell
+cd C:\OpenSiFli\SiFli-SDK
+$env:SIFLI_SDK_TOOLS_PATH="D:\SIFLI\tools"
+.\export.ps1
+```
+````
 
 ```{note}
 每次打开新的终端窗口都需要在SDK根目录下运行一次 `export.ps1` 脚本设置环境变量。注意，必须要在SDK根目录下运行该脚本，否则会导致运行失败或者编译错误。

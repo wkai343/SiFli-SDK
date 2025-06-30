@@ -147,6 +147,23 @@ export PIP_INDEX_URL="https://mirrors.ustc.edu.cn/pypi/simple"
 ./install.sh
 ```
 
+### 自定义工具安装路径（可选）
+
+本步骤中介绍的脚本将 SiFli-SDK 所需的编译工具默认安装在用户的根目录中，即 *inx 系统中的 `$HOME/.sifli` 目录，或者是windows下的`C:\Users\<name>\.sifli`。我们可以选择将工具安装到其他目录中，但请在运行安装脚本前，导出环境变量 `SIFLI_SDK_TOOLS_PATH`。注意，请确保用户账号已经具备了读写该路径的权限。
+
+```powershell
+export SIFLI_SDK_TOOLS_PATH="$HOME/required_sdk_tools_path"
+./install.sh
+
+. ./export.sh
+```
+
+如果修改了 `SIFLI_SDK_TOOLS_PATH` 变量，请在运行任意 SiFli-SDK 工具或脚本前，将该变量导出到环境变量中。
+
+```{note}
+如未导出环境变量，大多数 shell 将不支持在变量赋值中使用 `SIFLI_SDK_TOOLS_PATH`，例如 `SIFLI_SDK_TOOLS_PATH="$HOME/required_sdk_tools_path" ./install.sh`。因为即便在源脚本中导出或修改了该变量，当前的执行环境也不受变量赋值影响。
+```
+
 ## 设置环境变量
 
 通过以上步骤，SDK和相关工具就安装好了，但是他们的路径并不在环境变量里，没办法在任意目录使用。因此，必须设置一些环境变量。这可以通过 SiFli-SDK 提供的另一个脚本进行设置。
@@ -156,6 +173,15 @@ export PIP_INDEX_URL="https://mirrors.ustc.edu.cn/pypi/simple"
 ```bash
 . export.sh
 ```
+
+````{note}
+如果按照上述说明设置过自定义工具安装路径，那么在运行 `export.sh` 脚本之前**必须**设置`SIFLI_SDK_TOOLS_PATH` 变量
+```powershell
+cd C:\OpenSiFli\SiFli-SDK
+export SIFLI_SDK_TOOLS_PATH="$HOME/required_sdk_tools_path"
+. export.sh
+```
+````
 
 ```{note}
 目前的脚本可能有一些偶现的bug，如果在编译的时候提示找不到`arm-none-eabi-gcc`等命令，可以尝试运行两次`. export.sh`解决。
