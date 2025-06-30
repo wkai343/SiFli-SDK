@@ -1,17 +1,17 @@
-.. zephyr:code-sample:: bluetooth_bap_unicast_server
-   :name: Basic Audio Profile (BAP) Unicast Audio Server
-   :relevant-api: bluetooth bt_audio bt_bap bt_pacs
+.. zephyr:code-sample:: bluetooth_bap_unicast_client
+   :name: Basic Audio Profile (BAP) Unicast Audio Client
+   :relevant-api: bluetooth bt_audio bt_bap bt_conn
 
-   Use BAP Unicast Server functionality.
+   Use BAP Unicast Client functionality.
 
 Overview
 ********
 
-Application demonstrating the BAP Unicast Server functionality.
-Starts advertising and awaits connection from a BAP Unicast Client.
+Application demonstrating the BAP Unicast Client functionality. Scans for and
+connects to a BAP Unicast Server and establishes an audio stream.
 
 This sample can be found under
-:zephyr_file:`samples/bluetooth/bap_unicast_server` in the Zephyr tree.
+:zephyr_file:`samples/bluetooth/bap_unicast_client` in the Zephyr tree.
 
 Check the :zephyr:code-sample-category:`bluetooth` samples for general information.
 
@@ -32,7 +32,7 @@ Building for an nrf52840dk
 --------------------------
 
 .. zephyr-app-commands::
-   :zephyr-app: samples/bluetooth/bap_unicast_server/
+   :zephyr-app: samples/bluetooth/bap_unicast_client/
    :board: nrf52840dk/nrf52840
    :goals: build
    :gen-args: -DEXTRA_CONF_FILE=overlay-bt_ll_sw_split.conf
@@ -44,7 +44,7 @@ You can build both the application core image and an appropriate controller imag
 core with:
 
 .. zephyr-app-commands::
-   :zephyr-app: samples/bluetooth/bap_unicast_server/
+   :zephyr-app: samples/bluetooth/bap_unicast_client/
    :board: nrf5340dk/nrf5340/cpuapp
    :goals: build
    :west-args: --sysbuild
@@ -66,7 +66,7 @@ Building for a simulated nrf52_bsim
 Similarly to how you would for real HW, you can do:
 
 .. zephyr-app-commands::
-   :zephyr-app: samples/bluetooth/bap_unicast_server/
+   :zephyr-app: samples/bluetooth/bap_unicast_client/
    :board: nrf52_bsim
    :goals: build
    :gen-args: -DEXTRA_CONF_FILE=overlay-bt_ll_sw_split.conf
@@ -78,7 +78,7 @@ Building for a simulated nrf5340bsim
 ------------------------------------
 
 .. zephyr-app-commands::
-   :zephyr-app: samples/bluetooth/bap_unicast_server/
+   :zephyr-app: samples/bluetooth/bap_unicast_client/
    :board: nrf5340bsim/nrf5340/cpuapp
    :goals: build
    :west-args: --sysbuild
