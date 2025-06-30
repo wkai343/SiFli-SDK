@@ -125,7 +125,7 @@ int main(void)
 
 
     example_compass();
-
+    rt_kprintf("The version used is lvgl v8\n");
     while (1)
     {
         ms = lv_task_handler();

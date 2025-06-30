@@ -16,8 +16,8 @@
 + 一根能够通讯的USB数据线
 
 ### 硬件配置
-* 对于sf32lb52-lchspi-ulp开发板,可以配置到任意带有PA*_I2C_UART功能的IO输出I2C的SDA,SCLK波形，I2C名称不做强制要求，可以根据需求配置（I2C1~I2C4）
-* 传感器通过I2C协议进行通信，具体连接引脚为 PA40（SCL 时钟线）和 PA39（SDA 数据线）
+
+* 传感器通过I2C协议与开发板进行通信，具体连接引脚为 PA40（SCL 时钟线）和 PA39（SDA 数据线）
 * 通过HAL_PIN_Set() 函数把IO引脚配置为I2C模式，设置为上拉模式，最后一个参数为hcpu/lcpu选择, 1:选择hcpu,0:选择lcpu 
 ```c
 static void board_io_init(void)
@@ -29,13 +29,13 @@ static void board_io_init(void)
 
 
 ### menuconfig配置流程
-* 在menuconfig中打开MMC5603传感器和I2C2（因为屏驱使用的是I2C1避免冲突传感器使用I2C2）
+* 在menuconfig中打开MMC5603传感器和I2C2
 * 这些配置默认已经进行了开启，用户不必自己在进行使能
 ```
 scons --board=<name> --menuconfig
 ```
-![alt text](image/LP2.png)
-![alt text](image/LP3.png)  
+![alt text](./assets/LP2.png)
+![alt text](./assets/LP3.png)  
 
 
 ### 编译和烧录
@@ -55,9 +55,9 @@ please input the serial port num:10
 ## 预期效果
 * 能够模拟手机指南针功能，指明方向和角度
 * 输入:lcd_ctrl fps 来进行查看帧率
-* 具体演示视频参照链接：
-![alt text](image/Compass_log.png) 
-![alt text](image/sram.png) 
+* 具体演示视频参照链接：[罗盘演示视频](https://www.bilibili.com/video/BV1BxKmzaEVc/?spm_id_from=333.337.search-card.all.click&vd_source=00a26cb15a9627841023f7adb1c7c7f4)
+![alt text](./assets/Compass_log.png) 
+![alt text](./assets/sram.png) 
 
 ## 异常诊断
 如果未能达到了演示视频效果，可以从以下方面及逆行故障排除：
@@ -68,4 +68,4 @@ please input the serial port num:10
 * 首先要保证自定义的图片是.png格式的
 * 其次需要将图片放在asset文件下
 * 将需要自定页面的表盘放在asset下，然后自定义指针放在ezip文件夹下即可，当然图片不宜过大，否则会影响罗盘整体帧率，表盘（390x390）、指针（230x230）
-![alt text](image/ezip.png) 
+![alt text](./assets/ezip.png) 
