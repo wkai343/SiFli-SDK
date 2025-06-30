@@ -72,9 +72,14 @@ class DynamicPipelineGenerator:
         return job_name, job_config
     
     def _create_collect_job(self, build_job_names):
-        """创建收集artifacts的Job"""
-        collect_job = {
-            'collect_all_artifacts': {
+        """创建收集artifacts的Job - 使用分层策略避免needs限制"""
+        MAX_NEEDS_PER_JOB = 50  # GitLab CI的needs限制
+        
+        collect_jobs = {}
+        
+        if len(build_job_names) <= MAX_NEEDS_PER_JOB:
+            # 如果job数量不超过限制，直接创建单个收集job
+            collect_jobs['collect_all_artifacts'] = {
                 'stage': 'collect',
                 'tags': ['build'],
                 'script': [
@@ -82,9 +87,7 @@ class DynamicPipelineGenerator:
                     'python3 tools/ci/collect_artifacts_simple.py',
                 ],
                 'artifacts': {
-                    'paths': [
-                        'merged_artifacts/'
-                    ],
+                    'paths': ['merged_artifacts/'],
                     'expire_in': '1 week',
                     'when': 'always'
                 },
@@ -93,8 +96,67 @@ class DynamicPipelineGenerator:
                     {'if': '$CI_PIPELINE_SOURCE == "parent_pipeline"', 'when': 'always'}
                 ]
             }
-        }
-        return collect_job
+        else:
+            # 如果job数量超过限制，使用分层收集策略
+            print(f"⚠️  构建job数量({len(build_job_names)})超过GitLab CI needs限制({MAX_NEEDS_PER_JOB})，使用分层收集策略")
+            
+            # 将构建job分组
+            job_groups = []
+            for i in range(0, len(build_job_names), MAX_NEEDS_PER_JOB):
+                group = build_job_names[i:i + MAX_NEEDS_PER_JOB]
+                job_groups.append(group)
+            
+            intermediate_jobs = []
+            
+            # 为每组创建中间收集job
+            for group_idx, job_group in enumerate(job_groups):
+                intermediate_job_name = f'collect_group_{group_idx + 1}'
+                intermediate_jobs.append(intermediate_job_name)
+                
+                collect_jobs[intermediate_job_name] = {
+                    'stage': 'collect',
+                    'tags': ['build'],
+                    'script': [
+                        f'echo "🔍 收集第{group_idx + 1}组artifacts (共{len(job_groups)}组)..."',
+                        f'mkdir -p group_{group_idx + 1}_artifacts',
+                        'python3 tools/ci/collect_artifacts_simple.py',
+                        f'mv merged_artifacts group_{group_idx + 1}_artifacts/',
+                        f'echo "✅ 第{group_idx + 1}组收集完成"'
+                    ],
+                    'artifacts': {
+                        'paths': [f'group_{group_idx + 1}_artifacts/'],
+                        'expire_in': '1 day',
+                        'when': 'always'
+                    },
+                    'needs': [{'job': job_name, 'artifacts': True} for job_name in job_group],
+                    'rules': [
+                        {'if': '$CI_PIPELINE_SOURCE == "parent_pipeline"', 'when': 'always'}
+                    ]
+                }
+            
+            # 创建最终合并job
+            collect_jobs['merge_all_artifacts'] = {
+                'stage': 'collect',
+                'tags': ['build'],
+                'script': [
+                    'echo "🔄 合并所有组的artifacts..."',
+                    'mkdir -p final_merged_artifacts',
+                    'python3 tools/ci/merge_group_artifacts.py',
+                ],
+                'artifacts': {
+                    'paths': [
+                        'final_merged_artifacts/'
+                    ],
+                    'expire_in': '1 week',
+                    'when': 'always'
+                },
+                'needs': [{'job': job_name, 'artifacts': True} for job_name in intermediate_jobs],
+                'rules': [
+                    {'if': '$CI_PIPELINE_SOURCE == "parent_pipeline"', 'when': 'always'}
+                ]
+            }
+        
+        return collect_jobs
     
     def _generate_job_name(self, project_path, board=None):
         """生成Job名称"""
@@ -132,10 +194,13 @@ class DynamicPipelineGenerator:
         
         # 添加收集artifacts的job
         if job_count > 0:
-            collect_job = self._create_collect_job(list(jobs.keys()))
-            self.pipeline_config.update(collect_job)
+            collect_jobs = self._create_collect_job(list(jobs.keys()))
+            self.pipeline_config.update(collect_jobs)
+            collect_job_count = len(collect_jobs)
+        else:
+            collect_job_count = 0
         
-        print(f"📊 动态生成了 {job_count} 个构建Job + 1个收集Job")
+        print(f"📊 动态生成了 {job_count} 个构建Job + {collect_job_count}个收集Job")
         return self.pipeline_config
     
     def save_child_pipeline(self, output_file='child-pipeline.yml'):
