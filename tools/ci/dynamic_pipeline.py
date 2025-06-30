@@ -13,7 +13,7 @@ class DynamicPipelineGenerator:
         self.config_file = config_file
         self.config = self._load_config()
         self.pipeline_config = {
-            'stages': ['build'],
+            'stages': ['build', 'collect'],
             'variables': {
                 'GIT_SUBMODULE_STRATEGY': 'recursive',
                 'COMPILER': 'gcc',
@@ -61,7 +61,7 @@ class DynamicPipelineGenerator:
             ],
             'artifacts': {
                 'paths': [f'ci_build_logs/{log_name}.log', f'artifacts/{log_name}/'],
-                'expire_in': '1 week',
+                'expire_in': '1 day',
                 'when': 'always'
             },
             'rules': [
@@ -70,6 +70,31 @@ class DynamicPipelineGenerator:
             ]
         }
         return job_name, job_config
+    
+    def _create_collect_job(self, build_job_names):
+        """创建收集artifacts的Job"""
+        collect_job = {
+            'collect_all_artifacts': {
+                'stage': 'collect',
+                'tags': ['build'],
+                'script': [
+                    'echo "🔍 开始收集所有构建artifacts..."',
+                    'python3 tools/ci/collect_artifacts_simple.py',
+                ],
+                'artifacts': {
+                    'paths': [
+                        'merged_artifacts/'
+                    ],
+                    'expire_in': '1 week',
+                    'when': 'always'
+                },
+                'needs': [{'job': job_name, 'artifacts': True} for job_name in build_job_names],
+                'rules': [
+                    {'if': '$CI_PIPELINE_SOURCE == "parent_pipeline"', 'when': 'always'}
+                ]
+            }
+        }
+        return collect_job
     
     def _generate_job_name(self, project_path, board=None):
         """生成Job名称"""
@@ -105,7 +130,12 @@ class DynamicPipelineGenerator:
         # 合并配置
         self.pipeline_config.update(jobs)
         
-        print(f"📊 动态生成了 {job_count} 个构建Job")
+        # 添加收集artifacts的job
+        if job_count > 0:
+            collect_job = self._create_collect_job(list(jobs.keys()))
+            self.pipeline_config.update(collect_job)
+        
+        print(f"📊 动态生成了 {job_count} 个构建Job + 1个收集Job")
         return self.pipeline_config
     
     def save_child_pipeline(self, output_file='child-pipeline.yml'):
