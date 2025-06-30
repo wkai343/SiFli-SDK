@@ -100,6 +100,7 @@ typedef struct audio_3a_tag
 {
     uint8_t      state;
     uint8_t      is_bt_voice;
+    uint8_t      disable_uplink_agc;
     volatile uint8_t is_far_putted;
     volatile uint8_t is_aecm_mic_putted;
     uint16_t     frame_len; //byte
@@ -790,7 +791,7 @@ void audio_3a_data_process(audio_3a_t *p_3a_env, uint8_t *fifo, uint16_t fifo_si
         data_in = data_out; //outframe
         data_out = temp;    //outframe2
 #ifdef WEBRTC_AGC_FIX
-        if (g_uplink_agc)
+        if (g_uplink_agc && !p_3a_env->disable_uplink_agc)
         {
             audio_tick_in(AUDIO_UPAGC_TIME);
             audio_agc_proc(p_3a_env->agcInst, data_in, data_out, p_3a_env->samplerate);
@@ -887,7 +888,7 @@ void audio_3a_module_free(audio_3a_t *p_3a_env)
 }
 
 extern uint32_t bt_connect_get_peer_type(void);
-void audio_3a_open(uint32_t samplerate, uint8_t is_bt_voice)
+void audio_3a_open(uint32_t samplerate, uint8_t is_bt_voice, uint8_t disable_uplink_agc)
 {
     audio_3a_t *thiz = &g_audio_3a_env;
 #if defined(SOLUTION_WATCH) && defined(RT_USING_BT)
@@ -919,6 +920,7 @@ void audio_3a_open(uint32_t samplerate, uint8_t is_bt_voice)
     if (g_audio_3a_env.state == 0)
     {
         g_audio_3a_env.is_bt_voice = is_bt_voice;
+        g_audio_3a_env.disable_uplink_agc = disable_uplink_agc;
         g_3a_fifo = audio_mem_malloc(240);
         RT_ASSERT(g_3a_fifo);
         LOG_I("3a_w open samplearate=%ld", samplerate);

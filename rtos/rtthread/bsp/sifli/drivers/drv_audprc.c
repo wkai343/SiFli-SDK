@@ -2571,10 +2571,30 @@ int Set_mic_gain(int8_t value)
     return 0;
 }
 
-
+void mic_gain_decrease(int8_t db)
+{
+    int8_t new_gain = g_adc_volume - db;
+    rt_kprintf("xiaozhi mic gain to %ddb\r\n", new_gain);
+    HAL_AUDPRC_Config_ADCPath_Volume(get_audprc_handle(), 0, new_gain);
+    HAL_AUDPRC_Config_ADCPath_Volume(get_audprc_handle(), 1, new_gain);
+    rt_kprintf("ADC_PATH_CFG0=0x%x\r\n", get_audprc_handle()->Instance->ADC_PATH_CFG0);
+}
 
 #ifdef AUDIO_RX_USING_PDM
-
+void pdm_gain_decrease(int db)
+{
+    int new_gain = g_pdm_volume - db * 2;
+    if (new_gain < -30)
+    {
+        new_gain = -30;
+    }
+    else if (new_gain > 90)
+    {
+        new_gain = 90;
+    }
+    rt_kprintf("pmd gain to %ddb\r\n", new_gain / 2);
+    set_pdm_gain_to_register(new_gain);
+}
 extern void set_pdm_gain_to_register(int val);
 int get_pdm_volume()
 {

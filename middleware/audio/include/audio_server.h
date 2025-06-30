@@ -90,6 +90,7 @@ typedef struct
     uint8_t  write_channnel_num;
     uint8_t  write_bits_per_sample;
     uint8_t  is_need_3a;
+    uint8_t  disable_uplink_agc;
     // read paramter, only invalid when rwflag is AUDIO_RX/AUDIO_TXRX
     uint32_t read_samplerate;
     uint32_t read_cache_size;

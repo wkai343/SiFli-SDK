@@ -116,9 +116,10 @@ static void audio_3a_module_free(audio_3a_t *env)
 }
 
 
-void audio_3a_open(uint32_t samplerate, uint8_t is_bt_voice)
+void audio_3a_open(uint32_t samplerate, uint8_t is_bt_voice, uint8_t disable_uplink_agc)
 {
     audio_3a_t *env = &g_audio_3a_env;
+    RT_UNUSED(disable_uplink_agc);
     if (env->state == 0)
     {
         env->is_far_putted = 0;

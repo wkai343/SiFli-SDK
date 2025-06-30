@@ -1572,7 +1572,7 @@ static int audio_device_speaker_open(void *user_data, audio_device_input_callbac
                 my->rx_samplerate = 16000;
                 LOG_W("warning! no samplerate");
             }
-            audio_3a_open(my->tx_samplerate, (uint8_t)(client->audio_type == AUDIO_TYPE_BT_VOICE));
+            audio_3a_open(my->tx_samplerate, (uint8_t)(client->audio_type == AUDIO_TYPE_BT_VOICE), client->parameter.disable_uplink_agc);
             client->is_3a_opened = 1;
         }
 
@@ -2492,7 +2492,7 @@ static void audio_device_close(audio_server_t *server, audio_client_t client)
         rt_list_remove(&suspend1->node);
         if (suspend1->parameter.is_need_3a)
         {
-            audio_3a_open(suspend1->parameter.read_bits_per_sample, (uint8_t)(suspend1->audio_type == AUDIO_TYPE_BT_VOICE));
+            audio_3a_open(suspend1->parameter.read_bits_per_sample, (uint8_t)(suspend1->audio_type == AUDIO_TYPE_BT_VOICE), suspend1->parameter.disable_uplink_agc);
             suspend1->is_3a_opened = 1;
         }
         audio_device_open(server, suspend1);

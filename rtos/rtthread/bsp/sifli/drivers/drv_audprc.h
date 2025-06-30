@@ -71,6 +71,7 @@ uint8_t eq_is_working();
 int eq_get_default_volumex2();
 void bf0_audprc_eq_enable_offline(uint8_t is_enable);
 void bf0_audprc_stop();
+void mic_gain_decrease(int8_t db);
 
 #endif
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
