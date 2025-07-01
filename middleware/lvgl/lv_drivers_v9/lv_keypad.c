@@ -45,7 +45,7 @@
 
 #include "littlevgl2rtt.h"
 #include "lvgl.h"
-
+#include "lvsf.h"
 
 
 /*********************
@@ -59,7 +59,7 @@
 /**********************
  *  STATIC PROTOTYPES
  **********************/
-#if 0
+#if 1
 static void keypad_read(lv_indev_drv_t *indev_drv, lv_indev_data_t *data);
 static uint32_t keycode_to_ascii(uint32_t button);
 
@@ -115,13 +115,24 @@ void keypad_init(void)
         }
 #endif
     }
+
+
+
 #else
+    lv_indev_t *kb_indev = lv_indev_create();
+    if (kb_indev)
+    {
+
+        lv_indev_set_type(kb_indev, LV_INDEV_TYPE_KEYPAD);
+        lv_indev_set_read_cb(kb_indev, keypad_read);
 
 
-    lv_indev_drv_init(&kb_drv);
-    kb_drv.type = LV_INDEV_TYPE_KEYPAD;
-    kb_drv.read_cb = keypad_read;
-    kb_indev = lv_indev_drv_register(&kb_drv);
+    }
+    else
+    {
+        rt_kprintf("keypad_init: Failed to create keypad input device\n");
+        return;
+    }
 
 #ifdef BSP_USING_LVGL_INPUT_AGENT
     {
@@ -171,7 +182,9 @@ static uint32_t keycode_to_ascii(uint32_t button)
 
     return ret_value;
 }
-
+RT_WEAK void button_key_read(uint32_t *last_key, lv_indev_state_t *state)
+{
+}
 /**
  * Get the last pressed or released character from keypad
  * @param indev_drv pointer to the related input device driver
@@ -202,6 +215,7 @@ static void keypad_read(lv_indev_drv_t *indev_drv, lv_indev_data_t *data)
     last_key = buffer[0];
     state = buffer[1];
 #else
+
     button_key_read(&last_key, &state);
 #endif
 

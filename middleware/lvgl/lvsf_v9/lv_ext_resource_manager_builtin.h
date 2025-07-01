@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file   lvgl_drv.c
+  * @file   lv_ext_resource_manager_builtin.h
   * @author Sifli software development team
   ******************************************************************************
 */
@@ -43,42 +43,18 @@
  *
  */
 
-#include "littlevgl2rtt.h"
-#include "lvgl.h"
-#include "board.h"
+#ifndef LV_EXT_RESOURCE_MANAGER_BUILTIN_H_
+#define LV_EXT_RESOURCE_MANAGER_BUILTIN_H_
 
-extern void lv_sifli_img_decoder(void);
-extern void lv_lcd_init(const char *name);
-extern lv_indev_t *lv_touchscreen_create(const char *dev_path);
-extern void keypad_init(void);
-extern void wheel_init(void);
+#include "lv_ext_resource_manager.h"
 
-
-static uint32_t tick_count_callback(void)
-{
-    return (uint32_t)rt_tick_get_millisecond();
-}
-
-void lv_hal_init(const char *name)
-{
-
-    lv_tick_set_cb(tick_count_callback);
-
-    /* LCD Device Init */
-    lv_lcd_init(name);
+#ifdef LV_USING_EXT_RESOURCE_MANAGER
+    lv_res_t lv_ext_res_mng_builtin_init(lv_ext_res_mng_t res_mng, const lv_i18n_lang_pack_t *lang_pack);
+    lv_res_t lv_ext_res_mng_builtin_destroy(lv_ext_res_mng_t res_mng);
+#endif /* LV_USING_EXT_RESOURCE_MANAGER */
 
 
-    lv_sifli_img_decoder();
+#endif /* LV_EXT_RESOURCE_MANAGER_DL_IMPL_H_ */
 
 
-    /* littlevGL Input device interface */
-    lv_touchscreen_create("touch");
-
-    // Init keyboard driver
-    keypad_init();
-
-
-    //wheel_init();
-
-}
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/

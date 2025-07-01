@@ -11970,7 +11970,7 @@ static const uint8_t ubuntu_font[] =
 
 
 
-static const int ubuntu_font_size = sizeof(ubuntu_font);
+const int ubuntu_font_size = sizeof(ubuntu_font);
 
 const lv_font_t *lv_font_ubuntu_12 = NULL;
 const lv_font_t *lv_font_ubuntu_14 = NULL;
