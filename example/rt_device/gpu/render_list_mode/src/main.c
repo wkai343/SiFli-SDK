@@ -162,13 +162,18 @@ static void wait_lcd_flush_done(void)
     rt_err_t err;
     err = rt_sem_take(&lcd_sema, rt_tick_from_millisecond(1000));
     RT_ASSERT(RT_EOK == err);
+
+    err = rt_sem_release(&lcd_sema);
+    RT_ASSERT(RT_EOK == err);
 }
 
 static void partial_done_cb(drv_epic_render_list_t rl, EPIC_LayerConfigTypeDef *p_dst, void *usr_data, uint32_t last)
 {
     static uint8_t lcd_te = 1;
     rt_device_t p_lcd_device = usr_data;
-    wait_lcd_flush_done();
+    rt_err_t err;
+    err = rt_sem_take(&lcd_sema, rt_tick_from_millisecond(1000));
+    RT_ASSERT(RT_EOK == err);
     if (last)
     {
         lcd_te = 1;
@@ -230,7 +235,7 @@ static void draw_img(drv_epic_render_buf *p_buf)
 
     EPIC_LayerConfigTypeDef *p_src_layer = &o->desc.blend.layer;
     HAL_EPIC_LayerConfigInit(p_src_layer);
-    p_src_layer->alpha = 50;
+    p_src_layer->alpha = 255;
     p_src_layer->x_offset = 0;
     p_src_layer->y_offset = 0;
 
@@ -320,8 +325,8 @@ static void draw_arcs(drv_epic_render_buf *p_buf)
 
         o->desc.arc.center_x = LCD_HOR_RES_MAX >> 1;
         o->desc.arc.center_y = LCD_VER_RES_MAX >> 1;
-        o->desc.arc.start_angle = 0;
-        o->desc.arc.end_angle = 180;
+        o->desc.arc.start_angle = 20;
+        o->desc.arc.end_angle = 160;
         o->desc.arc.width = 20;
 
         o->desc.arc.round_start = 1;
@@ -481,6 +486,54 @@ static void draw_letters(drv_epic_render_buf *p_buf)
     drv_epic_commit_op(o);
 }
 
+static void draw_polygon(drv_epic_render_buf *p_buf)
+{
+
+    drv_epic_operation *o = drv_epic_alloc_op(p_buf);
+    RT_ASSERT(o != NULL);
+    o->op = DRV_EPIC_DRAW_POLYGON;
+
+    //Draw a hexagon
+    HAL_EPIC_LayerConfigInit(&o->mask);
+    o->desc.polygon.point_cnt = 6;
+    o->desc.polygon.points[0].x = 100;
+    o->desc.polygon.points[0].y = 100;
+    o->desc.polygon.points[1].x = 200;
+    o->desc.polygon.points[1].y = 100;
+    o->desc.polygon.points[2].x = 250;
+    o->desc.polygon.points[2].y = 150;
+    o->desc.polygon.points[3].x = 200;
+    o->desc.polygon.points[3].y = 200;
+    o->desc.polygon.points[4].x = 100;
+    o->desc.polygon.points[4].y = 200;
+    o->desc.polygon.points[5].x = 50;
+    o->desc.polygon.points[5].y = 150;
+
+
+    o->desc.polygon.argb8888 = 0xFF00FF00;
+
+    //Get the bounding box of the polygon
+    for (uint16_t i = 0; i < o->desc.polygon.point_cnt; i++)
+    {
+        if (i == 0)
+        {
+            o->clip_area.x0 = o->desc.polygon.points[i].x;
+            o->clip_area.y0 = o->desc.polygon.points[i].y;
+            o->clip_area.x1 = o->desc.polygon.points[i].x;
+            o->clip_area.y1 = o->desc.polygon.points[i].y;
+        }
+        else
+        {
+            if (o->desc.polygon.points[i].x < o->clip_area.x0) o->clip_area.x0 = o->desc.polygon.points[i].x;
+            if (o->desc.polygon.points[i].y < o->clip_area.y0) o->clip_area.y0 = o->desc.polygon.points[i].y;
+            if (o->desc.polygon.points[i].x > o->clip_area.x1) o->clip_area.x1 = o->desc.polygon.points[i].x;
+            if (o->desc.polygon.points[i].y > o->clip_area.y1) o->clip_area.y1 = o->desc.polygon.points[i].y;
+        }
+    }
+
+    //Commit the operation
+    drv_epic_commit_op(o);
+}
 
 static void draw_img_3d_rotated(drv_epic_render_buf *p_buf)
 {
@@ -802,9 +855,12 @@ int main(void)
         draw_arcs(&virtual_render_buf);//arc
         draw_lines(&virtual_render_buf);
         draw_letters(&virtual_render_buf);
+        draw_polygon(&virtual_render_buf);
+
+        // generate_image((uint8_t *)&test_image[0], TEST_IMAGE_COLOR_FORMAT, TEST_IMAGE_WIDTH, TEST_IMAGE_HEIGHT);
         // draw_img_3d_rotated(&virtual_render_buf);
         // draw_img_3d_rotated_2(&virtual_render_buf);
-        draw_arc_anim(&virtual_render_buf);
+        //draw_arc_anim(&virtual_render_buf);
 
 
         /*Start rendering  and show the result on LCD*/
@@ -822,7 +878,7 @@ int main(void)
         {
             /*and show the resule on LCD at first time*/
             msg.content.rd.partial_done_cb = partial_done_cb;
-            shown_on_lcd = 0;
+            shown_on_lcd = 1;
         }
         else
         {
@@ -835,6 +891,8 @@ int main(void)
         rt_err_t err;
         err = rt_sem_take(&render_done_sema, rt_tick_from_millisecond(3000));
         RT_ASSERT(RT_EOK == err);
+        /*Wait LCD asynchronize flushing done.*/
+        wait_lcd_flush_done();
     }
 
 
