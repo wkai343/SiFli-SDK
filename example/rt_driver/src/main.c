@@ -107,7 +107,11 @@ static uint8_t get_pixel_size(uint16_t color_format)
 {
     uint8_t pixel_size;
 
-    if (RTGRAPHIC_PIXEL_FORMAT_RGB565 == color_format)
+    if (RTGRAPHIC_PIXEL_FORMAT_RGB332 == color_format)
+    {
+        pixel_size = 1;
+    }
+    else if (RTGRAPHIC_PIXEL_FORMAT_RGB565 == color_format)
     {
         pixel_size = 2;
     }
@@ -133,6 +137,8 @@ static uint32_t make_color(uint16_t cf, uint32_t rgb888)
 
     switch (cf)
     {
+    case RTGRAPHIC_PIXEL_FORMAT_RGB332:
+        return (((r & 0xE0) >> 0) | ((g & 0xE0) >> 3) | ((b & 0xC0) >> 6));
     case RTGRAPHIC_PIXEL_FORMAT_RGB565:
         return ((((r) & 0xF8) << 8) | (((g) & 0xFC) << 3) | (((b) & 0xF8) >> 3));
     case RTGRAPHIC_PIXEL_FORMAT_RGB666:
@@ -148,20 +154,7 @@ static uint32_t make_color(uint16_t cf, uint32_t rgb888)
 static void fill_color(uint8_t *buf, uint32_t width, uint32_t height,
                        uint16_t cf, uint32_t ARGB8888)
 {
-    uint8_t pixel_size;
-
-    if (RTGRAPHIC_PIXEL_FORMAT_RGB565 == cf)
-    {
-        pixel_size = 2;
-    }
-    else if (RTGRAPHIC_PIXEL_FORMAT_RGB888 == cf)
-    {
-        pixel_size = 3;
-    }
-    else
-    {
-        RT_ASSERT(0);
-    }
+    uint8_t pixel_size = get_pixel_size(cf);
 
     uint32_t i, j, k, c;
     c = make_color(cf, ARGB8888);
@@ -215,6 +208,9 @@ static void fill_hor_gradient_color(uint8_t *buf, uint32_t width, uint32_t heigh
                 grad_color = make_color(cf, (r << 16 | g << 8 | b));
                 switch (cf)
                 {
+                case RTGRAPHIC_PIXEL_FORMAT_RGB332:
+                    *(buf ++) = (uint8_t)((grad_color >> 0) & 0xFF);
+                    break;
                 case RTGRAPHIC_PIXEL_FORMAT_RGB565:
                     grad_color = grad_color & 0xFFDF; //Convert to RGB555 to make gradient more smooth.
                     *(buf ++) = (uint8_t)((grad_color >> 0) & 0xFF);
@@ -282,6 +278,9 @@ static void fill_ver_gradient_color(uint8_t *buf, uint32_t width, uint32_t heigh
         {
             switch (cf)
             {
+            case RTGRAPHIC_PIXEL_FORMAT_RGB332:
+                *(buf ++) = (uint8_t)((grad_color >> 0) & 0xFF);
+                break;
             case RTGRAPHIC_PIXEL_FORMAT_RGB565:
                 *(buf ++) = (uint8_t)((grad_color >> 0) & 0xFF);
                 *(buf ++) = (uint8_t)((grad_color >> 8) & 0xFF);

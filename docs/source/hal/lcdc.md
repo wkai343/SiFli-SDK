@@ -34,13 +34,23 @@ LCDC(LCD Controller) 是为屏提供一个统一的接口，而不需关心具�
   - RGB565_SWAP (55x 不支持)
 
 ## 图层支持的颜色格式
+  - RGB332
   - RGB565
   - RGB888
-  - ARGB888
-  - ARGB565
+  - ARGB8888
+  - ARGB8565
   - A8      (55x 不支持)
   - L8      (55x 不支持)
   - RGB565_SWAP  (55x 不支持)
+
+|        | bit31~bit25 | bit24~bit17 | bit16~bit8 | bit7~bit0 |
+| ------     | ------  | ------     | ------             | ------ |
+| RGB332     |    /    |    /       |      /             |R2~R0G2~G0B1~B0|
+| RGB565     |    /    |    /       | R4~R0G5~G3         | G2~G0B4~B0 |
+| RGB565_SWAP|    /    |    /       | G2~G0B4~B0         | R4~R0G5~G3  |
+| ARGB8565   |    /    | A7 ~ A0    | R4~R0G5~G3         | G2~G0B4~B0 |
+| RGB888     |    /    | R7 ~ R0    | G7 ~ G0            | B7 ~ B0 |
+| ARGB8888   | A7 ~ A0 | R7 ~ R0    | G7 ~ G0            | B7 ~ B0 |
 
 ## 其他特性
   - 支持指定绘图区域， 且该区域可以跟给定的输出buffer区域任意交叉

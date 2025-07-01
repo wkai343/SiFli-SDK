@@ -309,6 +309,8 @@ static const char *lcd_s_name(uint32_t s)
         return "INITIALIZED";
     case LCD_STATUS_DISPLAY_ON:
         return "ON";
+    case LCD_STATUS_DISPLAY_OFF_PENDING:
+        return "OFF_PENDING";
     case LCD_STATUS_DISPLAY_OFF:
         return "OFF";
     case LCD_STATUS_DISPLAY_TIMEOUT:
