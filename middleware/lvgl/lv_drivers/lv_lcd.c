@@ -62,9 +62,8 @@
 #if defined(BSP_USING_LCD_FRAMEBUFFER)
     #include "drv_lcd_fb.h"
 #endif
-#if defined(DRV_EPIC_NEW_API)
-    #include "drv_epic.h"
-#endif
+
+#include "drv_epic.h"
 
 #if (16 != LV_COLOR_DEPTH) && (24 != LV_COLOR_DEPTH) && (32 != LV_COLOR_DEPTH)
     #error "Unsupported color depth"
