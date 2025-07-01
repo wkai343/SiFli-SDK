@@ -47,7 +47,7 @@
 
 #include <board.h>
 #include <string.h>
-#include "bf0_hal_lptim.h"
+#include "bf0_hal.h"
 /** @addtogroup bsp_driver Driver IO
   * @{
   */

@@ -47,8 +47,7 @@
 #include <stdlib.h>
 #include "utest.h"
 #include "board.h"
-#include "bf0_hal_lptim.h"
-#include "bf0_hal_lrc_cal.h"
+#include "bf0_hal.h"
 #include "tc_utils.h"
 
 #ifdef HAL_LPTIM_MODULE_ENABLED

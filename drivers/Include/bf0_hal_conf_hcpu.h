@@ -452,6 +452,10 @@ in voltage and temperature.  */
 #include "bf0_hal_secu.h"
 #endif
 
+#ifdef HAL_LPTIM_MODULE_ENABLED
+#include "bf0_hal_lptim.h"
+#endif
+
 #ifdef __cplusplus
 }
 #endif

@@ -161,7 +161,7 @@ static LCDC_InitTypeDef lcdc_int_cfg =
 {
     .lcd_itf = LCDC_INTF_JDI_PARALLEL,
     .freq = 60,
-    .color_mode = LCDC_PIXEL_FORMAT_RGB565,
+    .color_mode = LCDC_PIXEL_FORMAT_RGB565, // Useless parameter for JDI PARALLEL interface
 
     .cfg = {
         .jdi = {
@@ -221,23 +221,23 @@ static uint32_t LCD_ReadID(LCDC_HandleTypeDef *hlcdc)
   */
 static void LCD_DisplayOn(LCDC_HandleTypeDef *hlcdc)
 {
-    /* Display On */
-    //LCD_WriteReg(hlcdc, REG_DISPLAY_ON, (uint8_t *)NULL, 0);
-#ifdef SF32LB58X
-//HAL_LCDC_JDI_LP_CLK
-    hwp_lptim3->ARR = 32768 / lcdc_int_cfg.freq;
-    hwp_lptim3->CMP = hwp_lptim3->ARR / 2;
-    hwp_lptim3->CR |= LPTIM_CR_ENABLE;
-    hwp_lptim3->CR |= LPTIM_CR_CNTSTRT;
-
-
-    MODIFY_REG(hwp_lpsys_aon->CR1, LPSYS_AON_CR1_PBR_SEL0_Msk, 2 << LPSYS_AON_CR1_PBR_SEL0_Pos);
-    MODIFY_REG(hwp_lpsys_aon->CR1, LPSYS_AON_CR1_PBR_SEL1_Msk, 3 << LPSYS_AON_CR1_PBR_SEL1_Pos);
-
-    hwp_rtc->PBR3R |= 3 << RTC_PBR3R_SEL_Pos; //frp
-    hwp_rtc->PBR4R |= 2 << RTC_PBR4R_SEL_Pos; //xfrp
-    hwp_rtc->PBR5R |= 3 << RTC_PBR5R_SEL_Pos; //vcom
-#endif /* SF32LB58X */
+    /* Display On, enable the FRP&XFRP output */
+#ifdef JDI_FRP_LPPWM_INTERFACE_NAME
+    struct rt_device_pwm *device = (struct rt_device_pwm *)rt_device_find(JDI_FRP_LPPWM_INTERFACE_NAME);
+    if (!device)
+    {
+        LOG_E("Can not find FRP LPPWM device:%s", JDI_FRP_LPPWM_INTERFACE_NAME);
+    }
+    else
+    {
+        if (0 == (device->parent.open_flag & RT_DEVICE_OFLAG_OPEN))
+        {
+            rt_device_open((struct rt_device *)device, RT_DEVICE_OFLAG_RDWR);
+            rt_pwm_set(device, 1, 16 * 1000 * 1000, 8 * 1000 * 1000); // Set period to 16ms, pulse to 8ms
+            rt_pwm_enable(device, 1);
+        }
+    }
+#endif
 }
 
 /**
@@ -247,8 +247,22 @@ static void LCD_DisplayOn(LCDC_HandleTypeDef *hlcdc)
   */
 static void LCD_DisplayOff(LCDC_HandleTypeDef *hlcdc)
 {
-    /* Display Off */
-    //LCD_WriteReg(hlcdc, REG_DISPLAY_OFF, (uint8_t *)NULL, 0);
+    /* Display Off, disable the FRP&XFRP output */
+#ifdef JDI_FRP_LPPWM_INTERFACE_NAME
+    struct rt_device_pwm *device = (struct rt_device_pwm *)rt_device_find(JDI_FRP_LPPWM_INTERFACE_NAME);
+    if (!device)
+    {
+        LOG_E("Can not find FRP LPPWM device:%s", JDI_FRP_LPPWM_INTERFACE_NAME);
+    }
+    else
+    {
+        if (device->parent.open_flag & RT_DEVICE_OFLAG_OPEN)
+        {
+            rt_pwm_disable(device, 1);
+            rt_device_close((struct rt_device *)device);
+        }
+    }
+#endif
 }
 
 static void LCD_SetRegion(LCDC_HandleTypeDef *hlcdc, uint16_t Xpos0, uint16_t Ypos0, uint16_t Xpos1, uint16_t Ypos1)
