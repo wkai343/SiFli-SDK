@@ -208,7 +208,7 @@ int ezip_video_decode(ffmpeg_handle thiz, uint32_t size, uint32_t paddings);
 void ezip_audio_cache_init(ffmpeg_handle thiz);
 void ezip_audio_cache_deinit(ffmpeg_handle thiz);
 ezip_audio_packet_t *ezip_audio_read_packet(ffmpeg_handle thiz, uint32_t size, uint32_t paddings);
-void ezip_audio_decode(ffmpeg_handle thiz, audio_server_callback_func callback, AVCodecParserContext *parser);
+void ezip_audio_decode(ffmpeg_handle thiz, audio_server_callback_func callback, void *mp3parser);
 int ezip_flash_read(ffmpeg_handle thiz, void *buf, int len);
 
 #endif
