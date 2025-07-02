@@ -125,12 +125,27 @@ __HAL_ROM_USED HAL_StatusTypeDef HAL_GPT_Base_Init(GPT_HandleTypeDef *htim)
 #ifdef hwp_atim1
     if (htim->Instance == (GPT_TypeDef *)hwp_atim1)
         HAL_RCC_EnableModule(RCC_MOD_ATIM1);
-#endif
+#endif /* hwp_atim1 */
 #ifdef hwp_atim2
     if (htim->Instance == (GPT_TypeDef *)hwp_atim2)
         HAL_RCC_EnableModule(RCC_MOD_ATIM2);
-#endif
-
+#endif /* hwp_atim2 */
+#ifdef hwp_btim1
+    if (htim->Instance == (GPT_TypeDef *)hwp_btim1)
+        HAL_RCC_EnableModule(RCC_MOD_BTIM1);
+#endif /* hwp_btim1 */
+#ifdef hwp_btim2
+    if (htim->Instance == (GPT_TypeDef *)hwp_btim2)
+        HAL_RCC_EnableModule(RCC_MOD_BTIM2);
+#endif /* hwp_btim2 */
+#ifdef hwp_btim3
+    if (htim->Instance == (GPT_TypeDef *)hwp_btim3)
+        HAL_RCC_EnableModule(RCC_MOD_BTIM3);
+#endif /* hwp_btim3 */
+#ifdef hwp_btim4
+    if (htim->Instance == (GPT_TypeDef *)hwp_btim4)
+        HAL_RCC_EnableModule(RCC_MOD_BTIM4);
+#endif /* hwp_btim4 */
 
     /* Check the parameters */
     HAL_ASSERT(IS_GPT_INSTANCE(htim->Instance));
