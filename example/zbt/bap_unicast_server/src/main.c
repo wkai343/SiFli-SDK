@@ -647,17 +647,9 @@ static void stream_recv_lc3_codec(struct bt_bap_stream *stream,
             }
         }
         uint32_t ns = LC3_NS(lc3_decoder->dt, lc3_decoder->sr_pcm);
-        if (!client)
-        {
-            audio_parameter_t pa = {0};
 
-            pa.write_samplerate = (lc3_decoder->sr_pcm - LC3_SRATE_8K + 1) * 8000;
-            pa.write_channnel_num = 1;
-            pa.write_cache_size = 16000;
-            client = audio_open(AUDIO_TYPE_BT_MUSIC, AUDIO_TX, &pa, NULL, &client);
-            RT_ASSERT(client);
-        }
-        audio_write(client, (uint8_t *)audio_buf, ns * 2);
+        if (client)
+            audio_write(client, (uint8_t *)audio_buf, ns * 2);
     }
 
 
@@ -911,6 +903,16 @@ int main(void)
     pa.read_cache_size = 0;
     pa.write_cache_size = 16000;
 
+    if (!client)
+    {
+        audio_parameter_t pa = {0};
+
+        pa.write_samplerate = (lc3_decoder->sr_pcm - LC3_SRATE_8K + 1) * 8000;
+        pa.write_channnel_num = 1;
+        pa.write_cache_size = 16000;
+        client = audio_open(AUDIO_TYPE_BT_MUSIC, AUDIO_TX, &pa, NULL, &client);
+        RT_ASSERT(client);
+    }
     printk("Bluetooth initialized\n");
 
     bt_bap_unicast_server_register(&param);
