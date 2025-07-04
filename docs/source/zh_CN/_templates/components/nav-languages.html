@@ -1,0 +1,92 @@
+{%- if languages -%}
+<div class="nav-languages">
+  <button type="button">
+    <span class="md:hidden">{{ _("Translations") }}</span>
+    <iconify-icon icon="lucide:languages"></iconify-icon>
+  </button>
+  <div class="nav-languages-choices">
+    <ul>
+      {%- for item in languages -%}
+        <li><a href="#" data-lang="{{ item[2] }}" class="language-switch">{{ item[0] }}</a></li>
+      {%- endfor -%}
+    </ul>
+  </div>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const languageSwitches = document.querySelectorAll('.language-switch');
+    
+    // 从Sphinx上下文获取当前版本和芯片信息
+    const currentVersion = '{{ current_version }}';
+    const currentChip = '{{ current_chip }}';
+    const currentLang = '{{ language }}';
+    
+    languageSwitches.forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const targetLang = this.getAttribute('data-lang');
+            if (targetLang === currentLang) {
+                return; // 如果点击的是当前语言，不做任何操作
+            }
+            
+            const currentUrl = window.location.href;
+            const url = new URL(currentUrl);
+            const currentPath = url.pathname;
+            
+            let newPath;
+            
+            // 获取当前页面相对于文档根目录的路径
+            // 需要找到版本和芯片在路径中的位置，然后提取页面路径
+            const pathParts = currentPath.split('/').filter(part => part !== '');
+            
+            // 查找版本和芯片在路径中的位置
+            let versionIndex = -1;
+            let chipIndex = -1;
+            
+            for (let i = 0; i < pathParts.length; i++) {
+                if (pathParts[i] === currentVersion) {
+                    versionIndex = i;
+                    break;
+                }
+            }
+            
+            if (versionIndex >= 0 && versionIndex + 1 < pathParts.length) {
+                if (pathParts[versionIndex + 1] === currentChip) {
+                    chipIndex = versionIndex + 1;
+                }
+            }
+            
+            // 提取页面路径（版本和芯片之后的部分）
+            let pagePath = 'index.html';
+            if (chipIndex >= 0 && chipIndex + 1 < pathParts.length) {
+                pagePath = pathParts.slice(chipIndex + 1).join('/');
+            }
+            
+            // 构建base路径（版本之前的部分）
+            let basePath = '';
+            if (versionIndex > 0) {
+                basePath = '/' + pathParts.slice(0, versionIndex).join('/');
+            }
+            
+            // 构建新的完整路径
+            if (targetLang === 'zh_CN') {
+                // 切换到中文：不包含语言前缀
+                newPath = `${basePath}/${currentVersion}/${currentChip}/${pagePath}`;
+            } else {
+                // 切换到其他语言：包含语言前缀
+                newPath = `${basePath}/${targetLang}/${currentVersion}/${currentChip}/${pagePath}`;
+            }
+            
+            // 构建完整的新URL
+            const newUrl = new URL(newPath, url.origin);
+            
+            // 跳转到新URL
+            window.location.href = newUrl.href;
+        });
+    });
+});
+</script>
+{%- endif -%}
