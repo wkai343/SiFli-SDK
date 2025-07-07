@@ -733,7 +733,7 @@ static void ble_app_advertising_start(void)
     #endif
 #endif
 #ifdef HID_KEYBOARD
-static void key_button_handler(int pin, button_action_t action)
+static void key_button_handler(int32_t pin, button_action_t action)
 {
     uint8_t hid_code = key_mapping_table[0].hid_code;
     switch (action)
