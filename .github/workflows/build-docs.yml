@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - main
-      - 'release/**'
+      - 'release/*'
     paths:
       - 'docs/**'
+    tags:
+      - '*'
   workflow_dispatch:  # 允许手动触发
 
 jobs:
@@ -26,6 +28,11 @@ jobs:
           elif [[ "${{ github.ref }}" =~ refs/heads/release/(.*) ]]; then
             VERSION=${BASH_REMATCH[1]}
             echo "VERSION=${VERSION}" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref }}" =~ refs/tags/(.*) ]]; then
+            VERSION=${BASH_REMATCH[1]}
+            echo "VERSION=${VERSION}" >> $GITHUB_OUTPUT
+          else
+            echo "VERSION=unknown" >> $GITHUB_OUTPUT
           fi
 
       - name: Checkout code
