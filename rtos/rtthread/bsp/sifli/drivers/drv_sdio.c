@@ -73,7 +73,9 @@
         #define SDIO_USING_DMA          (1)
     #endif  //SDMMC2_DMA_INSTANCE
 #endif  //SOC_SF32LB52X
-
+#ifndef SDIO_USING_DMA
+    #error "SDIO_USING_DMA must be defined,the DMA function of sdio must be enabled"
+#endif
 int rt_hw_sdio_init(void);
 
 static struct sifli_sdio_config sdio_config = SDIO_BUS_CONFIG;
@@ -603,7 +605,7 @@ static void rthw_sdio_send_command(struct rthw_sdio *sdio, struct sdio_pkg *pkg)
     {
         volatile rt_uint32_t count = SDIO_TX_RX_COMPLETE_TIMEOUT_LOOPS;
         //LOG_D("before data: 0x%08x\n",HAL_SDMMC_GET_STA(hw_sdio));
-
+        int dma_res;
 #ifndef SDIO_USING_DMA
         rthw_sdio_transfer_by_cpu(sdio, pkg);
 
@@ -617,7 +619,10 @@ static void rthw_sdio_send_command(struct rthw_sdio *sdio, struct sdio_pkg *pkg)
         }
 #else
         if (data->flags & DATA_DIR_WRITE)
-            HAL_DMA_PollForTransfer(&sdio_obj.dma.handle_tx, HAL_DMA_FULL_TRANSFER, 1000);
+            dma_res = HAL_DMA_PollForTransfer(&sdio_obj.dma.handle_tx, HAL_DMA_FULL_TRANSFER, 1000);
+        else if (data->flags & DATA_DIR_READ)
+            dma_res = HAL_DMA_PollForTransfer(&sdio_obj.dma.handle_rx, HAL_DMA_FULL_TRANSFER, 1000);
+        if (HAL_OK != dma_res) LOG_D("sdio !!! dma_res error %d\n", dma_res);
 #endif
         //LOG_D("after data: 0x%08x\n",HAL_SDMMC_GET_STA(hw_sdio));
         while (count && (HAL_SDMMC_GET_STA(hw_sdio) & (HW_SDIO_IT_TXACT)))
