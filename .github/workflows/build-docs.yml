@@ -58,11 +58,17 @@ jobs:
           sudo apt-get install -y doxygen
           pip install coscmd
 
-      - name: Build documentation for ${{ matrix.variant }}
+      - name: Build zh_CN documentation for ${{ matrix.variant }}
         working-directory: ./docs
         env:
           SIFLI_DOC_VERSION: ${{ steps.determine-version.outputs.VERSION }}
-        run: python generate_docs.py ${{ matrix.variant }}
+        run: python generate_docs.py --lang=zh_CN ${{ matrix.variant }}
+      
+      - name: Build en documentation for ${{ matrix.variant }}
+        working-directory: ./docs
+        env:
+          SIFLI_DOC_VERSION: ${{ steps.determine-version.outputs.VERSION }}
+        run: python generate_docs.py --lang=en ${{ matrix.variant }}
 
       - name: Configure COSCMD
         run: |
@@ -72,7 +78,8 @@ jobs:
         run: |
           VERSION=${{ steps.determine-version.outputs.VERSION }}
           if [ -d "./docs/build_${{ matrix.variant }}/html" ]; then
-            coscmd upload -rs --delete --yes ./docs/build_${{ matrix.variant }}/html/ projects/sdk/$VERSION/sf32lb${{ matrix.variant }}/
+            coscmd upload -rs --delete --yes ./docs/build/zh_CN/${{ matrix.variant }}/html/ projects/sdk/$VERSION/sf32lb${{ matrix.variant }}/
+            coscmd upload -rs --delete --yes ./docs/build/en/${{ matrix.variant }}/html/ projects/sdk/$VERSION/en/sf32lb${{ matrix.variant }}/
             echo "Uploaded documentation for ${{ matrix.variant }} to $VERSION/sf32lb${{ matrix.variant }}/"
           else
             echo "Warning: Build directory for ${{ matrix.variant }} not found"

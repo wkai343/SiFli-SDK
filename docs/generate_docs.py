@@ -64,33 +64,6 @@ def make_html(chip, lang):
     output_dir = get_build_dir(chip, lang)
     run_command(f'sphinx-build -M html source/{lang} {output_dir} -t {arg_mapping[chip]["tag"]} -j 8')
 
-
-def copy_to_output(chip, lang):
-    print(f"Copying HTML documentation for {chip} to output directory...")
-    source_dir = os.path.join(get_build_dir(chip, lang), 'html')
-    if lang == 'zh_CN':
-        lang = '.'
-    if chip == '52x':
-        output_dir = os.path.join('output', lang, 'sf32lb52x')
-    elif chip == '55x':
-        output_dir = os.path.join('output', lang, 'sf32lb55x')
-    elif chip == '56x':
-        output_dir = os.path.join('output', lang, 'sf32lb56x')
-    elif chip == '58x':
-        output_dir = os.path.join('output', lang, 'sf32lb58x')
-
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
-    
-    if os.path.exists(source_dir):
-        for item in os.listdir(source_dir):
-            s = os.path.join(source_dir, item)
-            d = os.path.join(output_dir, item)
-            if os.path.isdir(s):
-                shutil.copytree(s, d, dirs_exist_ok=True)
-            else:
-                shutil.copy2(s, d)
-
 def copy_templates(chip, lang):
     print(f"Copying templates for {chip}...")
     source_templates_dir = os.path.join('source', '_templates')
@@ -119,9 +92,6 @@ def main(chip, lang):
     # Step 3: Build HTML documentation
     copy_templates(chip, lang)
     make_html(chip, lang)
-
-    # Step 4: Copy HTML documentation to output directory
-    copy_to_output(chip, lang)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Generate documentation for specified board.')
