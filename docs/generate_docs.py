@@ -68,6 +68,8 @@ def make_html(chip, lang):
 def copy_to_output(chip, lang):
     print(f"Copying HTML documentation for {chip} to output directory...")
     source_dir = os.path.join(get_build_dir(chip, lang), 'html')
+    if lang == 'zh_CN':
+        lang = '.'
     if chip == '52x':
         output_dir = os.path.join('output', lang, 'sf32lb52x')
     elif chip == '55x':
@@ -89,6 +91,23 @@ def copy_to_output(chip, lang):
             else:
                 shutil.copy2(s, d)
 
+def copy_templates(chip, lang):
+    print(f"Copying templates for {chip}...")
+    source_templates_dir = os.path.join('source', '_templates')
+    target_templates_dir = os.path.join('source', lang, '_templates')
+    
+    if not os.path.exists(target_templates_dir):
+        os.makedirs(target_templates_dir)
+    
+    if os.path.exists(source_templates_dir):
+        for item in os.listdir(source_templates_dir):
+            s = os.path.join(source_templates_dir, item)
+            d = os.path.join(target_templates_dir, item)
+            if os.path.isdir(s):
+                shutil.copytree(s, d, dirs_exist_ok=True)
+            else:
+                shutil.copy2(s, d)
+
 def main(chip, lang):
     # Step 1: Generate Doxygen XML
     generate_doxygen_xml(chip)
@@ -98,6 +117,7 @@ def main(chip, lang):
     copy_example_doc.main("../example", f"source/{lang}/example")
 
     # Step 3: Build HTML documentation
+    copy_templates(chip, lang)
     make_html(chip, lang)
 
     # Step 4: Copy HTML documentation to output directory

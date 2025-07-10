@@ -2,3 +2,5 @@ doxygen/
 output/
 source/zh_CN/example/
 source/en/example/
+source/zh_CN/_templates
+source/en/_templates
