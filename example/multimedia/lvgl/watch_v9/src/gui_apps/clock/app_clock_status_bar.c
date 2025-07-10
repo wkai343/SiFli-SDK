@@ -325,10 +325,7 @@ void app_clock_status_bar_init_font(void)
         chinese_font = lv_tiny_ttf_create_data(droid_sans_fallback_font, droid_sans_fallback_font_size, 24);
     }
 
-    if (!droid_sans_fallback_font)
-    {
-        return;
-    }
+
     for (uint32_t i = 0; i < ARRAY_SIZE(notify_msgs); i++)
     {
         uint8_t size = notify_msgs[i].dynamic_title_font_size;
