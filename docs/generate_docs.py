@@ -2,7 +2,7 @@ import subprocess
 import argparse
 import os
 import shutil
-import copy_example_doc
+from copy_example_doc import ExampleDocCopier
 
 def run_command(command, cwd=None):
     result = subprocess.run(command, shell=True, cwd=cwd)
@@ -87,7 +87,8 @@ def main(chip, lang):
 
     # Step 2: Copy example documents
     print("Copying example documents...")
-    copy_example_doc.main("../example", f"source/{lang}/example")
+    copier = ExampleDocCopier(lang)
+    copier.copy_example_docs("../example", f"source/{lang}/example")
 
     # Step 3: Build HTML documentation
     copy_templates(chip, lang)
