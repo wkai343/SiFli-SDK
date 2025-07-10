@@ -22,7 +22,7 @@
 - `sf32lb52-nano_52b`：表示型号为 SF32LB52 的 Nano 版本开发板，使用 4MB 的 SPI NOR 存储器。
 - `sf32lb56-lcd_a128r12n1`：表示型号为 SF32LB56 的 LCD 版本开发板，使用 128MB 的 SPI NAND 存储器、12MB 的 SPI PSRAM 存储器和 1MB 的 SPI NOR 存储器。
 
-```{image} assets/folder.png
+```{image} ../../assets/folder.png
 :scale: 70%
 ```
 

@@ -20,7 +20,7 @@
 ## Scheduling Between Pages
 For AppA and AppB, each having three pages, labeled A1~A3 and B1~B3 respectively, the diagram below shows the final state of each page in various scheduling scenarios (Note: the transition states are ignored here).
 
-![Figure 1: Scheduling Between Pages](/docs/source/assets/app_fsm.png)
+![Figure 1: Scheduling Between Pages](../../assets/app_fsm.png)
 
 ## Page State Machine and State Implementation Guidelines
 - **entryfunction()**: The function that starts the page. If no parameters are needed, this step can be merged with `on_start`.
@@ -43,7 +43,7 @@ For AppA and AppB, each having three pages, labeled A1~A3 and B1~B3 respectively
     - Release memory.
     - Created `lv` controls will be automatically deleted, no need for manual deletion.
 
-![Figure 2: Page Internal State Machine](/docs/source/assets/app_page_fsm.png)
+![Figure 2: Page Internal State Machine](../../assets/app_page_fsm.png)
 
 ### Additional Handling Functions:
 - **xxx_service_callback()**: The handler for services subscribed within the page. @see data_service

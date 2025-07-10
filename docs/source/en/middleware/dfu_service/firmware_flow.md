@@ -8,14 +8,14 @@ After Bootrom jumps to OTA manager, it will act according to the current state: 
 
 The starting address of the user project and the Upgrade bin address where firmware upgrade packages are stored can be configured through the project's _memory_map.h_ and _custom_memory_map.h_. It is recommended to place the Upgrade bin at the end of Flash.
 
- ![](/docs/source/assets/ota_flash_layout.png)
+ ![](../../../assets/ota_flash_layout.png)
 
 
 ## Process Overview
 
 The diagram below illustrates the basic OTA process. A complete OTA upgrade file contains _ctrl_packet.bin_ with verification information, followed by firmware packages, resource packages, and font packages.
 
-![](/docs/source/assets/ota_flow.png)
+![](../../../assets/ota_flow.png)
 
 
 - Step 1. The remote device sends _ctrl_packet.bin_ to user bin to confirm whether OTA can proceed. If yes, continue to step 2
@@ -38,12 +38,12 @@ The diagram below illustrates the basic OTA process. A complete OTA upgrade file
 
 User project configuration:
 - Both cores need configuration:
-    ![](/docs/source/assets/ota_hcpu_config1.png)
-    ![](/docs/source/assets/ota_hcpu_config2.png)
+    ![](../../../assets/ota_hcpu_config1.png)
+    ![](../../../assets/ota_hcpu_config2.png)
 - LCPU configuration:
     If BLE service is on LCPU, LCPU port service needs to be configured so that OTA manager can obtain BLE data
-    ![](/docs/source/assets/ota_lcpu_config1.png)
+    ![](../../../assets/ota_lcpu_config1.png)
 
 OTA Manager project configuration:
 - In addition to the content that both cores need to configure in the user project, zlib also needs to be added
-    ![](/docs/source/assets/ota_lcpu_config2.png)
+    ![](../../../assets/ota_lcpu_config2.png)

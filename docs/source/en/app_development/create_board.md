@@ -11,11 +11,11 @@ The steps are as follows:
 
 3. Modify `testboard_525/SConscript`, changing the macro names in locations 1 and 2 to the new board's name, and change the SConscript file path referenced in location 3 to `testboard_525_base`.
 
-    ![Alt text](/assets/create_board_sconscript.png)`
+    ![Alt text](../../assets/create_board_sconscript.png)`
 
     The modified code looks like this:
 
-    ![Alt text](/assets/create_board_sconscript_new.png)
+    ![Alt text](../../assets/create_board_sconscript_new.png)
 
 4. Modify the board macros in `testboard_525/hcpu/Kconfig.board` and `testboard_525/lcpu/Kconfig.board` to match the names from the previous step. The modified code is as follows:
     ```{code-block} kconfig

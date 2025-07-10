@@ -23,7 +23,7 @@ Some typical examples:
 - `sf32lb52-nano_52b`: Indicates the Nano version development board of model SF32LB52, using 4MB SPI NOR memory.
 - `sf32lb56-lcd_a128r12n1`: Indicates the LCD version development board of model SF32LB56, using 128MB SPI NAND memory, 12MB SPI PSRAM memory, and 1MB SPI NOR memory.
 
-```{image} assets/folder.png
+```{image} ../../assets/folder.png
 :scale: 70%
 ```
 

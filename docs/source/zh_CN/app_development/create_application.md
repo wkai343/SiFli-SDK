@@ -4,7 +4,7 @@
 ## 拷贝例程
 1. 拷贝示例：将`example/get-started/hello_world/rtt`拷贝到任意目录，比如`c:\work\ws\hello_world`，
 
-    ```{image} assets/app_folder.png
+    ```{image} ../../assets/app_folder.png
     :scale: 70%
     ```
 
@@ -30,7 +30,7 @@
 1. 打开Env命令行窗口：在SDK根目录右键菜单打开Env命令行窗口，运行`set_env gcc`设置环境参数
 1. 进入到工程目录：`cd c:\work\ws\hello_world\project`切换路径到拷贝的示例工程目录
 1. 编译：`scons --board=sf32lb52-lcd_n16r8 -j8`，这里选择的板子为`sf32lb52-lcd_n16r8`，参考[](/supported_boards/index.md)
-    ```{image} ./assets/create_app_and_build.png
+    ```{image} ../../assets/create_app_and_build.png
     ```
 1. 烧写：`build_sf32lb52-lcd_n16r8_hcpu\uart_download`    
 
@@ -75,7 +75,7 @@ int main(void)
 ```
 修改之后编译并下载程序，连接串口调试工具，复位后可以看到如图的打印输出
 
-```{image} assets/print_log.png
+```{image} ../../assets/print_log.png
 :scale: 70%
 ```
 
@@ -99,7 +99,7 @@ hello_world例程只有最简单的打印功能，很多组件都没有使能，
 
 执行menuconfig后打开如图的界面，可以使用{kbd}`⇧`和{kbd}`⇩`方向键在不同菜单项间移动，按{kbd}`Enter`键进入子菜单，按{kbd}`Space`选中菜单项，确认修改都完成后，按{kbd}`D`保存最小配置到工程目录下的`proj.conf`文件中（即`project\proj.conf`），该文件为文本文件，可以打开查看修改前后的差异，menuconfig的详细用法参见[](/app_note/menuconfig.md)
 
-```{image} assets/menuconfig.png
+```{image} ../../assets/menuconfig.png
 ```
 
 更详细的配置与编译机制请阅读[](build_and_configuration.md)

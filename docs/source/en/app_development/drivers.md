@@ -1,7 +1,7 @@
 # Chip Peripheral Drivers
 
 As shown in the software architecture diagram, the development framework provides two sets of chip peripheral driver interfaces: one is the HAL interface, and the other is the RT-Thread device driver interface.
-![sdk arch](../quickstart/assets/sdk_arch_diagram.png)
+![sdk arch](../../assets/sdk_arch_diagram.png)
 
 The HAL interface does not use operating system services and provides all the functionality supported by the chip peripherals. It requires the user to implement interrupt service routines. The HAL interface is compatible across different chip families. Most HAL interfaces offer both synchronous (polling) and asynchronous versions.
 

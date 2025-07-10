@@ -8,14 +8,14 @@ Bootrom跳转到OTA manager以后，再根据当前状态：若不需要升级�
 
 用户工程的起始地址、固件升级包存放的Upgrade bin地址均可通过工程的 _memory_map.h_ 、 _custom_memory_map.h_ 进行配置。Upgrade bin建议放在Flash的最后。
 
- ![](assets/ota_flash_layout.png)
+ ![](../../../assets/ota_flash_layout.png)
 
 
 ## 流程简介
 
 下图介绍了OTA的基本流程。完整的OTA升级文件包含携带验证信息的 _ctrl_packet.bin_ 以及随后的固件包，资源包和字体包。
 
-![](assets/ota_flow.png)
+![](../../../assets/ota_flow.png)
 
 
 - 步骤1. 远端设备将 _ctrl_packet.bin_ 传给user bin来确认是否可以进行OTA，如果可以，继续步骤2
@@ -38,12 +38,12 @@ Bootrom跳转到OTA manager以后，再根据当前状态：若不需要升级�
 
 用户工程配置：
 - 双核均需要配置：
-    ![](assets/ota_hcpu_config1.png)
-    ![](assets/ota_hcpu_config2.png)
+    ![](../../../assets/ota_hcpu_config1.png)
+    ![](../../../assets/ota_hcpu_config2.png)
 - LCPU配置：
     如果ble service放在LCPU，需要配置LCPU的port service以便于OTA manager能获取到BLE数据
-    ![](assets/ota_lcpu_config1.png)
+    ![](../../../assets/ota_lcpu_config1.png)
 
 OTA Manager工程配置：
 - 除了用户工程双核均需配置的内容为，还需要加入zlib
-    ![](assets/ota_lcpu_config2.png)
+    ![](../../../assets/ota_lcpu_config2.png)

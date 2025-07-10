@@ -7,7 +7,7 @@ The fastest way to create an application is to copy an existing example. Below, 
 
 1. Copy the example: Copy the `example/get-started/hello_world/rtt` directory to any desired location, such as `c:\work\ws\hello_world`.
 
-    ```{image} assets/app_folder.png
+    ```{image} ../../assets/app_folder.png
     :scale: 70%
     ```
 
@@ -31,7 +31,7 @@ The fastest way to create an application is to copy an existing example. Below, 
 3. Change to the project directory: `cd c:\work\ws\hello_world\project` to switch to the copied example project directory.
 4. Compile: `scons --board=sf32lb52-lcd_n16r8 -j8`. The selected board is `sf32lb52-lcd_n16r8`, refer to [supported_boards/index.md](../supported_boards/index.md).
     
-    ![Alt text](/assets/create_app_and_build.png)`
+    ![Alt text](../../assets/create_app_and_build.png)`
 5. Flash: `build_sf32lb52-lcd_n16r8_hcpu\uart_download`.
 
 At this point, a new `hello_world` program has been created, and the compilation and flashing methods for the new project are identical to those of the SDK’s built-in examples.
@@ -78,7 +78,7 @@ int main(void)
 
 After modifying the code, compile and download the program. Connect the serial port debugging tool, reset the device, and you will see the printed output as shown in the image.
 
-```{image} assets/print_log.png
+```{image} ../../assets/print_log.png
 :scale: 70%
 ```
 
@@ -103,6 +103,6 @@ To modify the configuration, run `menuconfig --board=<board_name>` in the projec
 
 After executing `menuconfig`, a screen like the following will appear. You can use the {kbd}`⇧` and {kbd}`⇩` arrow keys to navigate between menu items, press {kbd}`Enter` to enter submenus, and press {kbd}`Space` to select menu items. Once all changes are complete, press {kbd}`D` to save the minimal configuration to the `proj.conf` file in the project directory (`project\proj.conf`). This file is a text file and can be opened to view the differences before and after modifications. For detailed usage of `menuconfig`, refer to [menuconfig.md](../app_note/menuconfig.md).
 
-![Alt text](/assets/menuconfig.png)`
+![Alt text](../../assets/menuconfig.png)`
 
 For more detailed information on configuration and compilation mechanisms, please read [build_and_configuration.md](build_and_configuration.md).

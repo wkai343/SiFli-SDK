@@ -1,6 +1,6 @@
 # 芯片外设驱动
 如软件架构图所示，开发框架提供了两套芯片外设驱动接口，一个是HAL接口，另一个是RT-Thread设备驱动接口。
-![sdk arch](/quickstart/assets/sdk_arch_diagram.png)
+![sdk arch](../../assets/sdk_arch_diagram.png)
 
 HAL接口不使用操作系统服务，提供了所有芯片外设支持的功能，需要用户实现中断服务程序，不同芯片系列的HAL接口兼容。大部分HAL接口都提供了同步（轮询）与异步两套接口。
 

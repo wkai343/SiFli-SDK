@@ -59,7 +59,7 @@ SF32LB52X为双核芯片，有内置和外置多个存储接口，MPI1为内置�
 ### ResetHandler 
 应用程序的入口函数为`ResetHandler`（位于`drivers\cmsis\sf32lb52x\Templates\arm\startup_bf0_hcpu.S`），其执行流程如下图所示，用户主函数`main`则由`rt_application_init`创建的main线程调用，见{ref}`main_thread_entry流程 <main_thread_entry_flow>`。
 
-```{image} assets/ResetHandler.png
+```{image} ../../assets/ResetHandler.png
 :alt: reset_handler_flow
 :name: reset_handler_flow
 ```
@@ -68,7 +68,7 @@ SF32LB52X为双核芯片，有内置和外置多个存储接口，MPI1为内置�
 ### SystemInit
 `SystemInit`（在文件`drivers/cmsis/sf32lb52x/Templates/system_bf0_ap.c`里）在变量初始化之前执行（因此这期间不能使用带初值的变量，零段变量也要避免依赖于初值0），更新VTOR寄存器重定向中断向量表，调用`mpu_config`和`cache_enable`初始化MPU并使能Cache，这两个函数为weak函数，应用程序中可以重新实现来替换默认的实现。
 
-```{image} assets/SystemInit.png
+```{image} ../../assets/SystemInit.png
 :alt: system_init_flow
 :name: system_init_flow
 ```
@@ -76,7 +76,7 @@ SF32LB52X为双核芯片，有内置和外置多个存储接口，MPI1为内置�
 ### rt_hw_board_init
 `rt_hw_board_init`完成底层硬件初始化，例如时钟和IO配置，PSRAM和NOR Flash初始化，heap和串口console的初始化。`rt_components_board_init`是应用程序自定义的初始化函数，随应用程序配置的不同而调用不同的函数。
 
-```{image} assets/rt_hw_board_init.png
+```{image} ../../assets/rt_hw_board_init.png
 :alt: rt_hw_board_init
 :name: rt_hw_board_init
 ```
@@ -87,7 +87,7 @@ SF32LB52X为双核芯片，有内置和外置多个存储接口，MPI1为内置�
 `HAL_Init`完成HAL初始化，加载PMU的校准参数，更新时钟、IO设置， 初始化PSRAM和NOR Flash（根据新的时钟配置），下图中绿色函数为板级驱动函数，每个板子有独立的实现，包括`HAL_PreInit`、`BSP_IO_Init`、`BSP_PIN_Init`和`BSP_Power_Up`等，灰色函数为虚函数，由应用程序实现（也可以不实现），独立于板子，目的是相同板子不同的应用程序可以有自定义的实现，比如不同应用程序在同一块板子上使用不同的IO配置。流程图中横向为函数内的嵌套调用子函数，比如`HAL_PreInit`调用了时钟配置的函数，`HAL_MspInit`调用`BSP_IO_Init`，纵向为串行执行的几个函数，如`HAL_PreInit`执行完再执行`HAL_PostMspInit`。
 
 
-```{image} assets/hal_init.png
+```{image} ../../assets/hal_init.png
 :alt: hal_init_flow
 :name: hal_init_flow
 ```
@@ -122,7 +122,7 @@ Config Clock修改的设置包括：
 `rt_application_init`中创建main线程，线程入口函数为`main_thread_entry`，当放开线程调度后（即调用`rt_system_scheduler_start`之后），main线程得到调度，进入`main_thread_entry`函数，先调用`rt_components_init`初始化组件，随后即调用main函数（应用程序实现），用户代码即从main函数开始，比如rt\_driver示例的主函数在`example/rt_driver/src/main.c`中。
 
 
-```{image} assets/main_thread_entry.png
+```{image} ../../assets/main_thread_entry.png
 :alt: main_thread_entry_flow
 :name: main_thread_entry_flow
 ```
