@@ -32,3 +32,13 @@ After passing the testing process, your contribution will be merged into the pub
 ## Legal Compliance
 
 Before submitting contributions, you need to sign the Contributor License Agreement (CLA). The agreement will be automatically prompted during the Pull Request process.
+
+## Related Documents
+
+```{toctree}
+:maxdepth: 1
+
+coding_style
+creating-examples
+
+```
