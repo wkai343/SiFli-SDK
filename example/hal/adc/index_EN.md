@@ -1,4 +1,4 @@
-# 看门狗
+# ADC Example
 
 ```{toctree}
 :titlesonly:

@@ -1,9 +1,8 @@
-# 看门狗
+# Games
 
 ```{toctree}
 :titlesonly:
 :glob:
 
 */*
-
 ```

@@ -8,6 +8,7 @@ class ExampleDocCopier:
     README_FILENAME = "README.md"
     README_EN_FILENAME = "README_EN.md"
     INDEX_FILENAME = "index.md"
+    INDEX_EN_FILENAME = "index_EN.md"
     
     def __init__(self, lang='zh_CN'):
         self.lang = lang
@@ -44,7 +45,15 @@ class ExampleDocCopier:
         print("mkdir: {}".format(target_dir))
         os.makedirs(target_dir, exist_ok=True)
 
-        print("copy {}".format(self.INDEX_FILENAME))    
+        if self.lang != 'zh_CN':
+            if os.path.exists(os.path.join(src, self.INDEX_EN_FILENAME)):
+                indexfile_path = os.path.join(src, self.INDEX_EN_FILENAME)
+                print("copy {}".format(self.INDEX_EN_FILENAME))
+                target_dir = os.path.join(target_dir, self.INDEX_FILENAME)
+                shutil.copy(indexfile_path, target_dir)
+                return
+
+        print("copy {}".format(self.INDEX_FILENAME))
         shutil.copy(indexfile_path, target_dir)
 
     def is_project_root_dir(self, path):

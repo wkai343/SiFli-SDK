@@ -1,4 +1,4 @@
-# AGIF示例
+# AGIF
 ```{toctree}
 :titlesonly:
 :glob:

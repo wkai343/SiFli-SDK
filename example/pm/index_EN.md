@@ -1,9 +1,8 @@
-# 看门狗
+# Powermanagement
 
 ```{toctree}
 :titlesonly:
 :glob:
 
 */*
-
 ```

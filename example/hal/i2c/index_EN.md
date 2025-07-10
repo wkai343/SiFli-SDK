@@ -1,4 +1,4 @@
-# 看门狗
+# I2C Example
 
 ```{toctree}
 :titlesonly:

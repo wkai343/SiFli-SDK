@@ -1,9 +1,7 @@
-# 看门狗
-
+# Multicore
 ```{toctree}
 :titlesonly:
 :glob:
 
 */*
-
 ```
