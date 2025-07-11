@@ -534,7 +534,7 @@ static inline audio_server_t *get_server()
 uint8_t get_server_current_device(void)
 {
     if (ble_bap_src_enabled)
-        return AUDIO_DEVICE_A2DP_SINK;
+        return AUDIO_DEVICE_BLE_BAP_SINK;
 
     return current_audio_device;
 }
