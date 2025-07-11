@@ -2675,7 +2675,7 @@ def AddLCPU(SIFLI_SDK, chip,target_file=None):
         proj_path = None
         proj_path = os.path.join(SIFLI_SDK, 'example/ble/lcpu_general/project/common')
         lcpu_proj_name = 'lcpu'
-        AddChildProj(lcpu_proj_name, proj_path, True, core="LCPU")
+        return AddChildProj(lcpu_proj_name, proj_path, True, core="LCPU")
     elif "SF32LB55X" == chip:
         import rtconfig
         if target_file != None:
@@ -2691,7 +2691,7 @@ def AddLCPU(SIFLI_SDK, chip,target_file=None):
                 shutil.copy(os.path.join(SIFLI_SDK, 'example/rom_bin/lcpu_general_ble_img/lcpu_general_6600.c'), target_file)
             elif "SS6600_A3"==rtconfig.PACKAGE:
                 shutil.copy(os.path.join(SIFLI_SDK, 'example/rom_bin/lcpu_general_ble_img/lcpu_general_6600_a3.c'), target_file)
-            
+        return None   
 # For parent project, BSP_Root should be None
 def SifliEnv(BSP_Root = None):
     import rtconfig
