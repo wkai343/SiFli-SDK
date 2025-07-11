@@ -50,11 +50,6 @@
 #include "sensor.h"
 #include "gh3011_example.h"
 
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 uint32_t gh3011_get_i2c_handle(void);
 
 uint8_t gh3011_get_dev_addr(void);
@@ -72,8 +67,3 @@ int close_gh3011(void);
 
 #endif  // GOODIX_GH3011_H__
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
-
-
-#ifdef __cplusplus
-}
-#endif

@@ -63,11 +63,6 @@
 #if defined(BSP_USING_DATA_SVC)||defined(_SIFLI_DOXYGEN_)
 
 /** Data service */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 typedef struct data_service_mq_tag
 {
     //uint8_t hdl;
@@ -206,8 +201,3 @@ rt_err_t datac_ping(datac_handle_t handle, uint8_t mode);
 #endif
 
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
-
-
-#ifdef __cplusplus
-}
-#endif

@@ -159,11 +159,6 @@
 
 #define DFU_SECURE_PATTERN 0xA5
 
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 struct dfu_hdr
 {
     /** command, refer to #DFU_IMG_HDR_ENC  */
@@ -557,8 +552,3 @@ extern dfu_efuse_read_hook_t g_dfu_efuse_read_hook;
 #endif
 
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
-
-
-#ifdef __cplusplus
-}
-#endif

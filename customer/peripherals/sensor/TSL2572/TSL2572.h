@@ -93,11 +93,6 @@
 #define MAX_COUNT_27D3MS          (10240)   //
 #define MAX_COUNT_2D73MS          (1024)    //
 /***********************************************************************************/
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 int TSL2572_Init(void);
 uint32_t TSL2572_Read_Lux(void);
 void TSL2572_SET_InterruptThreshold(uint16_t SET_LOW, uint16_t SET_HIGH);
@@ -110,7 +105,3 @@ uint8_t TSL2572_Get_ID();
 void *TSL2572_Get_Bus();
 
 #endif  // _TSL2572_H_
-
-#ifdef __cplusplus
-}
-#endif

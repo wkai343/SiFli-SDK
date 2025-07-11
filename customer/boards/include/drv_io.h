@@ -55,11 +55,6 @@
  *
  * @retval None
  */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 void HAL_MspInit(void);
 
 /**
@@ -248,8 +243,3 @@ void BSP_GPIO_Set(int pin, int val, int is_porta);
 
 
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
-
-
-#ifdef __cplusplus
-}
-#endif

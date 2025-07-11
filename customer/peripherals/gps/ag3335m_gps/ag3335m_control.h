@@ -7,11 +7,6 @@
 
 #define GPS_MAX_CMD_BUFF_LEN  (352)
 
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 typedef enum
 {
     GPS_ENABLE_LOCUS = GPS_GENERAL_CMD_MAX,
@@ -29,8 +24,3 @@ void ag3335m_set_cmd_table(at_client_t client);
 void ag3335m_send_ex(char *cmd_buf);
 
 #endif /* _AT_AG3335M_CONTROL_H */
-
-
-#ifdef __cplusplus
-}
-#endif

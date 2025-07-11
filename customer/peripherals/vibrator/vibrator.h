@@ -59,11 +59,6 @@
  *
  * @return failed if < 0
  */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 rt_err_t vibrator_open();
 
 /**
@@ -86,8 +81,3 @@ rt_err_t vibrator_close();
 
 
 #endif /* __VIBRATOR_FY_H__ */
-
-
-#ifdef __cplusplus
-}
-#endif

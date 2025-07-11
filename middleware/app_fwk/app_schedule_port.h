@@ -28,11 +28,6 @@
 
 #define GUI_LIB_REFR_PERIOD_FLAG   (1<<30)
 #define GUI_LIB_REFR_PERIOD_CNT(x) (GUI_LIB_REFR_PERIOD_FLAG|(x))
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 screen_t port_app_sche_create_scr(void);
 void port_app_sche_del_scr(screen_t scr);
 void port_app_sche_load_scr(screen_t scr);
@@ -46,8 +41,3 @@ void port_app_sche_enable_indev(bool enable, bool expect_tp);
 
 #endif /* APP_SCHEDULE_PORT_H */
 
-
-
-#ifdef __cplusplus
-}
-#endif

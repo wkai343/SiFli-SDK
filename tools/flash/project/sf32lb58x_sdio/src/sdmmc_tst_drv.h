@@ -13,11 +13,6 @@
 
 #define SD_BLOCK_SIZE 512
 
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 enum resp
 {
     RESP_NONE = 0,
@@ -58,9 +53,4 @@ void sd_read(uint8_t wire_mode, uint8_t block_num);
 uint32_t sd_wait_read();
 uint32_t sd_tuning_emmc(uint8_t wire_mode, uint64_t *tuning_err);
 
-#endif
-
-
-#ifdef __cplusplus
-}
 #endif

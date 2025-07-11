@@ -2,11 +2,6 @@
 #define __SC7A20_DRIVER_H__
 
 
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 int Triaxial_Sensor_Init(void);
 void Triaxial_Sensor_Disable(void);
 void Triaxial_Sensor_Enable(void);
@@ -22,8 +17,3 @@ signed char Gsensor_Get_Gesture_status(void);
 
 #endif
 
-
-
-#ifdef __cplusplus
-}
-#endif

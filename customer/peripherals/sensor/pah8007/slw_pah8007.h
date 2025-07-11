@@ -13,11 +13,6 @@
 #include "sensor.h"
 
 
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 int pah8007_init(void);
 void *pah8007_get_bus(void);
 uint8_t pah8007_get_dev_addr(void);
@@ -28,8 +23,3 @@ unsigned char SL_PAH8007_I2c_Spi_Read(unsigned char reg, unsigned char len, unsi
 
 #endif  // SLW_SC7A20_H__
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
-
-
-#ifdef __cplusplus
-}
-#endif

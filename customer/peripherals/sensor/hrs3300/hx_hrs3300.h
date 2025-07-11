@@ -5,11 +5,6 @@
 #include <stdbool.h>
 
 #if defined(HR_USING_HRS3300)
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
     bool Hrs3300_write_reg(uint8_t addr, uint8_t data);
     uint8_t Hrs3300_read_reg(uint8_t addr);
     void Hrs3300_chip_enable(void);
@@ -26,8 +21,3 @@ extern "C" {
 #endif
 
 #endif // _HRS3300_H_
-
-
-#ifdef __cplusplus
-}
-#endif

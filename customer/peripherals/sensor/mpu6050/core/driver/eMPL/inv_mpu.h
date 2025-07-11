@@ -55,11 +55,6 @@
 #define INV_XYZ_ACCEL   (0x08)
 #define INV_XYZ_COMPASS (0x01)
 
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 struct int_param_s
 {
     void (*cb)(void);
@@ -155,8 +150,3 @@ int mpu_register_tap_cb(void (*func)(unsigned char, unsigned char));
 #endif  /* #ifndef _INV_MPU_H_ */
 
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
-
-
-#ifdef __cplusplus
-}
-#endif

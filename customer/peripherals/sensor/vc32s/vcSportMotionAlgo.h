@@ -39,11 +39,6 @@
 
 
 /* Function Declarations */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 extern float vcSportMotionCalculate(float x, float y, float z);
 void vcSportMotionAlgoInit(void);
 void vcSportMotionAlgoTerminate(void);
@@ -55,8 +50,3 @@ void vcSportMotionAlgoTerminate(void);
  *
  * [EOF]
  */
-
-
-#ifdef __cplusplus
-}
-#endif

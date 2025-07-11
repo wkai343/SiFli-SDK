@@ -10,11 +10,6 @@
 
 #define SD_BLOCK_SIZE 512
 
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 enum resp
 {
     RESP_NONE = 0,
@@ -58,9 +53,4 @@ int sdmmc_init();
 int sd_read_data(uint32_t addr, uint8_t *data, uint32_t len);
 
 
-#endif
-
-
-#ifdef __cplusplus
-}
 #endif

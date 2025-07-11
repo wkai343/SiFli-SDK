@@ -48,11 +48,6 @@
 
 #include "gps_types.h"
 
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 typedef struct
 {
     int             prn;
@@ -136,8 +131,3 @@ uint32_t gps_hal_get_uart(void);
 
 #endif
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
-
-
-#ifdef __cplusplus
-}
-#endif

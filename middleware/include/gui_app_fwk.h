@@ -76,11 +76,6 @@
 #endif
 
 
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 typedef int (*gui_app_entry_func_ptr_t)(intent_t i);
 typedef int16_t gui_anim_value_t;
 typedef lv_obj_t *gui_anim_obj_t;
@@ -313,8 +308,3 @@ extern void gui_builtin_app_list_close(const builtin_app_desc_t *ptr_app);
 
 #endif  /* __GUI_APP_FWK_H__ */
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
-
-
-#ifdef __cplusplus
-}
-#endif

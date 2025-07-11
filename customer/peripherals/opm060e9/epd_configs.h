@@ -1,11 +1,6 @@
 #ifndef __EPD_CONFIGS_H__
 #define __EPD_CONFIGS_H__
 
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 typedef enum
 {
     EPD_DRAW_MODE_INVALID = 0,
@@ -24,7 +19,3 @@ uint16_t epd_get_vcom_voltage(void);
 
 
 #endif /* __EPD_CONFIGS_H__ */
-
-#ifdef __cplusplus
-}
-#endif

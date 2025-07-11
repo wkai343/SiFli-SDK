@@ -55,11 +55,6 @@
 #include "bf0_sibles_advertising.h"
 #include "ble_connection_manager.h"
 
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 typedef struct
 {
     uint8_t is_power_on;
@@ -108,8 +103,4 @@ extern void ble_app_service_init(void);
 extern void ble_app_advertising_start(void);
 #define APP_TIMEOUT_INTERVAL (5000)
 
-#endif
-
-#ifdef __cplusplus
-}
 #endif

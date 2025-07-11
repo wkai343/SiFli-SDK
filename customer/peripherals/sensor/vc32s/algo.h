@@ -5,11 +5,6 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 typedef enum
 {
     SPORT_TYPE_NORMAL = 0x00,       // 日常
@@ -75,8 +70,3 @@ uint8_t vc32s_get_wear_status(void);
 
 
 
-
-
-#ifdef __cplusplus
-}
-#endif

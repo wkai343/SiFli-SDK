@@ -82,11 +82,6 @@
         *
         * @return 0: OK, >0: ERROR
         */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
         uint8_t lcpu_power_on(void);
         /** @brief power off LCPU,
         *
@@ -129,8 +124,3 @@ void print_sysinfo(char *buf, uint32_t buf_len);
 #endif
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
 
-
-
-#ifdef __cplusplus
-}
-#endif

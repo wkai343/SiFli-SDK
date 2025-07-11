@@ -13,11 +13,6 @@
 */
 
 
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 bt_err_t app_bt_search_device_start(void);
 
 
@@ -95,8 +90,3 @@ bt_err_t app_close_bt(void);
 #endif /* _APP_BT_H */
 
 
-
-
-#ifdef __cplusplus
-}
-#endif

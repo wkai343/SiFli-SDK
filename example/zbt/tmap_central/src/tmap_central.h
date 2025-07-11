@@ -15,11 +15,6 @@
  *
  * @return 0 if success, errno on failure.
  */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 int mcp_server_init(void);
 
 /**
@@ -70,8 +65,3 @@ int cap_initiator_init(void);
  * @return 0 if success, errno on failure.
  */
 int cap_initiator_setup(struct bt_conn *conn);
-
-
-#ifdef __cplusplus
-}
-#endif

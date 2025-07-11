@@ -17,11 +17,6 @@
 #include "hbd_ctrl.h"
 
 /* Hbd commhandler return value type. */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 typedef enum
 {
     COMM_CMD_ALGO_IN_MCU_HB_START = 0,
@@ -71,8 +66,3 @@ GU8 HBD_SendRawdataPackageByNewdataInt(ST_GS_DATA_TYPE *stGsAxisValue, EM_HBD_GS
 #endif /* __HBD_COMMUNICATE_H__ */
 
 /********END OF FILE********* (C) COPYRIGHT 2018 .********/
-
-
-#ifdef __cplusplus
-}
-#endif

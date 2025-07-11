@@ -51,11 +51,6 @@
 
 
 /* gh3011 device structure */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 struct gh3011_device
 {
     rt_device_t bus;
@@ -70,8 +65,3 @@ int rt_hw_gh3011_deinit(void);
 
 #endif  // SENSOR_GOODIX_GH3011_H__
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
-
-
-#ifdef __cplusplus
-}
-#endif

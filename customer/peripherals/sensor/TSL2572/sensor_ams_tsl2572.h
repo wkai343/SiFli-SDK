@@ -53,11 +53,6 @@
 
 
 /* tsl2572 config structure */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 struct tsl2572_config
 {
     uint16_t int_thd_low;
@@ -78,8 +73,3 @@ int rt_hw_tsl2572_init(const char *name, struct rt_sensor_config *cfg);
 
 #endif  // SENSOR_AMS_TSL2572_H__
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
-
-
-#ifdef __cplusplus
-}
-#endif

@@ -48,11 +48,6 @@ Copyright (c) 2017 Silan MEMS. All Rights Reserved.
     /*******1: 定时熄灭*********/
 
     /*****************抬手亮屏算法初始化函数****************/
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
     void SL_Turn_Wrist_Init(unsigned char *SL_Turn_Wrist_Para);
     /************输入参数：*************/
     /******SL_Turn_Wrist_Para[0]:加速度计贴片位置设置  0--7********/
@@ -243,8 +238,3 @@ extern "C" {
 
 #endif/****SL_Watch_ALGO_DRV__H__****/
 
-
-
-#ifdef __cplusplus
-}
-#endif

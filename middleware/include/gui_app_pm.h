@@ -8,11 +8,6 @@
 #include "button.h"
 
 /** GUI PM event */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 typedef enum
 {
     GUI_PM_EVT_INVALID,
@@ -175,8 +170,3 @@ void sys_poweron_fsm(sys_pwron_evt_t evt);
 
 
 #endif  /* __GUI_APP_PM_H__ */
-
-
-#ifdef __cplusplus
-}
-#endif

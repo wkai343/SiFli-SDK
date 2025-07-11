@@ -11,11 +11,6 @@
 /*!
  * @brief MMC56X3 I2C register address bits
  */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 typedef enum {
   MMC56X3_PRODUCT_ID = 0x39,
   MMC56X3_CTRL0_REG = 0x1B,
@@ -37,8 +32,3 @@ typedef struct {
 rt_err_t MMC56x3_Init(struct rt_sensor_config *cfg);
 mmc56x3_data_t MMC56x3_ReadData(void);
 void MMC56x3_SetDataRate(uint16_t rate);
-
-
-#ifdef __cplusplus
-}
-#endif

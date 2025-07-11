@@ -7,17 +7,7 @@
 #include "time.h"
 #include "app_clock_main.h"
 
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 extern void app_clock_main_status_bar_init(lv_obj_t *par, lv_obj_t *clock_tileview);
 extern void app_clock_main_status_bar_deinit(void);
 
 
-
-
-#ifdef __cplusplus
-}
-#endif

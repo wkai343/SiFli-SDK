@@ -129,11 +129,6 @@
 #endif
 
 /*****Driver Test******/
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 signed char SL_SC7R30_Driver_Test(unsigned char led_on_time);
 /*****led_on_time:  turn on time for test***********/
 /*****return：  1  IIC Success**********************/
@@ -292,9 +287,4 @@ extern unsigned char SL_SC7R30_I2c_Spi_Read(unsigned char reg, unsigned char len
 #endif
 
 
-#endif
-
-
-#ifdef __cplusplus
-}
 #endif

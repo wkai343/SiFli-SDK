@@ -53,11 +53,6 @@
 
 
 /* afe4404 device structure */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 struct afe4404_device
 {
     rt_device_t bus;
@@ -69,8 +64,3 @@ struct afe4404_device
 int rt_hw_afe4404_init(const char *name, struct rt_sensor_config *cfg);
 
 #endif  // SENSOR_TI_AFE4404_H__/************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
-
-
-#ifdef __cplusplus
-}
-#endif

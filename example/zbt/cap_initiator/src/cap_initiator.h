@@ -9,11 +9,6 @@
 #include <zephyr/bluetooth/audio/cap.h>
 #include <zephyr/bluetooth/conn.h>
 #include <ulog.h>
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 struct tx_stream
 {
     struct bt_cap_stream *stream;
@@ -68,8 +63,3 @@ int cap_initiator_tx_register_stream(struct bt_cap_stream *cap_stream);
  * @retval -EALREADY if the stream is currently not registered
  */
 int cap_initiator_tx_unregister_stream(struct bt_cap_stream *cap_stream);
-
-
-#ifdef __cplusplus
-}
-#endif

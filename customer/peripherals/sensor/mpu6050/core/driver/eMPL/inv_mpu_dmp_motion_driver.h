@@ -81,11 +81,6 @@
 #define INV_WXYZ_QUAT       (0x100)
 
 /* Set up functions. */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 int dmp_load_motion_driver_firmware(void);
 int dmp_set_fifo_rate(unsigned short rate);
 int dmp_get_fifo_rate(unsigned short *rate);
@@ -132,8 +127,3 @@ int dmp_read_fifo(short *gyro, short *accel, long *quat,
 #endif  /* #ifndef _INV_MPU_DMP_MOTION_DRIVER_H_ */
 
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
-
-
-#ifdef __cplusplus
-}
-#endif

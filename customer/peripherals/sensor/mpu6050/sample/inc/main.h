@@ -58,18 +58,8 @@
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
 
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 void gyro_data_ready_cb(void);
 
 #endif /* __MAIN_H */
 
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
-
-
-#ifdef __cplusplus
-}
-#endif

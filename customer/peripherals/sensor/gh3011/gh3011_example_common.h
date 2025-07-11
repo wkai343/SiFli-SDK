@@ -75,11 +75,6 @@
 #define SEND_AUTOLED_FAIL_EVT()                                         comm_send_app_cmd_auto_led_fail(ble_module_send_pkg)
 #define SEND_MCU_HB_MODE_WEAR_STATUS(sta, data, len)                    send_mcu_hb_mode_wear_status_pkg(sta, data, len)
 #define SEND_MCU_HB_MODE_RESULT(hb, lv, sta, wq, vb, ret, rr, data, len)    \
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
                                                                         send_mcu_hb_mode_result_pkg(hb, lv, sta, wq, vb, ret, rr, data, len)
 #define SEND_MCU_HRV_MODE_RESULT(rr_arr, cnt, lvl, data, len)           send_mcu_hrv_mode_result_pkg(rr_arr, cnt, lvl, data, len)
 #define SEND_MCU_SPO2_UNWEAR_EVT(data, len)                             send_mcu_spo2_mode_unwear_pkg(data, len)
@@ -453,8 +448,3 @@ extern GU16 g_usReadRawdataRegList[2];
 #endif /* _GH3011_EXAMPLE_COMMON_H_ */
 
 /********END OF FILE********* Copyright (c) 2003 - 2020, Goodix Co., Ltd. ********/
-
-
-#ifdef __cplusplus
-}
-#endif

@@ -21,16 +21,6 @@
 
 #define LSM6DSL_ADDR_DEFAULT (0x6A)
 
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 int rt_hw_lsm6dsl_init(const char *name, struct rt_sensor_config *cfg);
 
-#endif
-
-
-#ifdef __cplusplus
-}
 #endif

@@ -58,11 +58,6 @@
  * @param[in]  srcBLen  length of the second input sequence.
  * @param[out] pDst     points to the block of output data  Length srcALen+srcBLen-1.
  */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 void arm_conv_q7_facc(
     const q7_t *pSrcA,
     uint32_t srcALen,
@@ -257,8 +252,3 @@ void arm_dsp_facc_init(void);
 #endif
 
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
-
-
-#ifdef __cplusplus
-}
-#endif

@@ -6,11 +6,6 @@
 
 
 /* sc7a20 device structure */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 struct sc7a20_device
 {
     rt_device_t bus;
@@ -25,8 +20,3 @@ int rt_hw_sc7a20_deinit(void);
 
 #endif  // SENSOR_SC_SC7A20_H__
 
-
-
-#ifdef __cplusplus
-}
-#endif

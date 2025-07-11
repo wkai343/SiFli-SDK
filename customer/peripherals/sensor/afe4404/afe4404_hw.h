@@ -124,11 +124,6 @@
 
 #define ENABLE_RED_LED (0) //0:disable red LED
 
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 void Partron_UpdateSamplingRate(uint16_t freq, double duty);
 
 typedef struct
@@ -827,8 +822,3 @@ uint32_t PPS960_readReg(uint8_t regaddr);
 //#define PPS_ACC_USE_FIFO (1)
 
 #endif  // AFE4404_HW_INCLUDED/************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
-
-
-#ifdef __cplusplus
-}
-#endif

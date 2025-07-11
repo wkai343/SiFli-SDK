@@ -58,11 +58,6 @@
 #ifdef WIN32
 #ifdef COVERAGE
 
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 extern int functionEnterLog(const char *file, const char *func);
 extern int functionExitLog(const char *file, const char *func);
 
@@ -81,8 +76,3 @@ extern int functionExitLog(const char *file, const char *func);
 // #define return if ( functionExitLog(__FILE__, __FUNCTION__) ) return
 
 #endif //INV_INCLUDE_H__/************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
-
-
-#ifdef __cplusplus
-}
-#endif

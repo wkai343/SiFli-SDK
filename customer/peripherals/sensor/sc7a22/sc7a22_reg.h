@@ -85,11 +85,6 @@
 #define  SC7A22_FIFO_BYPASS_VAL  0x00
 #define  SC7A22_CLOSE_VAL        0x08  // 0x08 for sc7a20 
 
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 typedef int32_t (*stmdev_write_ptr)(void *, uint8_t, uint8_t *, uint16_t);
 typedef int32_t (*stmdev_read_ptr)(void *, uint8_t, uint8_t *, uint16_t);
 
@@ -120,8 +115,3 @@ int32_t sc7a22_fifo_enable_set(sifdev_sensor_ctx_t *ctx, uint8_t val);
 
 #endif /* __SC7A22_REG_H__*/
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
-
-
-#ifdef __cplusplus
-}
-#endif

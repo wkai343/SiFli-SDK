@@ -32,11 +32,6 @@
     #define __HBD_HSM_ENABLE__ (1)
 #endif
 
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 typedef unsigned char GU8;
 typedef signed char GS8;
 typedef unsigned short GU16;
@@ -1175,8 +1170,3 @@ GU8 HBD_AdtConfirmCalculateByFifoIntDbgOutputData(ST_GS_DATA_TYPE stGsAxisValue[
 #endif /* __HBD_CTRL_H__ */
 
 /********END OF FILE********* (C) COPYRIGHT 2018 .********/
-
-
-#ifdef __cplusplus
-}
-#endif

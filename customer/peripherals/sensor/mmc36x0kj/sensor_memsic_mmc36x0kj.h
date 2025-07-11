@@ -53,11 +53,6 @@
 
 
 /* mmc36x0kj device structure */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 struct mmc36x0kj_device
 {
     rt_device_t bus;
@@ -69,8 +64,3 @@ struct mmc36x0kj_device
 int rt_hw_mmc36x0kj_init(const char *name, struct rt_sensor_config *cfg);
 
 #endif  // SENSOR_MEMSIC_MMC36X0JK_H__/************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
-
-
-#ifdef __cplusplus
-}
-#endif

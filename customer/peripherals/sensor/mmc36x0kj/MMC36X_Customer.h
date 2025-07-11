@@ -52,11 +52,6 @@
 /**
  * @brief Delay function.
  */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 void Delay_Ms(int cnt);
 
 /**
@@ -87,8 +82,3 @@ uint32_t MMC36X0KJ_get_bus();
 int MMC36X0KJ_self_check(void);
 
 #endif //__MMC36X_HDR_FILE__/************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
-
-
-#ifdef __cplusplus
-}
-#endif

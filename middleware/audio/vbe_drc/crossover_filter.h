@@ -6,19 +6,9 @@ File: CROSSOVER_FILTER.h
 
 #include <stdint.h>
 
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 void crossover_lpf_left(float *data_out, float *data_in, int frame_length, float *state, const float *FB, const float *FA);
 void crossover_lpf_right(float *data_out, float *data_in, int frame_length, float *state, const float *FB, const float *FA);
 void crossover_hpf_left(float *data_out, float *data_in, int frame_length, float *state, const float *FB, const float *FA);
 void crossover_hpf_right(float *data_out, float *data_in, int frame_length, float *state, const float *FB, const float *FA);
 
 #endif /* CROSSOVER_FILTER_H */
-
-
-#ifdef __cplusplus
-}
-#endif

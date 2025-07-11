@@ -67,11 +67,6 @@
 
 /** @brief Set of flags for enabling/disabling profiling for given event types.
  */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 extern uint32_t profiler_enabled_events;
 
 
@@ -280,8 +275,3 @@ static inline void profiler_log_send(struct log_event_buf *buf,
  */
 
 #endif /* _PROFILER_H_ */
-
-
-#ifdef __cplusplus
-}
-#endif

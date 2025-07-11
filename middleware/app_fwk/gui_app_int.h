@@ -34,11 +34,6 @@
 #define GUI_APP_CMD_MAX_LEN INTENT_MAX_LEN
 #define GUI_APP_CMD_ARG_MAX 8
 
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 typedef uint32_t *screen_t;
 typedef uint32_t *task_t;
 typedef void (*task_handler_t)(task_t);
@@ -383,8 +378,3 @@ rt_err_t app_trans_anim_free_run_clean(void);
 
 
 #endif  /* __GUI_APP_UTILS_H__ */
-
-
-#ifdef __cplusplus
-}
-#endif

@@ -22,11 +22,6 @@
 #define SDIO_BWR_ARG(F,B,A,C) (0x80000000 | (F<<28) | (B<<27) | (A<<9) | C)
 #define SDIO_BRD_ARG(F,B,A,C) ((F<<28) | (B<<27) | (A<<9) | C)
 
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 enum resp
 {
     RESP_NONE = 0,
@@ -57,8 +52,3 @@ int sdio_emmc_init();
 int emmc_read_data(uint32_t addr, uint8_t *data, uint32_t len);
 
 #endif  //_SD_NAND_DRV_H_
-
-
-#ifdef __cplusplus
-}
-#endif

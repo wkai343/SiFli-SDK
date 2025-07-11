@@ -148,11 +148,6 @@
 *                              Data Type Declaration
 *
 ******************************************************************************/
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 typedef enum
 {
     VCWORK_MODE_HRWORK        = 0,    // Heart Rate Mode  心率模式 //
@@ -309,9 +304,4 @@ typedef uint32_t (* vc_gettime_cb)(void);
 
 
 #endif /* LIB_vcHr02_HCI_vcHr02HCI_H_ */
-#endif
-
-
-#ifdef __cplusplus
-}
 #endif

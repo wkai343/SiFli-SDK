@@ -10,11 +10,6 @@
 
 #if defined(CONFIG_BT_ASCS_ASE_SNK)
 #define AVAILABLE_SINK_CONTEXT                                                                     \
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
     (BT_AUDIO_CONTEXT_TYPE_UNSPECIFIED | BT_AUDIO_CONTEXT_TYPE_CONVERSATIONAL |                \
      BT_AUDIO_CONTEXT_TYPE_MEDIA | BT_AUDIO_CONTEXT_TYPE_GAME |                                \
      BT_AUDIO_CONTEXT_TYPE_INSTRUCTIONAL)
@@ -100,8 +95,3 @@ int mcp_ctlr_init(struct bt_conn *conn);
  * @return 0 if on success, errno on error.
  */
 int mcp_send_cmd(uint8_t mcp_opcode);
-
-
-#ifdef __cplusplus
-}
-#endif
