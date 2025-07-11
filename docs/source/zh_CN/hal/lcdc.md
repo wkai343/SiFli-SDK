@@ -19,7 +19,7 @@ LCDC(LCD Controller) 是为屏提供一个统一的接口，而不需关心具�
 |AHB 输出到SRAM/PSRAM|   Y    |   Y    |   Y    |   Y    |
 |DBI 8080-8bit       |   Y    |   Y    |   Y    |   Y    |
 |JDI                 |   Y    |   Y    |   Y    |   Y    |
-|DPI                 |   Y    |   Y    |   Y    |   Y    |
+|DPI                 |   Y    |   Y    |   Y    |   N    |
 
 
 ## 支持的速度：
