@@ -52,6 +52,11 @@
 #define GPS_CMD_MAXLEN      (64)
 
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 enum
 {
     MSG_DELETE_AIDING = 1,
@@ -428,3 +433,8 @@ int um_gps_self_check(void);
 
 #endif // __GPS_HOST_IF_H__
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
+
+
+#ifdef __cplusplus
+}
+#endif

@@ -36,6 +36,11 @@
     #define EPO_GA_Q_STR_F      "1:/QGA.DAT"
 #endif
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum
 {
     EPO_MODE_GPS,
@@ -64,3 +69,8 @@ gps_err_t epo_ading_start(epo_file_t *file);
 void epo_transfer_ind(at_client_t client, const char *data, rt_size_t size);
 
 #endif /* _AT_AG3335M_EPO_H */
+
+
+#ifdef __cplusplus
+}
+#endif

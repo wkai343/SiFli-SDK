@@ -17,6 +17,11 @@
 /**
  * @brief start run mode enum
  */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum
 {
     GH30X_RUN_MODE_HB = RUN_MODE_ADT_HB_DET,
@@ -57,3 +62,8 @@ void gh30x_module_system_test_os_start(void);
 #endif /* _GH3011_EXAMPLE_H_ */
 
 /********END OF FILE********* Copyright (c) 2003 - 2020, Goodix Co., Ltd. ********/
+
+
+#ifdef __cplusplus
+}
+#endif

@@ -70,6 +70,11 @@
  * @return: None
  */
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void Mac_Init();
 
 
@@ -102,3 +107,8 @@ int Get_snr();
 
 #endif  // __MAC_HR_HDR_XX01__
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
+
+
+#ifdef __cplusplus
+}
+#endif

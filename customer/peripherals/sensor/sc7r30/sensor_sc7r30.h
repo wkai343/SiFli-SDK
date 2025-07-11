@@ -6,6 +6,11 @@
 
 
 /* sc7r30 device structure */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct sc7r30_device
 {
     rt_device_t bus;
@@ -18,3 +23,8 @@ int rt_hw_sc7r30_init(const char *name, struct rt_sensor_config *cfg);
 
 #endif  // SENSOR_SC_SC7A20_H__
 
+
+
+#ifdef __cplusplus
+}
+#endif

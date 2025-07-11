@@ -58,6 +58,11 @@
 #define GIF_PALETTE_TO_PIXEL
 #define GIF_ZOOM_NEED
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum
 {
     AGIF_FS_DATA_NORMAL_MODE,
@@ -381,3 +386,8 @@ uint16_t     agif_dec_frame_num(agif_dsc_t *agif_dsc);
 void         agif_set_fs_mode(agif_fs_mode_t mode);
 #endif /* _AGIF_H_ */
 
+
+
+#ifdef __cplusplus
+}
+#endif

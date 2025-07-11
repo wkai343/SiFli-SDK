@@ -20,6 +20,11 @@
 #define AW_I2C_RETRIES          (5) /* 5 times */
 #define AW_I2C_RETRY_DELAY      (5) /* 5 ms */
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 enum aw882xx_chipid
 {
     PID_1852_ID = 0x1852,
@@ -123,3 +128,8 @@ int aw882xx_set_fs(aw_dev_index_t dev_index,  uint32_t fs, uint8_t chn_sel);
 
 #endif
 
+
+
+#ifdef __cplusplus
+}
+#endif

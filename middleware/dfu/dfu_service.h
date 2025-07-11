@@ -51,6 +51,11 @@
 #include <stdint.h>
 #include "dfu_protocol.h"
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum
 {
     DFU_APP_START_REQUEST,
@@ -306,3 +311,8 @@ uint8_t dfu_package_install_set();
 #endif //__DFU_SERVICE_H
 
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
+
+
+#ifdef __cplusplus
+}
+#endif

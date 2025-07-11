@@ -142,7 +142,7 @@
 #define  SDHCI_INT_ERROR_MASK   0xFFFF8000
 
 #define  SDHCI_INT_CMD_MASK (SDHCI_INT_RESPONSE | SDHCI_INT_TIMEOUT | \
-        SDHCI_INT_CRC | SDHCI_INT_END_BIT | SDHCI_INT_INDEX)
+SDHCI_INT_CRC | SDHCI_INT_END_BIT | SDHCI_INT_INDEX)
 #define  SDHCI_INT_DATA_MASK    (SDHCI_INT_DATA_END | SDHCI_INT_DMA_END | \
         SDHCI_INT_DATA_AVAIL | SDHCI_INT_SPACE_AVAIL | \
         SDHCI_INT_DATA_TIMEOUT | SDHCI_INT_DATA_CRC | \
@@ -226,6 +226,15 @@
 #define SDHCI_REQ_USE_DMA   (1<<2)      /*!<  Use DMA for this req. */
 #define SDHCI_DEVICE_DEAD   (1<<3)      /*!<  Device unresponsive */
 
+
+
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+        
 /**
   * @brief  ENUM definition of DMA transfer mode
   */
@@ -615,3 +624,7 @@ void HAL_SDHCI_MspInit(SDHCI_HandleTypeDef *handle);
   */
 
 #endif /* __BF0_HAL_SDHCI_H__ */
+
+#ifdef __cplusplus
+}
+#endif

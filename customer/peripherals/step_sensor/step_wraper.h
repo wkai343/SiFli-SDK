@@ -46,6 +46,11 @@
 #ifndef __VIRT_STEP_SENSOR_HDR_FILE__
 #define __VIRT_STEP_SENSOR_HDR_FILE__
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int virt_step_init(void);
 
 int vstep_get_step();
@@ -55,3 +60,8 @@ int vstep_get_distance();
 
 #endif /* __VIRT_STEP_SENSOR_HDR_FILE__*/
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
+
+
+#ifdef __cplusplus
+}
+#endif

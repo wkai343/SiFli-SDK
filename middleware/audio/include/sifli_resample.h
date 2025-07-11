@@ -1,6 +1,11 @@
 #ifndef SIFLI_RESAMPLE
 #define SIFLI_RESAMPLE 1
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct
 {
     float    ratio;
@@ -23,4 +28,9 @@ void sifli_resample_close(sifli_resample_t *p);
 void *resample_malloc(uint32_t size);
 void resample_free(void *p);
 
+#endif
+
+
+#ifdef __cplusplus
+}
 #endif

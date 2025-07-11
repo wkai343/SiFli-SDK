@@ -65,6 +65,11 @@
 #define SHARE_PREFS_MAX_NAME_LEN 32
 
 /// Preference data type
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct
 {
     char prfs_name[SHARE_PREFS_MAX_NAME_LEN]; /*!< Preference name*/
@@ -182,3 +187,8 @@ rt_err_t share_prefs_set_block(share_prefs_t *prfs, const char *key, const void 
 
 #endif
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
+
+
+#ifdef __cplusplus
+}
+#endif

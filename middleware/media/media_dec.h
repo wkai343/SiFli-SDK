@@ -79,6 +79,11 @@
     #endif
 #endif
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum
 {
     e_sifli_fmt_yuv420p,  // data in ffmpeg frame data[0] is yuv420p
@@ -205,3 +210,8 @@ ffmpeg_handle ffmpeg_player_status_get(void);
 
 #endif
 
+
+
+#ifdef __cplusplus
+}
+#endif

@@ -121,6 +121,11 @@ typedef enum {
     *
     * @return Return one of the PXI_STATUS_FLAG types.
     */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
     PXIALG_API int32_t PxiAlg_ProcessByTime(unsigned char *HRD_Data, float *MEMS_Data, float time);
     PXIALG_API int32_t PxiAlg_Process(unsigned char *HRD_Data, float *MEMS_Data);
 
@@ -696,3 +701,7 @@ PXIALG_API void PxiAlg_SetData_Seg(pah8series_data_t *pah8series_data);
 PXIALG_API uint8_t PxiAlg_Process_Seg(uint8_t *is_finished);
 PXIALG_API uint8_t PxiAlg_ProcessD_Seg(uint8_t *is_finished);
 #endif /* PXIALG_H__ */
+
+#ifdef __cplusplus
+}
+#endif

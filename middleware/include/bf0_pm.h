@@ -64,6 +64,11 @@
 ****************************************************************************************
 */
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct
 {
     uint32_t init_enter;
@@ -343,3 +348,8 @@ void pm_pin_backup(void);
 
 
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
+
+
+#ifdef __cplusplus
+}
+#endif

@@ -58,6 +58,11 @@
 #define BLE_APP_TIMEOUT_INTERVAL (5000)
 
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct
 {
     uint8_t is_power_on;
@@ -89,3 +94,8 @@ void app_timeout_handler(void *parameter);
 
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
 
+
+
+#ifdef __cplusplus
+}
+#endif

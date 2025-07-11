@@ -56,6 +56,11 @@
 
 
 /* Accelerometer full scale range */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 enum icm20948_accel_range
 {
     ICM20948_ACCEL_RANGE_2G  = 0, // ±2G
@@ -132,3 +137,8 @@ struct icm20948_device
 int rt_hw_icm20948_init(const char *name, struct rt_sensor_config *cfg);
 
 #endif  // SENSOR_INVEN_ICM20948_H__/************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
+
+
+#ifdef __cplusplus
+}
+#endif

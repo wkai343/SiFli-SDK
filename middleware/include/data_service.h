@@ -85,6 +85,11 @@
 #define GET_MSG_ID(msg_id)    ((~RSP_MSG_TYPE)&(msg_id))
 #define IS_RSP_MSG(msg_id)    ((msg_id) & RSP_MSG_TYPE)
 #define RSP_MSG_TYPE (0x8000)
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 enum
 {
     MSG_SERVICE_SUBSCRIBE_REQ = 0x0,
@@ -274,3 +279,8 @@ typedef struct
 
 #endif
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
+
+
+#ifdef __cplusplus
+}
+#endif

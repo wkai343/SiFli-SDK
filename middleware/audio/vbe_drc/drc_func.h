@@ -8,6 +8,11 @@ File: DRC_FUNC.h
 #include "fast_log10.h"
 
 /*audio DRC parameters */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct
 {
     int enable;
@@ -37,3 +42,8 @@ float apply_gain(float x, float g);
 
 #endif
 /* DRC_FUNC_H */
+
+
+#ifdef __cplusplus
+}
+#endif

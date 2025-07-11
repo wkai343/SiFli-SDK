@@ -14,6 +14,11 @@
 #define CTP_GLOVE_GATE               (1 << 19)
 #define CTP_ORIENTATION_GATE         (1 << 20)
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct chsc_updfile_header {
     uint32_t sig;
     uint32_t resv;
@@ -141,3 +146,8 @@ void CHSC5816TP_INIT(void);
 
 #endif
 
+
+
+#ifdef __cplusplus
+}
+#endif

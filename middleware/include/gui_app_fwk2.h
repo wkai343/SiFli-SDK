@@ -21,6 +21,11 @@
 
     Messages be send to page's msg handler by firmware while page's state changed
 */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum
 {
     /**
@@ -241,3 +246,8 @@ int gui_app_fwk_resume(void);
 
 #endif
 
+
+
+#ifdef __cplusplus
+}
+#endif

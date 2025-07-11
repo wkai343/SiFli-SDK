@@ -108,6 +108,11 @@
 
 
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef int32_t (*stmdev_write_ptr)(void *, uint8_t, uint8_t *, uint16_t);
 typedef int32_t (*stmdev_read_ptr)(void *, uint8_t, uint8_t *, uint16_t);
 
@@ -138,3 +143,8 @@ int32_t stk8328c_read_fifo_data(sifdev_sensor_ctx_t *ctx, uint8_t *data, uint16_
 
 #endif /* __SC7A22_REG_H__*/
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
+
+
+#ifdef __cplusplus
+}
+#endif

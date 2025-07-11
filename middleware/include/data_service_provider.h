@@ -64,6 +64,11 @@
 #define DATA_SERVICE_INVALID_ID   (0x7F)
 
 /** Data service client */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef void *datas_handle_t;
 
 
@@ -171,3 +176,8 @@ typedef struct data_service_config_tag
 #endif
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
 
+
+
+#ifdef __cplusplus
+}
+#endif

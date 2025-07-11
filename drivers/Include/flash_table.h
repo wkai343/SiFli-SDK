@@ -28,6 +28,11 @@
 
 #define NAND_ECC_START_POS              (4)
 #define NAND_ECC_FULL_RESERVED            (0xF<<NAND_ECC_START_POS)
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum __NAND_ECC_STATUS_MODE_
 {
     BIT2_IN_C0_T1 = 0,   // int reg c0, bit 4 and bit 5, b00 no error; b01 1-bit been corrected; others more than 1 bit and can not correct
@@ -76,3 +81,7 @@ extern FT_CONST FLASH_RDID_TYPE_T   *FT_CONST nand_cmd_id_pool[];
 #endif /* JLINK || KEIL */
 
 #endif  // _SIF_FLASH_CMD_TABLE_H__
+
+#ifdef __cplusplus
+}
+#endif

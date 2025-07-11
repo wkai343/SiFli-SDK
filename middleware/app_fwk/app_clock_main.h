@@ -21,6 +21,11 @@
 #include "gui_app_fwk.h"
 #include "lv_ext_resource_manager.h"
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct
 {
     uint8_t h;
@@ -101,3 +106,8 @@ int32_t app_clock_register(const char *id, const app_clock_ops_t *operations);
 #endif
 
 #endif /*__APP_CLOCK_MAIN_H_*/
+
+
+#ifdef __cplusplus
+}
+#endif

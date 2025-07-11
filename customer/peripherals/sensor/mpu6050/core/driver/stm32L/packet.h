@@ -50,6 +50,11 @@
 
 #include "mltypes.h"
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum
 {
     PACKET_DATA_ACCEL = 0,
@@ -85,3 +90,8 @@ void eMPL_send_data(unsigned char type, long *data);
  * @}
  */
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
+
+
+#ifdef __cplusplus
+}
+#endif

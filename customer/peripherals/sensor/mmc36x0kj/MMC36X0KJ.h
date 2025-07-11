@@ -46,6 +46,11 @@
  */
 
 #if 0
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
     typedef   signed char  int8_t;      // signed 8-bit number    (-128 to +127)
     typedef unsigned char  uint8_t;     // unsigned 8-bit number  (+0 to +255)
     typedef   signed short int16_t;     // signed 16-bt number    (-32768 to +32767)
@@ -169,3 +174,8 @@ void MMC36X0KJ_Get_OrgData(int *x, int *y, int *z);
  */
 void MMC36X0KJ_GetData_With_SET_RESET(float *mag_out);
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
+
+
+#ifdef __cplusplus
+}
+#endif

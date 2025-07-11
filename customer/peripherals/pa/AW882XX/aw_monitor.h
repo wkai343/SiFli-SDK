@@ -5,6 +5,11 @@
 #include "aw882xx.h"
 #include "aw_audio_common.h"
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct aw_table;
 
 #define AW_TABLE_SIZE   sizeof(struct aw_table)
@@ -184,3 +189,8 @@ void aw_monitor_deinit(void *dev);
 
 #endif
 
+
+
+#ifdef __cplusplus
+}
+#endif

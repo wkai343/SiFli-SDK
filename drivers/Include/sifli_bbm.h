@@ -37,6 +37,11 @@
 
 #define BBM_MAGIC_NUM               (0x5366424d)
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct
 {
     uint16_t logic_blk;     // logic block number
@@ -116,3 +121,7 @@ typedef struct
 #endif  //BBM_TABLE_AUTO_TEST
 
 #endif //__SIF_NAND_BBM_H__
+
+#ifdef __cplusplus
+}
+#endif

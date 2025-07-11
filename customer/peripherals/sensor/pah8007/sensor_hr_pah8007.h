@@ -14,6 +14,11 @@
 
 
 /* pah8007 device structure */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct pah8007_device
 {
     rt_device_t bus;
@@ -26,3 +31,8 @@ int rt_hw_pah8007_init(const char *name, struct rt_sensor_config *cfg);
 
 #endif  // SENSOR_HR_PAH8007_H__
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
+
+
+#ifdef __cplusplus
+}
+#endif

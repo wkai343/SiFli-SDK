@@ -47,6 +47,11 @@
 #ifndef __INTENT_H__
 #define __INTENT_H__
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef void   *intent_t;
 
 
@@ -125,3 +130,8 @@ void printf_intent(intent_t i);
 
 
 
+
+
+#ifdef __cplusplus
+}
+#endif

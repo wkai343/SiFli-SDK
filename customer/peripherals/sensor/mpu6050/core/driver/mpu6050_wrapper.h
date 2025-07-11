@@ -47,6 +47,11 @@
 #define __MPU6050_WRAPPER_H__
 #include <rtthread.h>
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int sensor_i2c_write(unsigned char slave_addr, unsigned char reg_addr, unsigned char length, unsigned char const *data);
 int sensor_i2c_read(unsigned char slave_addr, unsigned char reg_addr, unsigned char length, unsigned char *data);
 int sensor_get_ms(unsigned long *ms);
@@ -55,3 +60,8 @@ int sensor_reg_int_cb(void (*cb)(void));
 
 #endif /* __MPU6050_WRAPPER_H__ */
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
+
+
+#ifdef __cplusplus
+}
+#endif

@@ -20,6 +20,11 @@
 /* Header file for the liblc3 */
 #include <lc3.h>
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct stream_lc3_tx
 {
     uint32_t freq_hz;
@@ -54,3 +59,8 @@ void stream_lc3_add_data(struct tx_stream *stream, struct net_buf *buf);
 #define LC3_MAX_FRAME_DURATION_US 10000U
 
 #endif /* STREAM_LC3_H */
+
+
+#ifdef __cplusplus
+}
+#endif

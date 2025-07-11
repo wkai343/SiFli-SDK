@@ -71,6 +71,11 @@
 #define ACPU_ERR_ASSERT     0xff
 
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct
 {
     void *st;
@@ -206,3 +211,8 @@ void acpu_send_result2(void *val, uint32_t val_size, uint8_t error_code);
 #endif /* __ACPU_CTRL_H__ */
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
 
+
+
+#ifdef __cplusplus
+}
+#endif

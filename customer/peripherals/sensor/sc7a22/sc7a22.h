@@ -49,6 +49,11 @@
 #include "sc7a22_reg.h"
 
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum
 {
     SC7A22_ODR_DISABLE   =  0,
@@ -84,3 +89,8 @@ int sc7a22_self_check(void);
 
 #endif /* __SC7A22_H__*/
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
+
+
+#ifdef __cplusplus
+}
+#endif

@@ -11,6 +11,11 @@
  *
  * @return 0 if success, errno on failure.
  */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int bap_unicast_sr_init(void);
 
 /**
@@ -58,3 +63,8 @@ int ccp_call_ctrl_init(void);
  * @return 0 if success, errno on failure.
  */
 int has_server_init(void);
+
+
+#ifdef __cplusplus
+}
+#endif

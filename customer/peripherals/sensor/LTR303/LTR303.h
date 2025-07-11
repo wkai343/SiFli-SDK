@@ -23,6 +23,11 @@
 #define LTR303_REG_INTPERSIST 0x9E ///< Register for setting the IRQ persistance
 
 /*!    @brief  Sensor gain for ALS  */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum {
   LTR3XX_GAIN_1 = 0,
   LTR3XX_GAIN_2 = 1,
@@ -62,3 +67,7 @@ void LTR303_PowerOn(void);
 void LTR303_PowerOff(void);
 
 #endif // _LTR303_H_
+
+#ifdef __cplusplus
+}
+#endif

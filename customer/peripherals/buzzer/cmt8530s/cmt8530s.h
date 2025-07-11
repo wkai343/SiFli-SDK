@@ -54,6 +54,11 @@
  * Definitions
  ******************************************************************************/
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int cmt8530s_init();
 int cmt8530s_open();
 int cmt8530s_set_freq(uint32_t freq);
@@ -61,3 +66,8 @@ int cmt8530s_close();
 
 
 #endif /* __CMT8530S_SMT_TR_H__ */
+
+
+#ifdef __cplusplus
+}
+#endif

@@ -18,6 +18,11 @@
 #define MAX_NUM_SECTORS (4096)      // Max. number of sectors, must not be modified.
 #define ALGO_VERSION    (0x0101)   // Algo version, must not be modified.
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct SECTOR_INFO
 {
     U32 SectorSize;       // Sector Size in bytes
@@ -64,3 +69,8 @@ extern int  SEGGER_OPEN_Erase(U32 SectorAddr, U32 SectorIndex, U32 NumSectors); 
  */
 #define FLASH_WRITE_BASE_SIZE       (0x10000)
 
+
+
+#ifdef __cplusplus
+}
+#endif

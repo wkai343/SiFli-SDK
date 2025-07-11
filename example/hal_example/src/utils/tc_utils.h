@@ -25,6 +25,11 @@
  * @param max - should be less than UINT32_MAX
  * @return Value from 0 ~ max
  */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 uint32_t rand_within(uint32_t max);
 
 /*
@@ -52,3 +57,8 @@ uint32_t dwtGetCycles(void);
 
 #endif /* __TC_UTILS__ */
 
+
+
+#ifdef __cplusplus
+}
+#endif

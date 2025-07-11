@@ -48,6 +48,11 @@
 
 #include "gps_types.h"
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 enum
 {
     GNSS_MAX_SVS_COUNT = 64u, // 64
@@ -128,3 +133,8 @@ void um_gps_nmea_parse(char *buf, uint32_t len);
 #endif /* _GPS_NMEA_H_ */
 
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
+
+
+#ifdef __cplusplus
+}
+#endif

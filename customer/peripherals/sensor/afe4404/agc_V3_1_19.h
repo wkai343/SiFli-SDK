@@ -71,6 +71,11 @@
     #define bool unsigned char
 #endif
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum
 {
     AGC_STATE_CALIBRATION_WAITINGFORADJUSTMENT = 0,
@@ -455,3 +460,8 @@ uint8_t AGC_getMinorVer(void);
 uint8_t AGC_getBuildVer(void);
 #endif /* AGC_V3_H_ */
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
+
+
+#ifdef __cplusplus
+}
+#endif

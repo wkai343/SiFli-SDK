@@ -54,6 +54,11 @@
 
 
 /* device structure */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct stk8328c_device
 {
     rt_device_t bus;
@@ -67,3 +72,8 @@ int rt_hw_stk8328c_deinit(void);
 
 
 #endif  // SENSOR_ST_SC7A22_H__/************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
+
+
+#ifdef __cplusplus
+}
+#endif

@@ -23,6 +23,16 @@
 #include <zephyr/sys_clock.h>
 #include <zephyr/toolchain.h>
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int bap_broadcast_src_start();
 void bap_broadcast_src_stop();
+#endif
+
+
+#ifdef __cplusplus
+}
 #endif

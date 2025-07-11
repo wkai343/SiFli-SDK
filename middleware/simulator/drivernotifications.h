@@ -6,6 +6,11 @@
 #pragma once
 
 #ifdef  __cplusplus
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
     enum eNotificationTypes
 #else
     typedef enum
@@ -69,4 +74,9 @@ typedef void (*NotificationType2)(void *pThis, int iDatasourceId);
     ;
 #else
     eKeepAliveEventTypes;
+#endif
+
+
+#ifdef __cplusplus
+}
 #endif

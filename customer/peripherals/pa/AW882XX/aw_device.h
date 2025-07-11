@@ -11,6 +11,11 @@
 #define AW_REG_NONE     (0xFF)
 #define AW_PROF_NAME_MAX    (50)
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 enum
 {
     AW_1_MS = 1,
@@ -300,3 +305,8 @@ int aw_dev_set_init_fs(struct aw_device *aw_dev, uint32_t fs, uint8_t chn_sel);
 
 #endif
 
+
+
+#ifdef __cplusplus
+}
+#endif

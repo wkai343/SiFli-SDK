@@ -52,6 +52,11 @@
 
 /*******************************************************************************/
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int stk8328c_init(void);
 uint32_t stk8328c_get_bus_handle(void);
 uint8_t stk8328c_get_dev_addr(void);
@@ -67,3 +72,8 @@ int stk8328c_self_check(void);
 
 #endif /* __SC7A22_H__*/
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
+
+
+#ifdef __cplusplus
+}
+#endif

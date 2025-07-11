@@ -16,6 +16,11 @@
 #define SOURCE_CONTEXT      BT_AUDIO_CONTEXT_TYPE_UNSPECIFIED
 
 /** Struct to contain information for a specific peer (CAP) device */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct peer_config
 {
     /** Stream for the source endpoint */
@@ -68,3 +73,8 @@ struct bt_cap_stream *stream_alloc(enum bt_audio_dir dir);
  * @param cap_stream Pointer to the stream that was released
  */
 void stream_released(const struct bt_cap_stream *cap_stream);
+
+
+#ifdef __cplusplus
+}
+#endif

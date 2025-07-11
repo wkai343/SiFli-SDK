@@ -65,6 +65,11 @@
 #define MAX_SYNCD_DEVICE 2
 
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct
 {
     struct rt_delayed_work work;
@@ -136,3 +141,8 @@ uint8_t ble_app_sender_is_working(void);
 
 #endif // MAIN_H_
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
+
+
+#ifdef __cplusplus
+}
+#endif

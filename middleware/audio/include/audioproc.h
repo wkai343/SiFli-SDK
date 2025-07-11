@@ -8,6 +8,11 @@
 
 #define USING_2RX_WAKEUP        1 //wakeup aduio server when adc and pdm data coming all
 #define DEBUG_FRAME_SYNC        0
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct
 {
     rt_tick_t dump_start;
@@ -77,3 +82,8 @@ int is_audio_dump_enable_type(audio_dump_type_t type);
 #endif
 
 
+
+
+#ifdef __cplusplus
+}
+#endif

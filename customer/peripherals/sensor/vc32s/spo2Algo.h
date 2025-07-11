@@ -41,6 +41,11 @@
 
 
 /* Function Declarations */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern float vcSpo2Calculate(float r_ppg, float ir_ppg);
 extern void vcSpo2AlgoInit(void);
 extern void vcSpo2AlgoTerminate(void);
@@ -52,3 +57,8 @@ extern void vcSpo2AlgoTerminate(void);
  *
  * [EOF]
  */
+
+
+#ifdef __cplusplus
+}
+#endif

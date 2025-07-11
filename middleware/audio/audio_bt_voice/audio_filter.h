@@ -15,5 +15,14 @@
 
 #define FIR_FILTER_LENGTH 64
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int interpolation_x8(int16_t *inp_buf, int inp_len, int16_t *out_buf, int out_len);
 int decimation_x8(int16_t *inp_buf, int inp_len, int16_t *out_buf, int out_len);
+
+#ifdef __cplusplus
+}
+#endif

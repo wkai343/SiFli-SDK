@@ -33,7 +33,17 @@
 #if defined(CONFIG_LIBLC3)
     #include "lc3.h"
 #endif /* defined(CONFIG_LIBLC3) */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int bap_broadcast_sink_init();
 int bap_broadcast_sink_start(int stream_idx);
 int bap_broadcast_sink_stop(void);
+#endif
+
+
+#ifdef __cplusplus
+}
 #endif

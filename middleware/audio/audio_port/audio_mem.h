@@ -56,6 +56,11 @@
 #define     AUDIO_MEMORY_LEAK_CHECK         0
 
 #if AUDIO_MEMORY_LEAK_CHECK
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
     void *audio_mem_malloc_do(uint32_t size, const char *file, int line);
     void  audio_mem_free_do(void *ptr);
     void *audio_mem_calloc_do(uint32_t count, uint32_t size, const char *file, int line);
@@ -97,3 +102,8 @@
 
 
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
+
+
+#ifdef __cplusplus
+}
+#endif

@@ -48,6 +48,11 @@
 #ifndef __DFU_UART_H
 #define __DFU_UART_H
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct
 {
     uint32_t magic;
@@ -205,3 +210,7 @@ void dfu_uart_reset_handler();
 void dfu_uart_dfu_mode_set();
 
 #endif //__DFU_UART_H
+
+#ifdef __cplusplus
+}
+#endif

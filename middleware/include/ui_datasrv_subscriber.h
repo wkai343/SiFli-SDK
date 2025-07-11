@@ -63,6 +63,11 @@
     @brief Initialize GUI data service client module.
 */
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void ui_datac_init(void);
 
 /**
@@ -78,3 +83,8 @@ datac_handle_t ui_datac_subscribe(datac_handle_t handle, char *name, data_callba
 ///@} ui_datac
 #endif /*__UI_DATASRV_H__*/
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
+
+
+#ifdef __cplusplus
+}
+#endif

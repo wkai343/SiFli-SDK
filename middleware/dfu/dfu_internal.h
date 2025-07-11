@@ -92,6 +92,11 @@
 #define DFU_EMMC_ADDR_RANGE_FLAG 0xF0000000
 
 #define DFU_PROTOCOL_PKT_BUFF_ALLOC(msg_id, msg_struct) \
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
     (msg_struct *)dfu_protocol_packet_buffer_alloc(msg_id, sizeof(msg_struct));
 
 
@@ -897,3 +902,8 @@ uint32_t crc32_update(uint32_t crc, const uint8_t *data, size_t len);
 #endif //__DFU_INTERNAL_H
 
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
+
+
+#ifdef __cplusplus
+}
+#endif

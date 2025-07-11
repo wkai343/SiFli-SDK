@@ -11,6 +11,11 @@
  *
  * @return 0 if success, errno on failure.
  */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int vcp_vol_renderer_init(void);
 
 /**
@@ -26,3 +31,8 @@ int bap_broadcast_sink_init(void);
  * @return 0 if success, errno on failure.
  */
 int bap_broadcast_sink_run(void);
+
+
+#ifdef __cplusplus
+}
+#endif

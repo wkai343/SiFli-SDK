@@ -10,6 +10,11 @@
  *
  * @return 0 if success, errno on failure.
  */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int cap_initiator_init(void);
 
 /**
@@ -18,3 +23,8 @@ int cap_initiator_init(void);
  * @return 0 if success, errno on failure.
  */
 int cap_initiator_setup(void);
+
+
+#ifdef __cplusplus
+}
+#endif

@@ -9,6 +9,11 @@
 #define CHARGE_CC_CURRENT_LEVEL1   (300)
 
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum
 {
     RT_CHARGE_ENABLE = 0x100 + 1,
@@ -203,3 +208,8 @@ void rt_charge_event_notify(rt_charge_event_t event);
 rt_err_t rt_charge_register(rt_charge_device_t *charge, const struct rt_charge_ops *ops, const void *user_data);
 
 #endif /* __CHARGE_H__ */
+
+
+#ifdef __cplusplus
+}
+#endif

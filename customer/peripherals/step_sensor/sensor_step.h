@@ -49,6 +49,11 @@
 #include "board.h"
 #include "sensor.h"
 /* virt_step config structure */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct virt_step_config
 {
     rt_uint16_t odr;
@@ -70,3 +75,8 @@ int rt_virt_step_init(const char *name, struct rt_sensor_config *cfg);
 
 #endif  // SENSOR_VIRT_STEP_H__
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
+
+
+#ifdef __cplusplus
+}
+#endif

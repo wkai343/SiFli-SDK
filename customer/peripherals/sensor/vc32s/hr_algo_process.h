@@ -52,6 +52,11 @@
 #include "hr_algo.h"
 #include "algo.h"
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct
 {
     uint8_t no_touch_num;
@@ -68,3 +73,8 @@ uint8_t hrs_algo_postprocess(uint8_t hr_type, hrs_info_t *info);
 
 #endif  // SENSOR_GOODIX_GH3011_H__
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
+
+
+#ifdef __cplusplus
+}
+#endif

@@ -57,6 +57,11 @@
 #define HR_PERIOD_TIMER         800     //vc32s every  800ms get fifo data
 #define HR_ALGO_PEROID          800
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct
 {
     uint8_t status;
@@ -96,3 +101,8 @@ void vc32sStart(vcHr02_t *pVcHr02, vcHr02Mode_t vcHr02WorkMode);
 
 #endif  // SENSOR_GOODIX_GH3011_H__
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
+
+
+#ifdef __cplusplus
+}
+#endif

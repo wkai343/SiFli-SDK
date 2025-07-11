@@ -57,6 +57,11 @@
 #define  MAX_SVS 256
 #define  NMEA_MAX_SIZE  1024
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 enum
 {
     GNSS_CONSTELLATION_UNKNOWN = 0,
@@ -216,3 +221,8 @@ typedef struct
 #endif /* _GPS_TYPES_H_ */
 
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
+
+
+#ifdef __cplusplus
+}
+#endif

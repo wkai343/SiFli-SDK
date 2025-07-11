@@ -53,6 +53,11 @@
 
 
 /* bmp280 config structure */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 struct bmp280_config
 {
     rt_uint16_t accel_range;
@@ -72,3 +77,8 @@ struct bmp280_device
 int rt_hw_bmp280_init(const char *name, struct rt_sensor_config *cfg);
 
 #endif  // SENSOR_BST_BMP280_H__/************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
+
+
+#ifdef __cplusplus
+}
+#endif

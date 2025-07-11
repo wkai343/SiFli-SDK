@@ -203,7 +203,7 @@
 
 
 #define uswap_32(x) \
-    ((((x) & 0xff000000) >> 24) | \
+((((x) & 0xff000000) >> 24) | \
      (((x) & 0x00ff0000) >>  8) | \
      (((x) & 0x0000ff00) <<  8) | \
      (((x) & 0x000000ff) << 24))
@@ -211,6 +211,14 @@
 #define  uswap_8(x) \
     (((uint16_t)(*((uint8_t *)(x)))) + \
     (((uint16_t)(*(((uint8_t *)(x)) + 1))) << 8))
+
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+    
 
 typedef void (*func_callback)(void *context);
 typedef enum
@@ -472,4 +480,8 @@ struct ustorage_csw
 typedef struct ustorage_csw *ustorage_csw_t;
 
 
+#endif
+
+#ifdef __cplusplus
+}
 #endif
