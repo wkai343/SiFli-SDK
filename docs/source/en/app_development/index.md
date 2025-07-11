@@ -1,4 +1,4 @@
-# Application development
+# Application Development
 
 ```{toctree}
 :hidden:

@@ -1,4 +1,4 @@
-# 硬件抽象层
+# HAL (Hardware Abstract Layer)
 
 ```{toctree}
 :titlesonly:

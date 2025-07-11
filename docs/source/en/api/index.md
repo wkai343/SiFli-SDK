@@ -1,4 +1,4 @@
-# API consult
+# API Reference
 
 Here is a list of all modules:
 

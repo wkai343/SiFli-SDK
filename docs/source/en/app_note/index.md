@@ -1,4 +1,4 @@
-# operating guide
+# Application Note
  
 ```{toctree}
 :titlesonly:
