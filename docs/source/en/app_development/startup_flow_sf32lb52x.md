@@ -56,24 +56,36 @@ The secondary Bootloader does not load PMU calibration parameters, only modifyin
 ## Application
 
 ### ResetHandler 
-The entry function for the application is `ResetHandler` (located in `drivers\cmsis\sf32lb52x\Templates\arm\startup_bf0_hcpu.S`), and its execution flow is shown in the diagram below. The user-defined `main` function is called by the main thread created by `rt_application_init`, as shown in {ref}`main_thread_entry_flow`.
+The entry function for the application is `ResetHandler` (located in `drivers\cmsis\sf32lb52x\Templates\arm\startup_bf0_hcpu.S`), and its execution flow is shown in the diagram below. The user-defined `main` function is called by the main thread created by `rt_application_init`, as shown in {ref}`main_thread_entry flow<main_thread_entry_flow>`.
 
-![Alt text](../../assets/ResetHandler.png)
+```{image} ../../assets/ResetHandler.png
+:alt: reset_handler_flow
+:name: reset_handler_flow
+```
 
 ### SystemInit
 `SystemInit` (located in `drivers/cmsis/sf32lb52x/Templates/system_bf0_ap.c`) executes before variable initialization (so variables with initial values or zero-initialized variables should not rely on their default values during this phase). It updates the VTOR register to redirect the interrupt vector table and calls `mpu_config` and `cache_enable` to initialize the MPU and enable the Cache. These functions are weak, and applications can override them to replace the default implementation.
 
-![Alt text](../../assets/SystemInit.png)
+```{image} ../../assets/SystemInit.png
+:alt: system_init_flow
+:name: system_init_flow
+```
 
 ### rt_hw_board_init
 `rt_hw_board_init` completes low-level hardware initialization, such as clock and IO configuration, PSRAM and NOR Flash initialization, heap, and serial console initialization. `rt_components_board_init` is an application-defined initialization function, called differently based on the application's configuration.
 
-![Alt text](../../assets/rt_hw_board_init.png)
+```{image} ../../assets/rt_hw_board_init.png
+:alt: rt_hw_board_init
+:name: rt_hw_board_init
+```
 
 #### HAL_Init
 `HAL_Init` performs the HAL initialization, loads PMU calibration parameters, updates clock and IO settings, and initializes PSRAM and NOR Flash (based on the new clock configuration). The green functions in the diagram represent board-level driver functions, with each board having an independent implementation, including `HAL_PreInit`, `BSP_IO_Init`, `BSP_PIN_Init`, and `BSP_Power_Up`. The gray functions are virtual functions implemented by the application, allowing customization for different applications on the same board.
 
-![Alt text](../../assets/hal_init.png)
+```{image} ../../assets/hal_init.png
+:alt: hal_init_flow
+:name: hal_init_flow
+```
 
 The Config Clock modifications include:
 
@@ -103,7 +115,10 @@ The code that loads these calibration values may run from Flash or PSRAM.
 
 `rt_application_init` creates the main thread, with the thread entry function being `main_thread_entry`. Once thread scheduling is enabled (i.e., after calling `rt_system_scheduler_start`), the main thread is scheduled and enters the `main_thread_entry` function. It first calls `rt_components_init` to initialize components, then calls the main function (application-defined). The user code begins execution from the main function, for example, the main function in the `rt_driver` example is located in `example/rt_driver/src/main.c`.
 
-![Alt text](../../assets/main_thread_entry.png)
+```{image} ../../assets/main_thread_entry.png
+:alt: main_thread_entry_flow
+:name: main_thread_entry_flow
+```
 
 ## Board-Level Driver Interface
 

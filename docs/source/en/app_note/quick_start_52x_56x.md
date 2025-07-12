@@ -16,7 +16,7 @@
 ```{note}  
 There is a conflict between the power supply of the emulator and the HDK board, so you need to disable the emulator's power supply. If the emulator connection fails, check the power supply jumper on the Jlink.  
 The following image shows the common Jlink power supply jumper that needs to be removed. 
-![](/assets/disable_jlink_power_supply.png)
+![](../../assets/disable_jlink_power_supply.png)
 ```
 3. USB Type-C Cable x2  
    Used to connect the ARM emulator and the USB2UART debug board to power the HDK board and capture HDK serial log data.
@@ -68,7 +68,7 @@ Using the `sf525` project under the `hal_example` as an example, the compilation
 ```{note}  
 `--board=xx` specifies the board information. You can choose a directory from _customer\\boards_ with a directory name containing "v2" and add _hcpu_ to the end, for example, `eh-lb525_v2_hcpu`.  
 After compilation, a folder `build_eh-lb525_v2_hcpu` will be created under the common directory, storing the generated images and other files.  
-![sf525 Project Compilation Successful](/assets/sf525_compile_success.png)
+![sf525 Project Compilation Successful](../../assets/sf525_compile_success.png)
 ```
 
 ### SF56X Project Code Compilation

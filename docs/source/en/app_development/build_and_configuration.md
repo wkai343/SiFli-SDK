@@ -58,7 +58,7 @@ The SDK uses `menuconfig`, a graphical interface tool from the kconfiglib packag
 If you wish to modify `proj.conf`, you can execute `menuconfig --board=<board_name>` in the project directory. If the board name does not have the `_hcpu` suffix, it defaults to configuring for the HCPU. To use the LCPU configuration, the board name should include the `_lcpu` suffix, such as `sf32lb52-lcd_n16r8_lcpu`. The parameter settings displayed in the menuconfig interface are the same as those used during actual compilation. After making modifications, press {kbd}`D` to save the minimal configuration to `proj.conf`. If you want to modify `board.conf`, you need to switch to the board directory and execute `menuconfig` (without any parameters). For example, switch to the `boards/sf32lb52-lcd_n16r8/hcpu` directory and run `menuconfig`.
 
 ```{note}
-If the configurations stored in `proj.conf` do not apply to all boards, you can create a subdirectory for the board in the project directory. Place the specific `proj.conf` for that board in this subdirectory for differentiated configuration. For more details, refer to [common_project.md](app_note/common_project.md).
+If the configurations stored in `proj.conf` do not apply to all boards, you can create a subdirectory for the board in the project directory. Place the specific `proj.conf` for that board in this subdirectory for differentiated configuration. For more details, refer to [](../app_note/common_project.md).
 ```
 
-For further reading, refer to [common_project.md](app_note/common_project.md).
+For further reading, refer to [](../app_note/common_project.md).

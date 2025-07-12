@@ -1,5 +1,5 @@
 
-# Universal Engineering Build Method
+# Common Project Build Method
 
 ## 1. Background
 
@@ -7,11 +7,11 @@ In SDK versions before v2.1.5, under each example directory, different directori
 
 The problem with this approach was that every time a new board was added, a new project directory had to be created. As the number of examples increased, many new projects were added. If a common configuration needed modification for a certain example, it had to be updated in all the projects, leading to high maintenance overhead. 
 
-To address this issue, starting from v2.1.5, the SDK introduced a new engineering build method known as the "Universal Engineering" approach. Under this method, only one project folder is required for each example, and it no longer stores the _.config_ and _rtconfig_ files. During compilation, the software for the selected board is generated, and _.config_ and _rtconfig.h_ are generated in the build directory. Multiple boards can be compiled simultaneously, and the generated files will not overwrite each other.
+To address this issue, starting from v2.1.5, the SDK introduced a new project build method known as the "Common Project" approach. Under this method, only one project folder is required for each example, and it no longer stores the _.config_ and _rtconfig_ files. During compilation, the software for the selected board is generated, and _.config_ and _rtconfig.h_ are generated in the build directory. Multiple boards can be compiled simultaneously, and the generated files will not overwrite each other.
 
 ## 2. Compilation Method
 
-In the universal engineering directory, execute the following command to compile the image for a specified board. `board_name` is the name of the board, and it can still be followed by other scons parameters, such as `-j8` to specify the use of 8 threads for compilation.
+In the common project directory, execute the following command to compile the image for a specified board. `board_name` is the name of the board, and it can still be followed by other scons parameters, such as `-j8` to specify the use of 8 threads for compilation.
 
 For dual-core chip boards, the `board_name` must specify which core is being used, for example, `eh-lb523_hcpu`, indicating the program that can run on the HCPU of the 523 HDK board.
 
@@ -31,9 +31,9 @@ The generated files will be stored in the `build_eh-lb523_v2_hcpu` directory, as
 
 ![Build Output](../../assets/an_28_build_output.png)
 
-## 3. How to Create a Universal Project
+## 3. How to Create a Common Project
 
-The creation of a universal project involves two parts: the board and the application. If creating a new application on an existing board, you can skip section 3.1 and directly create an application project.
+The creation of a common project involves two parts: the board and the application. If creating a new application on an existing board, you can skip section 3.1 and directly create an application project.
 
 ### 3.1 Board
 
@@ -198,7 +198,7 @@ After adding the `exec` property, the main project’s generated `ptab.h` will d
 ![](../../assets/an_28_ptab_header.png)  
 ## 4. Modifying Existing Projects
 
-Follow these steps to convert an existing project into a universal project supporting compilation for any board:
+Follow these steps to convert an existing project into a common project supporting compilation for any board:
 
 1. Create the board folder, extract board-related configurations from the original project's `.config`, write them into `board.conf` (skip this step if the board already exists), and copy the `_ptab.json_` file from the original project to the newly created board folder.
 2. Create the application project folder, extract common configurations from the original project's `.config`, write them into the root `proj.conf` of the application project, and place board-specific configurations in the corresponding board directory under the application.

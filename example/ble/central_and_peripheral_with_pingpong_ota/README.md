@@ -55,7 +55,7 @@ FTAB需要通过addchildproj的方式添加 \
 ![BOOT](./assets/bootloader.png)
 
 4. 制作命令
-```c
+```shell
 .\imgtoolv37.exe gen_dfu --img_para main 0 0 --key=s01 --sigkey=sig --dfu_id=1 --hw_ver=51 --sdk_ver=7001 --fw_ver=1001001 --com_type=0 --bksize=2048 --align=0
 ```
 main待升级的bin的名字，如果是hcpu.bin 则填hcpu即可。
@@ -82,7 +82,7 @@ $ ./uart_download.bat
 
 please input the serial port num:5
 ```
-关于编译、下载的详细步骤，请参考[快速入门](/quickstart/get-started-gcc.md)的相关介绍。
+关于编译、下载的详细步骤，请参考[快速入门](/quickstart/get-started.md)的相关介绍。
 
 ## 例程的预期结果
 <!-- 说明例程运行结果，比如哪几个灯会亮，会打印哪些log，以便用户判断例程是否正常运行，运行结果可以结合代码分步骤说明 -->
