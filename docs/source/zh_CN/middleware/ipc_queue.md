@@ -24,7 +24,7 @@ _ipc_queue.c_ 提供接口 `ipc_queue_data_ind`让中断处理函数通知上层
 
 ![图2: IPC queue](../../assets/ipc_queue_arch.png)
 
-对于RT-Thread平台，可以使用 [ipc_queue_device](#ipc-queue-device) 提供的API，将IPC Queue封装成RT Device。
+对于RT-Thread平台，可以使用 [ipc_queue_device](#middleware-ipc_queue_device) 提供的API，将IPC Queue封装成RT Device。
 
 ```{note}
  #ipc_queue_read 和 #ipc_queue_write 不是线程安全的，对于同一个queue，如果在多线程环境中调用`ipc_queue_read`或者`ipc_queue_write`读写数据，调用者需要做好互斥，避免重入。

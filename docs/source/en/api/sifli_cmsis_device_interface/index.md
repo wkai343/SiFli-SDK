@@ -1,4 +1,4 @@
-# SiFli CMSIS device interface
+# SiFli CMSIS Device Interface
 
 ```{toctree}
 :titlesonly:

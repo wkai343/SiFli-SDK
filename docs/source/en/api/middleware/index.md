@@ -1,4 +1,4 @@
-# middleware
+# Middleware
 
 ```{toctree}
 :titlesonly:

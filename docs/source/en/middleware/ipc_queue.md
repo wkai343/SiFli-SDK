@@ -1,7 +1,7 @@
 
 # Inter-Core Communication Queue
 
-The Inter-Core Communication Queue (IPC Queue library) implements bidirectional inter-core communication functionality. It combines the notification mechanism of [mailbox](hal/mailbox.md) with a software circular buffer, making inter-core communication similar to serial communication between two chips.
+The Inter-Core Communication Queue (IPC Queue library) implements bidirectional inter-core communication functionality. It combines the notification mechanism of [mailbox](/hal/mailbox.md) with a software circular buffer, making inter-core communication similar to serial communication between two chips.
 The library supports up to 4 queues operating simultaneously. Each queue is bound to a pair of transmit and receive buffers (buffers are optional; if set to NULL, only interrupt notification functionality is provided). The queues are mapped to corresponding hardware channels according to user configuration. The platform-supported hardware channel numbers can be found in the corresponding _ipc_hw_port.h_.
 
 Taking the communication between HCPU and LCPU as an example, from _ipc_hw_port.h_ we know that channels 0~7 are hardware channels between HCPU and LCPU. By selecting channel 0, calling `ipc_queue_init()` configures the addresses of the transmit and receive buffers and the callback function for receiving. If successful, it returns a valid queue handle. Then, calling `ipc_queue_open()` opens the channel, and data can be transmitted and received normally.
@@ -19,7 +19,7 @@ The _ipc_queue.c_ provides the interface `ipc_queue_data_ind` for the interrupt 
 
 ![Figure 2: IPC Queue Architecture](../../assets/ipc_queue_arch.png)
 
-For the RT-Thread platform, you can use the API provided by [ipc_queue_device](#ipc-queue-device) to encapsulate IPC Queue into an RT Device.
+For the RT-Thread platform, you can use the API provided by [ipc_queue_device](#middleware-ipc_queue_device) to encapsulate IPC Queue into an RT Device.
 
 ```{note}
  #ipc_queue_read and #ipc_queue_write are not thread-safe. If `ipc_queue_read` or `ipc_queue_write` is called in a multi-threaded environment on the same queue, the caller must ensure mutual exclusion to avoid re-entry.
