@@ -83,9 +83,9 @@ html_show_sourcelink = False
 #html_show_copyright = False
 
 html_theme_options = {
-    'collapse_navigation' : False,
-    'style_nav_header_background': 'white',
-    'logo_only': False,
+    # 'collapse_navigation' : False,
+    # 'style_nav_header_background': 'white',
+    # 'logo_only': False,
     "accent_color": "blue",
 }
 
@@ -146,7 +146,7 @@ if "SF32LB58X" in tags:
     # HAL
     exclude_patterns = ["**/hash.md", "**/psram.md", "**/qspi.md"]
     # App note
-    exclude_patterns += ["**/quick_start_55x.md", "**/memory_usage.md"]
+    exclude_patterns += ["**/quick_start_55x.md", "**/memory_usage.md", "**/dualcore.md"]
     # Middlware
     exclude_patterns += []
     # Example 
@@ -159,7 +159,7 @@ if "SF32LB56X" in tags:
     # HAL
     exclude_patterns = ["**/dsi.md", "**/psram.md", "**/qspi.md"]
     # App note
-    exclude_patterns += ["**/quick_start_55x.md", "**/memory_usage.md"]
+    exclude_patterns += ["**/quick_start_55x.md", "**/memory_usage.md", "**/dualcore.md"]
     # Middlware
     exclude_patterns += []
     # Example 
@@ -172,7 +172,7 @@ if "SF32LB52X" in tags:
     # HAL
     exclude_patterns = ["**/busmon.md", "**/dsi.md", "**/facc.md", "**/fft.md", "**/nnacc.md", "**/psram.md", "**/qspi.md"]
     # App note
-    exclude_patterns += ["**/quick_start_55x.md", "**/memory_usage.md"]
+    exclude_patterns += ["**/quick_start_55x.md", "**/memory_usage.md", "**/dualcore.md"]
     # Middlware
     exclude_patterns += []
     # Example 

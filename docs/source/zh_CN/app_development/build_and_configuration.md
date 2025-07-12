@@ -54,7 +54,7 @@ SDK使用menuconfig（kconfiglib包中的一个图形化界面工具）管理项
 如果想修改`proj.conf`，可以在工程目录下执行`menuconfig --board=<board_name>`，其中`<board_name>`如果不带`_hcpu`后缀则默认按HCPU来配置，如果想使用LCPU的配置，则需要在板子名称后加上`_lcpu`后缀，如`sf32lb52-lcd_n16r8_lcpu`。menuconfig界面上看到的参数设置与实际编译时用到的相同，修改设置后按{kbd}`D`保存最小配置到`proj.conf`中。如果想修改`board.conf`，则需要切换到板子目录下执行`menuconfig`（不带任何参数），如切换到`boards/sf32lb52-lcd_n16r8/hcpu`目录下运行`menuconfig`
 
 ```{note}
-`proj.conf`中的存放的配置如果不适用于所有板子，可以在工程目录下创建板子的子目录，在这个目录下放置该板子专属的`proj.conf`，以做差异化配置，具体方法参考[](/app_note/common_project.md)
+`proj.conf`中的存放的配置如果不适用于所有板子，可以在工程目录下创建板子的子目录，在这个目录下放置该板子专属的`proj.conf`，以做差异化配置，具体方法参考[](../app_note/common_project.md)
 ```
 
-扩展阅读请参考[](/app_note/common_project.md)
+扩展阅读请参考[](../app_note/common_project.md)

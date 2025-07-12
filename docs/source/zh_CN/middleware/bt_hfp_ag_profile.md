@@ -394,7 +394,7 @@ ind_info.ind_type = HFP_AG_CIND_SERVICE_TYPE ;
 ind_info.ind_val  = 3;
 bt_interface_indicator_status_changed(&ind_info);
 ```
-##### AG本地号码同步
+#### AG本地号码同步
 - AT cmd: 
     - AT+CNUM: Subscriber Number Information
     - 格式：AT+CNUM
