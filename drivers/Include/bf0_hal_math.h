@@ -12,8 +12,7 @@ extern "C" {
 #endif
 
 #ifndef SF32LB52X
-/* TODO: */
-#if defined(__CC_ARM) || defined(__CLANG_ARM) || (defined(__GNUC__) && (__GNUC__ > 19))
+#if defined(__CC_ARM) || defined(__CLANG_ARM) || (defined(__GNUC__) && (__GNUC__ > 9))
 #define HAL_MATH_CDE_SUPPORT
 #endif /* defined(__CC_ARM) || defined(__CLANG_ARM) || (defined(__GNUC__) && (__GNUC__ > 9)) */
 #endif /* SF32LB52X */
@@ -34,11 +33,6 @@ extern "C" {
 #endif /* defined(__CC_ARM) */
 
 #include "bf0_hal_def.h"
-
-uint32_t __arm_cx2(int, uint32_t, uint32_t);
-uint32_t __arm_cx2a(int, uint32_t, uint32_t, uint32_t);
-uint64_t __arm_cx2d(int, uint32_t, uint32_t);
-uint64_t __arm_cx2da(int, uint64_t, uint32_t, uint32_t);
 
 /** @addtogroup MATH
   * @ingroup BF0_HAL_Driver
