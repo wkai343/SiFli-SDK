@@ -2265,12 +2265,15 @@ def SifliGccEnv(cpu):
     else:
         no_dsp_fp = False
 
+    SIFLI_SDK = os.getenv('SIFLI_SDK')
     DEVICE = ' -mcpu=' + cpu + ' -mthumb -ffunction-sections -fdata-sections'
     if not no_dsp_fp:
         rtconfig.CFLAGS = DEVICE + ' -mfpu=fpv5-sp-d16 -mfloat-abi=hard'
     else:
         rtconfig.CFLAGS = DEVICE + ' -mfloat-abi=soft'
     rtconfig.CFLAGS += ' -funsigned-char -fshort-enums -fshort-wchar'
+    # remove absolute path
+    rtconfig.CFLAGS += f' -ffile-prefix-map={SIFLI_SDK}=./'
     rtconfig.CFLAGS += ' -mlittle-endian -gdwarf-3 -Wno-packed -Wno-missing-noreturn -Wno-sign-conversion -Wno-unused-macros -Wnull-dereference'
     rtconfig.CFLAGS += ' -fno-unwind-tables -fno-exceptions'
     rtconfig.CFLAGS += ' -fno-common'
