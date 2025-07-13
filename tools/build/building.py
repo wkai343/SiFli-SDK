@@ -2240,6 +2240,23 @@ def SifliIarEnv(cpu):
     #env.Replace(ARFLAGS = [''])
     #env.Replace(LINKCOM = env["LINKCOM"] + ' --map rt-thread.map')
 
+def GetKeilMcpu():
+    if GetDepend('SOC_SF32LB55X'):
+        mcpu = 'cortex-m33'
+    elif GetDepend('SOC_SF32LB56X'):
+        mcpu = 'cortex-m33+cdecp1'
+    elif GetDepend('SOC_SF32LB58X'):
+        mcpu = 'cortex-m33+cdecp1'
+    elif GetDepend('SOC_SF32LB52X'):  
+        if GetDepend("BF0_LCPU"):
+            mcpu = 'cortex-m33+nodsp'
+        else:
+            mcpu = 'cortex-m33+cdecp1'
+    else:
+        raise Exception("Unknown chip series")
+    
+    return mcpu
+
 def SifliGccEnv(cpu):
     import rtconfig
     
@@ -2395,11 +2412,12 @@ def SifliKeilEnv(cpu, BSP_ROOT=''):
             rtconfig.CFLAGS+= ' -DARMCM33 '        
             DEVICE += ' -mfpu=none -mfloat-abi=soft '   
             asm_cpu = cpu + '.no_dsp'
-            cpu += "+nodsp"
+
+        cpu = GetKeilMcpu()
     else:
         assert false, "Unknown cpu: {}".format(cpu)
     
-    rtconfig.CFLAGS +=' -mcpu=' + cpu +  DEVICE + ' -c -ffunction-sections --target=arm-arm-none-eabi'
+    rtconfig.CFLAGS += ' -mcpu=' + cpu +  DEVICE + ' -c -ffunction-sections --target=arm-arm-none-eabi'
     rtconfig.CFLAGS += ' -fno-rtti -funsigned-char -fshort-enums -fshort-wchar'
 	# -Werror 
     rtconfig.CFLAGS += ' -mlittle-endian -gdwarf-3 -Wno-builtin-macro-redefined -Wno-pointer-sign -Wno-typedef-redefinition '
@@ -2418,7 +2436,7 @@ def SifliKeilEnv(cpu, BSP_ROOT=''):
     rtconfig.CFLAGS = rtconfig.CFLAGS + ' -xc -std=c99 '
     rtconfig.LFLAGS = ' --cpu=' + asm_cpu 
     if no_dsp_fp:
-        rtconfig.LFLAGS = ' --fpu=SoftVFP'    
+        rtconfig.LFLAGS += ' --fpu=SoftVFP'    
     rtconfig.LFLAGS += ' --strict --scatter '+ rtconfig.LINK_SCRIPT+ '.sct --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols --info sizes --info totals --info unused --info veneers --any_contingency '
     
     rtconfig.LFLAGS += ' --list ' + os.path.join(rtconfig.OUTPUT_DIR, rtconfig.TARGET_NAME + '.map') + ' '
