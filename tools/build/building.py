@@ -2257,6 +2257,40 @@ def GetKeilMcpu():
     
     return mcpu
 
+# ref.: https://gcc.gnu.org/onlinedocs/gcc/ARM-Options.html
+# -mcpu=cortex-m33+cdecp1 is not supported by GCC14, -mcpu=star-mc1+cdecp1 neither, so we use the combination of -mtune and -march
+# -mtune=cortex-m33 doesn't enable dsp and fp by default, so need to enable them by -march
+def GetMtune():
+    if GetDepend('SOC_SF32LB55X'):
+        mtune = 'cortex-m33'
+    elif GetDepend('SOC_SF32LB56X'):
+        mtune = 'cortex-m33'
+    elif GetDepend('SOC_SF32LB58X'):
+        mtune = 'cortex-m33'
+    elif GetDepend('SOC_SF32LB52X'):  
+        mtune = 'cortex-m33'
+    else:
+        raise Exception("Unknown chip series")
+    
+    return ' -mtune=' + mtune
+
+def GetMarch():
+    if GetDepend('SOC_SF32LB55X'):
+        march = 'armv8-m.main+dsp+fp'
+    elif GetDepend('SOC_SF32LB56X'):
+        march = 'armv8-m.main+dsp+fp+cdecp1'
+    elif GetDepend('SOC_SF32LB58X'):
+        march = 'armv8-m.main+dsp+fp+cdecp1'
+    elif GetDepend('SOC_SF32LB52X'):  
+        if GetDepend("BF0_LCPU"):
+            march = 'armv8-m.main'
+        else:
+            march = 'armv8-m.main+dsp+fp+cdecp1'
+    else:
+        raise Exception("Unknown chip series")
+    
+    return ' -march=' + march
+
 def SifliGccEnv(cpu):
     import rtconfig
     
@@ -2278,12 +2312,11 @@ def SifliGccEnv(cpu):
 
     if GetDepend('CPU_HAS_NO_DSP_FP'):
         no_dsp_fp = True
-        cpu += '+nodsp'
     else:
         no_dsp_fp = False
 
     SIFLI_SDK = os.getenv('SIFLI_SDK')
-    DEVICE = ' -mcpu=' + cpu + ' -mthumb -ffunction-sections -fdata-sections'
+    DEVICE = GetMtune() + GetMarch() + ' -mthumb -ffunction-sections -fdata-sections'
     if not no_dsp_fp:
         rtconfig.CFLAGS = DEVICE + ' -mfpu=fpv5-sp-d16 -mfloat-abi=hard'
     else:
@@ -2302,7 +2335,7 @@ def SifliGccEnv(cpu):
     rtconfig.CCFLAGS =  rtconfig.CFLAGS + ' -std=c99 -Wno-missing-prototypes'
     rtconfig.AFLAGS = ' -c' + DEVICE
     if not no_dsp_fp:
-        rtconfig.AFLAGS += ' -mfpu=fpv4-sp-d16 -mfloat-abi=hard'
+        rtconfig.AFLAGS += ' -mfpu=fpv5-sp-d16 -mfloat-abi=hard'
     else:
         rtconfig.AFLAGS += ' -mfloat-abi=soft'
 
