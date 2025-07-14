@@ -78,7 +78,7 @@ rt_err_t drv_epic_fill_ext(EPIC_LayerConfigTypeDef *input_layers,
 rt_err_t drv_epic_fill(uint32_t dst_cf, uint8_t *dst,
                        const EPIC_AreaTypeDef *dst_area,
                        const EPIC_AreaTypeDef *fill_area,
-                       uint32_t fill_color,
+                       uint32_t argb8888,
                        uint32_t mask_cf, const uint8_t *mask,
                        const EPIC_AreaTypeDef *mask_area,
                        drv_epic_cplt_cbk cbk);

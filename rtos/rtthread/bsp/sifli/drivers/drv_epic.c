@@ -1669,7 +1669,7 @@ rt_err_t drv_epic_fill_ext(EPIC_LayerConfigTypeDef *input_layers,
 rt_err_t drv_epic_fill(uint32_t dst_cf, uint8_t *dst,
                        const EPIC_AreaTypeDef *dst_area,
                        const EPIC_AreaTypeDef *fill_area,
-                       uint32_t fill_color,
+                       uint32_t argb8888,
                        uint32_t mask_cf, const uint8_t *mask_map,
                        const EPIC_AreaTypeDef *mask_area,
                        drv_epic_cplt_cbk cbk)
@@ -1683,7 +1683,7 @@ rt_err_t drv_epic_fill(uint32_t dst_cf, uint8_t *dst,
     if (RT_EOK != err) return err;
 
 
-    LOG_D("\r\n drv_epic_fill dst=%p "AreaString" color=%x", dst, AreaParams(dst_area), fill_color);
+    LOG_D("\r\n drv_epic_fill dst=%p "AreaString" color=%x", dst, AreaParams(dst_area), argb8888);
     if (mask_map)
     {
         LOG_D("mask=%p "AreaString, mask_map, AreaParams(mask_area));
@@ -1696,10 +1696,10 @@ rt_err_t drv_epic_fill(uint32_t dst_cf, uint8_t *dst,
     HAL_EPIC_LayerConfigInit(p_output_canvas);
     p_output_canvas->color_mode = dst_cf;
     p_output_canvas->total_width = HAL_EPIC_AreaWidth(dst_area);
-    opa = (uint8_t)((fill_color >> 24) & 0xFF);
-    p_output_canvas->color_r = (uint8_t)((fill_color >> 16) & 0xFF);
-    p_output_canvas->color_g = (uint8_t)((fill_color >> 8) & 0xFF);
-    p_output_canvas->color_b = (uint8_t)((fill_color >> 0) & 0xFF);
+    opa = (uint8_t)((argb8888 >> 24) & 0xFF);
+    p_output_canvas->color_r = (uint8_t)((argb8888 >> 16) & 0xFF);
+    p_output_canvas->color_g = (uint8_t)((argb8888 >> 8) & 0xFF);
+    p_output_canvas->color_b = (uint8_t)((argb8888 >> 0) & 0xFF);
     p_output_canvas->color_en = true;
 
     //Clip dst layer to filling area
@@ -2039,6 +2039,9 @@ void drv_epic_cont_blend_reset(void)
 }
 
 #else /* DRV_EPIC_NEW_API */
+#ifdef SOC_SF32LB55X
+    #error "Render-list mode can not works on SF32LB55X"
+#endif
 #define DRV_EPIC_ASSERT(expr) do{\
     if(!(expr)){print_gpu_error_info();\
     RT_ASSERT(expr);}\

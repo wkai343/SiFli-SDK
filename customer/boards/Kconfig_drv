@@ -1423,10 +1423,14 @@ menu "On-chip Peripheral RTOS Drivers"
         bool "Enable EPIC"
         select RT_USING_EPIC
         default n
-        if BSP_USING_EPIC
+        if BSP_USING_EPIC && !SOC_SF32LB55X
             config DRV_EPIC_NEW_API
-            bool "Using epic render list API"
+            bool "Using epic render list API(under development)"
             default n
+            help
+                1. Can not works on SFLB55X serials
+                2. Asynchronized rendering, must keep the buffers used by the render-list available until rendering is complete.
+
         endif
         config EZIP_PAL_SUPPORT
             bool

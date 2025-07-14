@@ -825,7 +825,13 @@ lv_disp_drv_t *lv_lcd_init(const char *name)
     disp_drv.wait_cb = NULL;
     disp_drv.set_px_cb = set_px_cb_assert;
 
+
+
+#if defined(LV_FB_TWO_NOT_SCREEN_SIZE) || defined(LV_FB_TWO_SCREEN_SIZE)
     drv_epic_setup_render_buffer((uint8_t *)buf1_1, (uint8_t *)buf1_2, sizeof(buf1_1));
+#else
+#error "Two LVGL framebufers are required for the EPIC render-list mode"
+#endif
 
 #endif /*DRV_EPIC_NEW_API*/
     disp_drv.draw_buf = &disp_buf;
