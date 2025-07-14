@@ -199,7 +199,7 @@ static void send_timeout_handler(void *parameter)
     uint32_t lvl = rt_hw_interrupt_disable();
     time_cnt++;
     rt_hw_interrupt_enable(lvl);
-    printk("timer=%d\n", rt_tick_get());
+    //printk("timer=%d\n", rt_tick_get());
     rt_event_send(g_run_event, BAP_EVENT_SEND);
 }
 
