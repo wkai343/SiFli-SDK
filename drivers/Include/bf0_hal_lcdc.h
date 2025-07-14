@@ -262,6 +262,16 @@ typedef struct
     uint16_t bank_row_head;
     uint16_t valid_rows;
     uint16_t bank_row_tail;
+
+    uint16_t enb_start_col;   /*ENB active start column number */
+    uint16_t enb_end_col;     /*ENB active end column number */
+
+    uint8_t  enb_pol_invert : 1;  /*Enable polarity invert, default is high active*/
+    uint8_t  hck_pol_invert: 1;  /*HCLK polarity invert, default is high active*/
+    uint8_t  hst_pol_invert : 1;  /*HST polarity invert, default is high active*/
+    uint8_t  vck_pol_invert : 1;  /*VCK polarity invert, default is high active*/
+    uint8_t  vst_pol_invert : 1;  /*VST polarity invert, default is high active*/
+    uint8_t reserved : 3;       /*Reserved bits*/
 } JDI_LCD_CFG;
 
 

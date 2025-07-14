@@ -65,7 +65,7 @@
 static LCDC_InitTypeDef lcdc_int_cfg =
 {
     .lcd_itf = LCDC_INTF_JDI_PARALLEL,
-    .freq = 60,
+    .freq = 746268, //HCK frequency
     .color_mode = LCDC_PIXEL_FORMAT_RGB565, // Useless parameter for JDI PARALLEL interface
 
     .cfg = {
@@ -77,6 +77,9 @@ static LCDC_InitTypeDef lcdc_int_cfg =
             .bank_row_head = 0,
             .valid_rows = THE_LCD_PIXEL_HEIGHT,
             .bank_row_tail = 4,
+
+            .enb_start_col = 32,
+            .enb_end_col = 95,
         },
     },
 

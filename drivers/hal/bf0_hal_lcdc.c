@@ -1498,17 +1498,17 @@ static HAL_StatusTypeDef _SendLayerData(LCDC_HandleTypeDef *lcdc, LCDC_AsyncMode
     {
 
         uint32_t max_col, max_line, start_line, end_line, start_col, end_col;
+        JDI_LCD_CFG *jdi_cfg = &(lcdc->Init.cfg.jdi);
+
+        max_col = (jdi_cfg->bank_col_head + jdi_cfg->valid_columns + jdi_cfg->bank_col_tail) / 2;
+        max_line = (jdi_cfg->bank_row_head + jdi_cfg->valid_rows + jdi_cfg->bank_row_tail) * 2;
 
 
-        max_col = (lcdc->Init.cfg.jdi.bank_col_head + lcdc->Init.cfg.jdi.valid_columns + lcdc->Init.cfg.jdi.bank_col_tail) / 2;
-        max_line = (lcdc->Init.cfg.jdi.bank_row_head + lcdc->Init.cfg.jdi.valid_rows + lcdc->Init.cfg.jdi.bank_row_tail) * 2;
+        start_line = (jdi_cfg->bank_row_head + lcdc->roi.y0) * 2 + 1;
+        end_line   = (jdi_cfg->bank_row_head + lcdc->roi.y1 + 1) * 2;
 
-
-        start_line = (lcdc->Init.cfg.jdi.bank_row_head + lcdc->roi.y0) * 2 + 1;
-        end_line   = (lcdc->Init.cfg.jdi.bank_row_head + lcdc->roi.y1 + 1) * 2;
-
-        start_col = (lcdc->Init.cfg.jdi.bank_col_head + lcdc->roi.x0) / 2;
-        end_col   = (lcdc->Init.cfg.jdi.bank_col_head + lcdc->roi.x1 + 1) / 2  - 1;
+        start_col = (jdi_cfg->bank_col_head + lcdc->roi.x0) / 2;
+        end_col   = (jdi_cfg->bank_col_head + lcdc->roi.x1 + 1) / 2  - 1;
 
 
         lcdc->Instance->JDI_PAR_CONF2 = (start_line << LCD_IF_JDI_PAR_CONF2_ST_LINE_Pos) | (end_line << LCD_IF_JDI_PAR_CONF2_END_LINE_Pos);
@@ -1521,14 +1521,6 @@ static HAL_StatusTypeDef _SendLayerData(LCDC_HandleTypeDef *lcdc, LCDC_AsyncMode
         /* Interrupt after send half of 'max_line' data */
         lcdc->Instance->JDI_PAR_CTRL &= ~LCD_IF_JDI_PAR_CTRL_INT_LINE_NUM_Msk;
         lcdc->Instance->JDI_PAR_CTRL |= ((max_line / 2) - 1) << LCD_IF_JDI_PAR_CTRL_INT_LINE_NUM_Pos;
-
-
-        if (lcdc->Instance->JDI_PAR_EX_CTRL & LCD_IF_JDI_PAR_EX_CTRL_CNT_EN)
-        {
-            //wait fall edge
-            while (0 == (lcdc->Instance->JDI_PAR_EX_CTRL & LCD_IF_JDI_PAR_EX_CTRL_XFRP));
-            while (0 != (lcdc->Instance->JDI_PAR_EX_CTRL & LCD_IF_JDI_PAR_EX_CTRL_XFRP));
-        }
 
         lcdc->Instance->SETTING |= LCD_IF_SETTING_JDI_PARL_INTR_MASK | LCD_IF_SETTING_EOF_MASK;
         //Pull up rst
@@ -1737,19 +1729,17 @@ static void LCDC_TransErrCallback(LCDC_HandleTypeDef *lcdc, HAL_StatusTypeDef er
 
 static void HAL_LCDC_JDIParallelInit(LCDC_HandleTypeDef *lcdc)
 {
-    uint32_t lcdc_clk_MHz = HAL_RCC_GetHCLKFreq(GET_LCDC_SYSID(lcdc)) / 1000000;
+    uint32_t lcdc_clk_Hz = HAL_RCC_GetHCLKFreq(GET_LCDC_SYSID(lcdc));
     uint32_t lcdc_pclk_Hz = HAL_RCC_GetPCLKFreq(GET_LCDC_SYSID(lcdc), 1);
-
+    JDI_LCD_CFG *jdi_cfg = &(lcdc->Init.cfg.jdi);
 
     uint32_t max_col, max_line;
 
-    max_col = (lcdc->Init.cfg.jdi.bank_col_head + lcdc->Init.cfg.jdi.valid_columns + lcdc->Init.cfg.jdi.bank_col_tail) / 2;
-    max_line = (lcdc->Init.cfg.jdi.bank_row_head + lcdc->Init.cfg.jdi.valid_rows + lcdc->Init.cfg.jdi.bank_row_tail) * 2;
-
-    const uint32_t hck_ns = 660;  //hck pulse width, half period time
+    max_col = (jdi_cfg->bank_col_head + jdi_cfg->valid_columns + jdi_cfg->bank_col_tail) / 2;
+    max_line = (jdi_cfg->bank_row_head + jdi_cfg->valid_rows + jdi_cfg->bank_row_tail) * 2;
 
 
-    uint32_t hck_tk     = ((hck_ns  * lcdc_clk_MHz) + 500) / 1000;
+    uint32_t hck_tk     = ((lcdc_clk_Hz + (lcdc->Init.freq - 1)) / lcdc->Init.freq) >> 1;
     uint32_t hst_tk     = hck_tk;
     uint32_t hst_dly_tk = hst_tk;
     uint32_t hck_dly_tk = hck_tk / 2;
@@ -1782,26 +1772,16 @@ static void HAL_LCDC_JDIParallelInit(LCDC_HandleTypeDef *lcdc)
                                     | LCD_IF_JDI_PAR_CONF7_DP_MODE;
 
 
-    lcdc->Instance->JDI_PAR_CONF8 = ((32) << LCD_IF_JDI_PAR_CONF8_ENB_ST_COL_Pos) | ((95) << LCD_IF_JDI_PAR_CONF8_ENB_END_COL_Pos);
-    lcdc->Instance->JDI_PAR_CTRL = (0 << LCD_IF_JDI_PAR_CTRL_ENBPOL_Pos)
-                                   | (0 << LCD_IF_JDI_PAR_CTRL_HCKPOL_Pos)
-                                   | (0 << LCD_IF_JDI_PAR_CTRL_HSTPOL_Pos)
-                                   | (0 << LCD_IF_JDI_PAR_CTRL_VCKPOL_Pos)
-                                   | (0 << LCD_IF_JDI_PAR_CTRL_VSTPOL_Pos)
-                                   | (0 << LCD_IF_JDI_PAR_CTRL_INT_LINE_NUM_Pos);
+    lcdc->Instance->JDI_PAR_CONF8 = ((jdi_cfg->enb_start_col) << LCD_IF_JDI_PAR_CONF8_ENB_ST_COL_Pos) | ((jdi_cfg->enb_end_col) << LCD_IF_JDI_PAR_CONF8_ENB_END_COL_Pos);
+    lcdc->Instance->JDI_PAR_CTRL = (jdi_cfg->enb_pol_invert << LCD_IF_JDI_PAR_CTRL_ENBPOL_Pos)
+                                   | (jdi_cfg->hck_pol_invert << LCD_IF_JDI_PAR_CTRL_HCKPOL_Pos)
+                                   | (jdi_cfg->hst_pol_invert << LCD_IF_JDI_PAR_CTRL_HSTPOL_Pos)
+                                   | (jdi_cfg->vck_pol_invert << LCD_IF_JDI_PAR_CTRL_VCKPOL_Pos)
+                                   | (jdi_cfg->vst_pol_invert << LCD_IF_JDI_PAR_CTRL_VSTPOL_Pos);
 
 
 
     lcdc->Instance->JDI_PAR_CTRL &= ~LCD_IF_JDI_PAR_CTRL_XRST;
-
-
-    lcdc->Instance->JDI_PAR_EX_CTRL &= ~(LCD_IF_JDI_PAR_EX_CTRL_MAX_CNT_Msk | LCD_IF_JDI_PAR_EX_CTRL_CNT_EN);
-    lcdc->Instance->JDI_PAR_EX_CTRL |= (lcdc_pclk_Hz / 60) << LCD_IF_JDI_PAR_EX_CTRL_MAX_CNT_Pos;
-
-
-
-
-
 }
 
 
