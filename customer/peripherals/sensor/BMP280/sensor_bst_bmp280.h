@@ -46,11 +46,17 @@
 #ifndef SENSOR_BST_BMP280_H__
 #define SENSOR_BST_BMP280_H__
 
+
 #include "board.h"
 #include "sensor.h"
 
 #include "BMP280.h"
 
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* bmp280 config structure */
 struct bmp280_config
@@ -71,4 +77,7 @@ struct bmp280_device
 
 int rt_hw_bmp280_init(const char *name, struct rt_sensor_config *cfg);
 
+#ifdef __cplusplus
+}
+#endif
 #endif  // SENSOR_BST_BMP280_H__/************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/

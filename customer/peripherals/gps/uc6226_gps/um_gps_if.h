@@ -46,8 +46,14 @@
 #ifndef __GPS_HOST_IF_H__
 #define __GPS_HOST_IF_H__
 
+
 #include "gps_types.h"
 
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define GPS_CMD_MAXLEN      (64)
 
@@ -426,5 +432,8 @@ int um_gps_close(void);
  */
 int um_gps_self_check(void);
 
+#ifdef __cplusplus
+}
+#endif
 #endif // __GPS_HOST_IF_H__
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/

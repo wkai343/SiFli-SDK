@@ -47,6 +47,12 @@
 #define _GPS_TYPES_H_
 
 
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define GNSS_MAX_SVS 128
 
 #define GPS_NMEA_STRING_MAXLEN 1024
@@ -213,6 +219,9 @@ typedef struct
 } GpsCallbacks;
 
 
+#ifdef __cplusplus
+}
+#endif
 #endif /* _GPS_TYPES_H_ */
 
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/

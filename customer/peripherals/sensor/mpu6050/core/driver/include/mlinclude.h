@@ -46,6 +46,12 @@
 #ifndef INV_INCLUDE_H__
 #define INV_INCLUDE_H__
 
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define INVENSENSE_FUNC_START  typedef int invensensePutFunctionCallsHere
 
 #ifdef COVERAGE
@@ -75,4 +81,7 @@ extern int functionExitLog(const char *file, const char *func);
 
 // #define return if ( functionExitLog(__FILE__, __FUNCTION__) ) return
 
+#ifdef __cplusplus
+}
+#endif
 #endif //INV_INCLUDE_H__/************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/

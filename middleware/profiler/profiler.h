@@ -48,6 +48,7 @@
 #ifndef _PROFILER_H_
 #define _PROFILER_H_
 
+
 /**
  * @defgroup profiler Profiler
  * @brief Profiler
@@ -63,6 +64,10 @@
 #ifndef CONFIG_MAX_NUMBER_OF_CUSTOM_EVENTS
     /** Maximum number of custom events. */
     #define CONFIG_MAX_NUMBER_OF_CUSTOM_EVENTS 0
+#endif
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 /** @brief Set of flags for enabling/disabling profiling for given event types.
@@ -274,4 +279,7 @@ static inline void profiler_log_send(struct log_event_buf *buf,
  * @}
  */
 
+#ifdef __cplusplus
+}
+#endif
 #endif /* _PROFILER_H_ */

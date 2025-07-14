@@ -47,6 +47,7 @@
 #define __VIBRATOR_FY_H__
 
 
+
 #include <rtthread.h>
 #include "board.h"
 
@@ -59,6 +60,11 @@
  *
  * @return failed if < 0
  */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 rt_err_t vibrator_open();
 
 /**
@@ -80,4 +86,7 @@ rt_size_t vibrator_write(rt_uint32_t on_time_ms, rt_uint32_t off_time_ms, rt_uin
 rt_err_t vibrator_close();
 
 
+#ifdef __cplusplus
+}
+#endif
 #endif /* __VIBRATOR_FY_H__ */

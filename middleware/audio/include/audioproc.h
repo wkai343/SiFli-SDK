@@ -1,7 +1,13 @@
 #ifndef AUDIOPROC_H
 #define AUDIOPROC_H
+
 #include <stdint.h>
 #include "ipc/ringbuffer.h"
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define AUDIO_DBG_LVL           LOG_LVL_INFO
 
@@ -74,6 +80,10 @@ void audio_hardware_pa_start(uint32_t samplerate, uint32_t reserved);
 void audio_hardware_pa_stop(void);
 int is_audio_dump_enable();
 int is_audio_dump_enable_type(audio_dump_type_t type);
+
+#ifdef __cplusplus
+}
+#endif
 #endif
 
 

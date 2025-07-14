@@ -46,11 +46,17 @@
 #ifndef SENSOR_AMS_TSL2572_H__
 #define SENSOR_AMS_TSL2572_H__
 
+
 #include "board.h"
 #include "sensor.h"
 
 #include "TSL2572.h"
 
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* tsl2572 config structure */
 struct tsl2572_config
@@ -71,5 +77,8 @@ struct tsl2572_device
 
 int rt_hw_tsl2572_init(const char *name, struct rt_sensor_config *cfg);
 
+#ifdef __cplusplus
+}
+#endif
 #endif  // SENSOR_AMS_TSL2572_H__
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/

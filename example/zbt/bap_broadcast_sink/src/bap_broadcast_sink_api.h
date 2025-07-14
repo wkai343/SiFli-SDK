@@ -1,5 +1,6 @@
 #ifndef BAP_BROADCAST_SINK_API_H
 #define BAP_BROADCAST_SINK_API_H
+
 #include <errno.h>
 #include <stdint.h>
 #include <string.h>
@@ -33,7 +34,16 @@
 #if defined(CONFIG_LIBLC3)
     #include "lc3.h"
 #endif /* defined(CONFIG_LIBLC3) */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int bap_broadcast_sink_init();
 int bap_broadcast_sink_start(int stream_idx);
 int bap_broadcast_sink_stop(void);
+
+#ifdef __cplusplus
+}
+#endif
 #endif

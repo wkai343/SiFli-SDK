@@ -49,9 +49,15 @@
 #ifndef __AUDIO_MEM_H
 #define __AUDIO_MEM_H
 
+
 #include <stdint.h>
 #include <rtthread.h>
 #include "board.h"
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define     AUDIO_MEMORY_LEAK_CHECK         0
 
@@ -93,6 +99,9 @@
 #endif
 
 
+#ifdef __cplusplus
+}
+#endif
 #endif // __AUDIO_MEM_H
 
 

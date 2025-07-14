@@ -45,7 +45,13 @@
 
 #ifndef __SC7A22_REG_H__
 #define __SC7A22_REG_H__
+
 #include <stdint.h>
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define SC7A22_IC               0
 #define SC7A20_IC               1
@@ -113,5 +119,8 @@ int32_t sc7a22_fifo_enable_set(sifdev_sensor_ctx_t *ctx, uint8_t val);
 
 
 
+#ifdef __cplusplus
+}
+#endif
 #endif /* __SC7A22_REG_H__*/
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/

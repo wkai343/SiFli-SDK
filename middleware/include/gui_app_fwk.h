@@ -48,6 +48,7 @@
 #ifndef __GUI_APP_FWK_H__
 #define __GUI_APP_FWK_H__
 
+
 #include <rtthread.h>
 #include <rtdevice.h>
 #include <board.h>
@@ -67,6 +68,12 @@
 ****************************************************************************************
 */
 
+
+#include "gui_app_fwk2.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define GUI_APP_NAME_MAX_LEN            16  //!< App display name max length
 #define GUI_APP_ID_MAX_LEN              16  //!< An unique character id of an app (both bult-in app and dl app)
@@ -137,7 +144,6 @@ typedef struct
     }
 #endif
 
-#include "gui_app_fwk2.h"
 
 
 typedef void (*gui_page_msg_cb_t)(gui_app_msg_type_t msg, void *param);
@@ -306,5 +312,8 @@ extern void gui_builtin_app_list_close(const builtin_app_desc_t *ptr_app);
 
 /// @}  gui_app_fwk
 
+#ifdef __cplusplus
+}
+#endif
 #endif  /* __GUI_APP_FWK_H__ */
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/

@@ -1,6 +1,12 @@
 #ifndef __EPD_CONFIGS_H__
 #define __EPD_CONFIGS_H__
 
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum
 {
     EPD_DRAW_MODE_INVALID = 0,
@@ -18,4 +24,7 @@ uint32_t epd_get_clk_freq(void);
 uint16_t epd_get_vcom_voltage(void);
 
 
+#ifdef __cplusplus
+}
+#endif
 #endif /* __EPD_CONFIGS_H__ */

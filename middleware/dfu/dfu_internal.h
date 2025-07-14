@@ -47,6 +47,7 @@
 #ifndef __DFU_INTERNAL_H
 #define __DFU_INTERNAL_H
 
+
 #include "rtthread.h"
 #include <stdio.h>
 #include <stdint.h>
@@ -54,6 +55,11 @@
 #include "dfu_service.h"
 #include "data_service.h"
 #include "mem_section.h"
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define DFU_DB "SIF_DFU"
 #define DFU_DB_PARTIAL "dfu"
@@ -894,6 +900,9 @@ uint32_t dfu_get_download_addr_by_imgid(uint8_t img_id, uint8_t flag);
 
 uint32_t crc32_update(uint32_t crc, const uint8_t *data, size_t len);
 
+#ifdef __cplusplus
+}
+#endif
 #endif //__DFU_INTERNAL_H
 
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/

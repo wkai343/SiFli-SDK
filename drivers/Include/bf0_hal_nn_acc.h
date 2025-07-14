@@ -8,6 +8,7 @@
 #define BF0_NN_ACC_H_
 
 
+
 /*
  * INCLUDE FILES
  ****************************************************************************************
@@ -26,6 +27,11 @@
 /**
   * @brief  HAL NNACC State structures definition
   */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum
 {
     HAL_NNACC_STATE_RESET             = 0x00U,    /*!< NN_ACC not yet initialized or disabled       */
@@ -111,4 +117,7 @@ void HAL_NNACC_IRQHandler(NNACC_HandleTypeDef *nn_acc);
 
 ///@} BF0_HAL_Driver
 
+#ifdef __cplusplus
+}
+#endif
 #endif // BF0_NN_ACC_H_

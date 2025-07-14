@@ -46,6 +46,12 @@
 #ifndef __BUZZER_TEST_MUSIC_H__
 #define __BUZZER_TEST_MUSIC_H__
 
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct
 {
     short mName; // 音名：取值L1～L7、M1～M7、H1～H7分别表示低音、中音、高音的1234567，取值0表示休止符
@@ -59,4 +65,7 @@ extern const tNote MyScore3[];
 
 void musicPlay(tNote *MyScore) ;
 
+#ifdef __cplusplus
+}
+#endif
 #endif /* __BUZZER_TEST_MUSIC_H__ */

@@ -7,6 +7,7 @@
 #ifndef STREAM_TX_H
 #define STREAM_TX_H
 
+
 #include <stdint.h>
 
 #include <zephyr/bluetooth/conn.h>
@@ -15,6 +16,11 @@
 #include <zephyr/types.h>
 
 #include "stream_lc3.h"
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 struct tx_stream
 {
@@ -58,4 +64,7 @@ int stream_tx_register(struct bt_bap_stream *bap_stream);
  */
 int stream_tx_unregister(struct bt_bap_stream *bap_stream);
 
+#ifdef __cplusplus
+}
+#endif
 #endif /* STREAM_TX_H */

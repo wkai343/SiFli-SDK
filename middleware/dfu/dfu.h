@@ -46,6 +46,7 @@
 #ifndef DFU_H
 #define DFU_H
 
+
 #include <rtconfig.h>
 
 
@@ -57,6 +58,10 @@
     #else
         #define RT_USED __attribute__((used))
     #endif
+#endif
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 
@@ -549,6 +554,10 @@ extern dfu_efuse_read_hook_t g_dfu_efuse_read_hook;
 
 
 //#define FLASH_SIMULATE
+
+#ifdef __cplusplus
+}
+#endif
 #endif
 
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/

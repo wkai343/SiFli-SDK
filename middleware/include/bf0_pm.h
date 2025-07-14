@@ -47,6 +47,7 @@
 
 #ifndef BF0_PM_H
 #define BF0_PM_H
+
 #include <rtthread.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -63,6 +64,11 @@
 * @{
 ****************************************************************************************
 */
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct
 {
@@ -337,6 +343,10 @@ void pm_pin_restore(void);
 void pm_pin_backup(void);
 
 ///@} pm
+
+#ifdef __cplusplus
+}
+#endif
 #endif
 
 /// @} file

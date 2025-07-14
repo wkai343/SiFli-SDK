@@ -47,6 +47,7 @@
 
 #ifndef DATA_SERVICE_H
 #define DATA_SERVICE_H
+
 #include <rtthread.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -77,8 +78,13 @@
  ****************************************************************************************
  */
 
-/*Message exchanged between data service provider and subscriber*/
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/*Message exchanged between data service provider and subscriber*/
 /** Invalid data client handle */
 #define DATA_CLIENT_INVALID_HANDLE   (0)
 
@@ -272,5 +278,8 @@ typedef struct
 /// @}  file
 
 
+#ifdef __cplusplus
+}
+#endif
 #endif
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/

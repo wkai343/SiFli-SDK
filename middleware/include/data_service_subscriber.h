@@ -46,6 +46,7 @@
 
 #ifndef DATA_SERVICE_SUBSCRIBER_H
 #define DATA_SERVICE_SUBSCRIBER_H
+
 #include <rtthread.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -59,6 +60,11 @@
 * @{
 ****************************************************************************************
 */
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #if defined(BSP_USING_DATA_SVC)||defined(_SIFLI_DOXYGEN_)
 
@@ -198,6 +204,10 @@ rt_err_t datac_ping(datac_handle_t handle, uint8_t mode);
 #endif
 
 /// @} data_service_subscriber
+
+#ifdef __cplusplus
+}
+#endif
 #endif
 
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/

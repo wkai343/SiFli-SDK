@@ -47,6 +47,7 @@
 
 #ifndef __UI_DATASRV_H__
 #define __UI_DATASRV_H__
+
 #include "data_service_subscriber.h"
 
 /**
@@ -63,6 +64,10 @@
     @brief Initialize GUI data service client module.
 */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void ui_datac_init(void);
 
 /**
@@ -76,5 +81,9 @@ void ui_datac_init(void);
 datac_handle_t ui_datac_subscribe(datac_handle_t handle, char *name, data_callback_t cbk, uint32_t user_data);
 
 ///@} ui_datac
+
+#ifdef __cplusplus
+}
+#endif
 #endif /*__UI_DATASRV_H__*/
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/

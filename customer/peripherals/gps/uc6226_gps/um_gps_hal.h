@@ -46,7 +46,13 @@
 #ifndef _GPS_HAL_H_
 #define _GPS_HAL_H_
 
+
 #include "gps_types.h"
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct
 {
@@ -129,5 +135,8 @@ int gps_hal_cleanup(void);
 int gps_hal_set_local_baud(int baud);
 uint32_t gps_hal_get_uart(void);
 
+#ifdef __cplusplus
+}
+#endif
 #endif
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/

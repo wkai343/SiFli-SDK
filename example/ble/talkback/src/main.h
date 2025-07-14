@@ -46,12 +46,18 @@
 #ifndef MAIN_H_
 #define MAIN_H_
 
+
 #include "bf0_ble_gap.h"
 
-#define LOG_TAG "ble_app"
 #include "audio_server.h"
-
 #include "log.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#define LOG_TAG "ble_app"
+
 
 #define APP_MIC_ALWAYS_ON
 
@@ -134,5 +140,8 @@ uint8_t ble_app_scan_restart(void);
 uint8_t ble_app_sender_is_working(void);
 
 
+#ifdef __cplusplus
+}
+#endif
 #endif // MAIN_H_
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/

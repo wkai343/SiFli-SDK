@@ -7,6 +7,7 @@
 #ifndef _SIF_FLASH_CMD_TABLE_H__
 #define _SIF_FLASH_CMD_TABLE_H__
 
+
 #ifdef SF32LB55X
     #include "bf0_hal_qspi_ex.h"
 #else
@@ -18,6 +19,10 @@
     #define FT_CONST               /* For bootloader, need compress to reduce code size */
 #else
     #define FT_CONST const
+#endif
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 
@@ -75,4 +80,7 @@ extern FT_CONST FLASH_RDID_TYPE_T   *FT_CONST nand_cmd_id_pool[];
     void spi_nand_table_init(void);
 #endif /* JLINK || KEIL */
 
+#ifdef __cplusplus
+}
+#endif
 #endif  // _SIF_FLASH_CMD_TABLE_H__

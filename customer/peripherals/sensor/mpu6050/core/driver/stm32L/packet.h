@@ -48,7 +48,13 @@
 #ifndef __PACKET_H__
 #define __PACKET_H__
 
+
 #include "mltypes.h"
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef enum
 {
@@ -79,6 +85,9 @@ void eMPL_send_quat(long *quat);
  */
 void eMPL_send_data(unsigned char type, long *data);
 
+#ifdef __cplusplus
+}
+#endif
 #endif /* __PACKET_H__ */
 
 /**

@@ -47,6 +47,7 @@
 
 #ifndef DATA_SERVICE_PROVIDER_H
 #define DATA_SERVICE_PROVIDER_H
+
 #include <rtthread.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -60,6 +61,11 @@
 * @{
 ****************************************************************************************
 */
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define DATA_SERVICE_INVALID_ID   (0x7F)
 
@@ -168,6 +174,9 @@ typedef struct data_service_config_tag
 /// @} data_service_provider
 /// @} file
 
+#ifdef __cplusplus
+}
+#endif
 #endif
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
 

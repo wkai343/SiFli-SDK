@@ -46,7 +46,13 @@
 #ifndef _GPS_NMEA_H_
 #define _GPS_NMEA_H_
 
+
 #include "gps_types.h"
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 enum
 {
@@ -125,6 +131,9 @@ typedef struct
 void nmea_reader_init();
 void um_gps_nmea_parse(char *buf, uint32_t len);
 
+#ifdef __cplusplus
+}
+#endif
 #endif /* _GPS_NMEA_H_ */
 
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/

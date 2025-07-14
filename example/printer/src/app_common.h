@@ -44,6 +44,7 @@
  */
 #ifndef APP_COMMON_H
 #define APP_COMMON_H
+
 #include <rtthread.h>
 #include <rtdevice.h>
 #include <board.h>
@@ -54,6 +55,11 @@
 #include "bf0_sibles.h"
 #include "bf0_sibles_advertising.h"
 #include "ble_connection_manager.h"
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct
 {
@@ -103,4 +109,7 @@ extern void ble_app_service_init(void);
 extern void ble_app_advertising_start(void);
 #define APP_TIMEOUT_INTERVAL (5000)
 
+#ifdef __cplusplus
+}
+#endif
 #endif

@@ -45,6 +45,7 @@
 
 #ifndef __STK8328C_REG_H__
 #define __STK8328C_REG_H__
+
 #include <stdint.h>
 
 /* STK832x PSEUDO CODE
@@ -55,6 +56,11 @@
  *
  */
 
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* SPI mode needs to open this macro, IIC mode is blocked */
 #define STK_SPI_MODE    0
@@ -136,5 +142,8 @@ int32_t stk8328c_read_fifo_data(sifdev_sensor_ctx_t *ctx, uint8_t *data, uint16_
 
 
 
+#ifdef __cplusplus
+}
+#endif
 #endif /* __SC7A22_REG_H__*/
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/

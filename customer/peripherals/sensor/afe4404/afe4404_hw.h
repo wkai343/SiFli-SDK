@@ -48,6 +48,7 @@
 #ifndef AFE4404_HW_INCLUDED
 #define AFE4404_HW_INCLUDED
 
+
 #include "hqerror.h"   // LifeQ error definitions file
 #include "phys_calc.h"
 #include "pp_config.h"
@@ -59,10 +60,15 @@
 //#include "app_error.h"
 
 
-/* Weight definitions for variable sampling */
 
 
 //old
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/* Weight definitions for variable sampling */
 #define LED2STC         0
 #define LED2ENDC        1
 #define LED1LEDSTC      2
@@ -821,4 +827,7 @@ uint32_t PPS960_readReg(uint8_t regaddr);
 //ACC use FIFO,its raw data will be read by timer, timer period about 1s.
 //#define PPS_ACC_USE_FIFO (1)
 
+#ifdef __cplusplus
+}
+#endif
 #endif  // AFE4404_HW_INCLUDED/************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/

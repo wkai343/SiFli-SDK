@@ -46,8 +46,14 @@
 #ifndef SENSOR_VIRT_STEP_H__
 #define SENSOR_VIRT_STEP_H__
 
+
 #include "board.h"
 #include "sensor.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* virt_step config structure */
 struct virt_step_config
 {
@@ -68,5 +74,8 @@ struct virt_step_device
 
 int rt_virt_step_init(const char *name, struct rt_sensor_config *cfg);
 
+#ifdef __cplusplus
+}
+#endif
 #endif  // SENSOR_VIRT_STEP_H__
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/

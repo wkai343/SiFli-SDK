@@ -48,7 +48,13 @@
 #ifndef __BF0_MBOX_COMMON_H__
 #define __BF0_MBOX_COMMON_H__
 
+
 #include <rtthread.h>
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #if defined(USING_IPC_QUEUE) || defined(_SIFLI_DOXYGEN_)
     #include "ipc_queue.h"
@@ -121,6 +127,9 @@ void print_sysinfo(char *buf, uint32_t buf_len);
 /// @}  mbox_common
 /// @}  file
 
+#ifdef __cplusplus
+}
+#endif
 #endif
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
 

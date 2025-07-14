@@ -46,15 +46,21 @@
 #ifndef AGC_V3_H_
 #define AGC_V3_H_
 
+
+#include <stdint.h>
+#include "hqerror.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define AGC_VERSION_MAJOR (uint8_t) 3
 #define AGC_VERSION_MINOR (uint8_t) 1
 #define AGC_VERSION_BUILD (uint8_t) 19
 
-#include <stdint.h>
 //#include <stdbool.h>
 //#include <stdint.h>
 //#include "hw_config.h"
-#include "hqerror.h"
 
 /*
 #ifdef POST
@@ -453,5 +459,9 @@ void AGC_setAgcState(agc_state_t setState);
 uint8_t AGC_getMajorVer(void);
 uint8_t AGC_getMinorVer(void);
 uint8_t AGC_getBuildVer(void);
+
+#ifdef __cplusplus
+}
+#endif
 #endif /* AGC_V3_H_ */
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/

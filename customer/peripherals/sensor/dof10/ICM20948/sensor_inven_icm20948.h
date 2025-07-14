@@ -46,7 +46,13 @@
 #ifndef SENSOR_INVEN_ICM20948_H__
 #define SENSOR_INVEN_ICM20948_H__
 
+
 #include "ICM20948.h"
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* define ICM-20948 Device I2C address*/
 #define I2C_ADD_ICM20948_HIGH               0x69
@@ -131,4 +137,7 @@ struct icm20948_device
 
 int rt_hw_icm20948_init(const char *name, struct rt_sensor_config *cfg);
 
+#ifdef __cplusplus
+}
+#endif
 #endif  // SENSOR_INVEN_ICM20948_H__/************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/

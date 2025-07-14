@@ -46,10 +46,16 @@
 #ifndef _HR_ALGO_PROCESS_H_
 #define _HR_ALGO_PROCESS_H_
 
+
 #include "board.h"
 #include "sensor.h"
 #include "hr_sensor_service.h"
 #include "hr_algo.h"
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct
 {
@@ -62,5 +68,8 @@ typedef struct
 void hrs_algo_process(uint8_t hr_type, hr_raw_data_t *hr_data, void *g_in);
 uint8_t hrs_algo_postprocess(uint8_t hr_type, hrs_info_t *info);
 
+#ifdef __cplusplus
+}
+#endif
 #endif  // SENSOR_GOODIX_GH3011_H__
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/

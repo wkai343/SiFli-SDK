@@ -46,12 +46,18 @@
 #ifndef SENSOR_STK8328C_H__
 #define SENSOR_STK8328C_H__
 
+
 #include "board.h"
 #include "sensor.h"
 
 #include "stk8328c.h"
 
 
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* device structure */
 struct stk8328c_device
@@ -66,4 +72,7 @@ int rt_hw_stk8328c_init(void);
 int rt_hw_stk8328c_deinit(void);
 
 
+#ifdef __cplusplus
+}
+#endif
 #endif  // SENSOR_ST_SC7A22_H__/************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/

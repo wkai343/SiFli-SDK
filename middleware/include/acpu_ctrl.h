@@ -49,6 +49,7 @@
 #define __ACPU_CTRL_H__
 
 
+
 /**
 ****************************************************************************************
 * @addtogroup acpu_ctrl ACPU Controller
@@ -58,6 +59,11 @@
 ****************************************************************************************
 */
 
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define ACPU_TASK_INPUT_PARAM_SIZE    (128)
 #define ACPU_TASK_OUTPUT_VAL_SIZE     (64)
@@ -203,6 +209,9 @@ void acpu_send_result2(void *val, uint32_t val_size, uint8_t error_code);
 /// @}  acpu_ctrl
 /// @}  file
 
+#ifdef __cplusplus
+}
+#endif
 #endif /* __ACPU_CTRL_H__ */
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
 

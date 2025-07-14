@@ -45,6 +45,7 @@
 #ifndef __BLE_H__
 #define __BLE_H__
 
+
 #include <rtthread.h>
 #include <rtdevice.h>
 #include <board.h>
@@ -54,6 +55,11 @@
 #include "bf0_sibles.h"
 #include "bf0_sibles_advertising.h"
 
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define BLE_APP_TIMEOUT_INTERVAL (5000)
 
@@ -85,6 +91,9 @@ void ble_app_service_init(void);
 void ble_app_advertising_start(void);
 void app_timeout_handler(void *parameter);
 
+#ifdef __cplusplus
+}
+#endif
 #endif /* __BLE_H__ */
 
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/

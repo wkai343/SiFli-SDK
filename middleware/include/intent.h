@@ -47,6 +47,12 @@
 #ifndef __INTENT_H__
 #define __INTENT_H__
 
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef void   *intent_t;
 
 
@@ -121,6 +127,9 @@ int intent_runapp(intent_t i);
  */
 void printf_intent(intent_t i);
 
+#ifdef __cplusplus
+}
+#endif
 #endif  /* __INTENT_H__ */
 
 

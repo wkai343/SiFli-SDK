@@ -1,5 +1,6 @@
 #ifndef BLE_AUDIO_SRC_H
 #define BLE_AUDIO_SRC_H
+
 #include <errno.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -23,6 +24,15 @@
 #include <zephyr/sys_clock.h>
 #include <zephyr/toolchain.h>
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int bap_broadcast_src_start();
 void bap_broadcast_src_stop();
+
+#ifdef __cplusplus
+}
+#endif
 #endif

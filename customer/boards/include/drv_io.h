@@ -45,6 +45,7 @@
 #ifndef __DRV_IO_H__
 #define __DRV_IO_H__
 
+
 #include "stdint.h"
 #include "stdbool.h"
 
@@ -55,6 +56,11 @@
  *
  * @retval None
  */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void HAL_MspInit(void);
 
 /**
@@ -236,6 +242,9 @@ void BSP_GPIO_Set(int pin, int val, int is_porta);
   * @}
   */
 
+#ifdef __cplusplus
+}
+#endif
 #endif
 
 

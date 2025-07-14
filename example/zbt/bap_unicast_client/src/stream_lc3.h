@@ -7,6 +7,7 @@
 #ifndef STREAM_LC3_H
 #define STREAM_LC3_H
 
+
 #include <stdint.h>
 
 #include <zephyr/bluetooth/audio/audio.h>
@@ -16,6 +17,11 @@
 /* Since the lc3.h header file is not available when CONFIG_LIBLC3=n, we need to guard the include
  * and use of it
  */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #if defined(CONFIG_LIBLC3)
 /* Header file for the liblc3 */
 #include <lc3.h>
@@ -53,4 +59,7 @@ void stream_lc3_add_data(struct tx_stream *stream, struct net_buf *buf);
 
 #define LC3_MAX_FRAME_DURATION_US 10000U
 
+#ifdef __cplusplus
+}
+#endif
 #endif /* STREAM_LC3_H */

@@ -45,9 +45,15 @@
 
 #ifndef __SC7A22_H__
 #define __SC7A22_H__
+
 #include <stdint.h>
 #include "sc7a22_reg.h"
 
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef enum
 {
@@ -82,5 +88,8 @@ int sc7a20_read_fifo(uint8_t *buf, int len);
 int sc7a22_set_fifo_threshold(int thd);
 int sc7a22_self_check(void);
 
+#ifdef __cplusplus
+}
+#endif
 #endif /* __SC7A22_H__*/
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/

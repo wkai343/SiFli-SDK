@@ -46,8 +46,14 @@
 #ifndef SENSOR_GPS_UC6226_H__
 #define SENSOR_GPS_UC6226_H__
 
+
 #include "um_gps_if.h"
 #include "um_gps_hal.h"
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* uc6226 config structure */
 struct uc6226_config
@@ -67,4 +73,7 @@ struct uc6226_device
 
 int rt_hw_uc6226_init(const char *name, struct rt_sensor_config *cfg);
 
+#ifdef __cplusplus
+}
+#endif
 #endif  // SENSOR_GPS_UC6226_H__/************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/

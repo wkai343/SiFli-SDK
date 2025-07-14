@@ -47,9 +47,15 @@
 #ifndef __DFU_SERVICE_H
 #define __DFU_SERVICE_H
 
+
 #include <stdio.h>
 #include <stdint.h>
 #include "dfu_protocol.h"
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef enum
 {
@@ -303,6 +309,9 @@ void bt_dfu_pan_download(const char *url);
 
 uint8_t dfu_package_install_set();
 
+#ifdef __cplusplus
+}
+#endif
 #endif //__DFU_SERVICE_H
 
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/

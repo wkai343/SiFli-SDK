@@ -48,12 +48,6 @@
 #ifndef __MAC_HR_HDR_XX01__
 #define __MAC_HR_HDR_XX01__
 
-/* Includes ------------------------------------------------------------------*/
-/* Private typedef -----------------------------------------------------------*/
-/* Private define ------------------------------------------------------------*/
-/* Private macro -------------------------------------------------------------*/
-/* Private variables ---------------------------------------------------------*/
-/* Extern variables ----------------------------------------------------------*/
 
 
 
@@ -61,8 +55,7 @@
 
 
 
-/* Private function prototypes -----------------------------------------------*/
-/* Private functions ---------------------------------------------------------*/
+
 
 /**
  * @brief Initialize the variables, This function should be called every time the algorithm starts
@@ -70,6 +63,19 @@
  * @return: None
  */
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/* Includes ------------------------------------------------------------------*/
+/* Private typedef -----------------------------------------------------------*/
+/* Private define ------------------------------------------------------------*/
+/* Private macro -------------------------------------------------------------*/
+/* Private variables ---------------------------------------------------------*/
+/* Extern variables ----------------------------------------------------------*/
+/* Private function prototypes -----------------------------------------------*/
+/* Private functions ---------------------------------------------------------*/
 void Mac_Init();
 
 
@@ -100,5 +106,8 @@ int Mac_HR_Validcheck();
 double Adaptive_MACancel_2(double *dc_GREEN1, double *ACC_X1, double *ACC_Y1, double *ACC_Z1);
 int Get_snr();
 
+#ifdef __cplusplus
+}
+#endif
 #endif  // __MAC_HR_HDR_XX01__
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/

@@ -46,7 +46,13 @@
 #ifndef SIFLI_CMSIS_DSP_H
 #define SIFLI_CMSIS_DSP_H
 
+
 #include "arm_math.h"
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define FACC_MAX_BLOCK_SIZE 256
 
@@ -249,6 +255,9 @@ void arm_iir_q15_facc(
 void arm_dsp_facc_init(void);
 
 
+#ifdef __cplusplus
+}
+#endif
 #endif
 
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/

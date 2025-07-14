@@ -46,6 +46,12 @@
 #ifndef __PPS960_HDR_FILE__
 #define __PPS960_HDR_FILE__
 
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int init_pps960_sensor(void);
 int open_pps960(void);
 int close_pps960(void);
@@ -57,6 +63,9 @@ uint8_t pps960_get_dev_addr(void);
 
 int pps960_self_check(void);
 
+#ifdef __cplusplus
+}
+#endif
 #endif  //__PPS960_HDR_FILE__
 
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/

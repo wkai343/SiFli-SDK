@@ -46,11 +46,17 @@
 #ifndef _HR_SENSOR_SERVICE_H_
 #define _HR_SENSOR_SERVICE_H_
 
+
 #include "board.h"
 #include "sensor.h"
 #include "vcHr02Hci.h"
 #if defined (HR_ALGO_USING_GSENSOR_DATA)
     #include "gsensor_service.h"
+#endif
+
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 #define PPG_BUFF_SIZE           40              //ppg buff szie
@@ -94,5 +100,8 @@ rt_err_t vc32s_int_open(void);
 void vc32s_int_close(void);
 void vc32sStart(vcHr02_t *pVcHr02, vcHr02Mode_t vcHr02WorkMode);
 
+#ifdef __cplusplus
+}
+#endif
 #endif  // SENSOR_GOODIX_GH3011_H__
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/

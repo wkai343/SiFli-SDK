@@ -7,7 +7,7 @@
 #ifndef __BF0_HAL_SDHCI_H__
 #define __BF0_HAL_SDHCI_H__
 
-/* Includes ------------------------------------------------------------------*/
+
 #include "bf0_hal_def.h"
 
 
@@ -19,7 +19,6 @@
   * @{
   */
 
-/* Register address and description define ------------------------------------------------------------*/
 /** @defgroup SDHCI_Register_Types SDHCI Register Types
   * @{
   */
@@ -31,6 +30,13 @@
 // TODO : move it to menuconfig later
 //#define SDCARD_INSTANCE                   SDIO2
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/* Includes ------------------------------------------------------------------*/
+/* Register address and description define ------------------------------------------------------------*/
 /******************** Register Description Start ************************************/
 #ifndef __SDHCI_H
 
@@ -614,4 +620,7 @@ void HAL_SDHCI_MspInit(SDHCI_HandleTypeDef *handle);
   * @}
   */
 
+#ifdef __cplusplus
+}
+#endif
 #endif /* __BF0_HAL_SDHCI_H__ */

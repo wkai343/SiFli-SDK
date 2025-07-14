@@ -46,9 +46,15 @@
 #ifndef SENSOR_GOODIX_GH3011_H__
 #define SENSOR_GOODIX_GH3011_H__
 
+
 #include "board.h"
 #include "sensor.h"
 
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* gh3011 device structure */
 struct gh3011_device
@@ -63,5 +69,8 @@ int rt_hw_gh3011_init(void);
 int rt_hw_gh3011_deinit(void);
 
 
+#ifdef __cplusplus
+}
+#endif
 #endif  // SENSOR_GOODIX_GH3011_H__
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/

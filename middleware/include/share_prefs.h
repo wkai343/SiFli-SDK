@@ -48,6 +48,7 @@
 #ifndef SHARE_PREFS_H
 #define SHARE_PREFS_H
 
+
 #include <rtthread.h>
 #include <stdint.h>
 #include <string.h>
@@ -61,6 +62,11 @@
 * @{
 ****************************************************************************************
 */
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define SHARE_PREFS_MAX_NAME_LEN 32
 
@@ -180,5 +186,8 @@ rt_err_t share_prefs_set_block(share_prefs_t *prfs, const char *key, const void 
 /// @} shard_pref
 /// @} file
 
+#ifdef __cplusplus
+}
+#endif
 #endif
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/

@@ -45,6 +45,7 @@
 #ifndef _AGIF_H_
 #define _AGIF_H_
 
+
 #include <stdint.h>
 #include <sys/types.h>
 
@@ -52,6 +53,10 @@
     #include "lvgl.h"
     #define ANIM_LV_TASK
     // #include "app_mem.h"
+#endif
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 #define GIF_REFR_PEROID                     _lv_refr_get_disp_refreshing()->refr_timer->period
@@ -379,5 +384,9 @@ int          agif_dec_indicated_frame(agif_dsc_t *agif_dsc, uint16_t frame_no);
 void         agif_dec_reset(agif_dsc_t *agif_desc);
 uint16_t     agif_dec_frame_num(agif_dsc_t *agif_dsc);
 void         agif_set_fs_mode(agif_fs_mode_t mode);
+
+#ifdef __cplusplus
+}
+#endif
 #endif /* _AGIF_H_ */
 

@@ -46,11 +46,17 @@
 #ifndef __TC_VGLITE_H__
 #define __TC_VGLITE_H__
 
+
 #include "stdint.h"
 #include "stdbool.h"
 #include "rtthread.h"
 #include "utest.h"
 
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 void tc_vglite_print_error(const char *func, size_t line, vg_lite_error_t err);
 
@@ -78,5 +84,8 @@ const char *tc_vglite_get_filter_str(vg_lite_filter_t filter);
 const char *tc_vglite_get_layout_str(vg_lite_buffer_layout_t layout);
 
 
+#ifdef __cplusplus
+}
+#endif
 #endif /* __TC_VGLITE_H__ */
 /************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
