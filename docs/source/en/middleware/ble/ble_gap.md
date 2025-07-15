@@ -33,7 +33,7 @@ Users can use these 4 address types in different scenarios:
 Bluetooth LE has 40 physical channels (indexed from 0~39) from 2.4GHz - 2.4835Hz, where channels 37, 38, and 39 are allocated for advertising. Advertisements sent sequentially on channels 37, 38, or 39 are called advertising events.
 The distance between two starts of adjacent advertising events is called the advertising interval. Channels can be configured through the advertising parameter channel_map to any of channels 37, 38, 39.
 
-![](../../assets/advertisement_channel.png)
+![](../../../assets/advertisement_channel.png)
 
 If the interval is smaller, the advertising is denser, and the central device can more easily scan the advertisement or connect faster, while power consumption is higher.
 In contrast, the larger the interval, the lower the power consumption, but scanning or connecting will be more difficult.
@@ -41,7 +41,7 @@ In contrast, the larger the interval, the lower the power consumption, but scann
 A special case is high duty cycle directed connectable advertising. Directed advertising is sent to a specified peer address device, making it carry the peer address instead of advertising data or scan response data.
 High duty cycle expects the peer device to quickly initiate link establishment and advertise at a very high frequency. In this case, no advertising interval is used. Due to the high frequency, the advertising duration cannot exceed 1.28s.
 
-![](../../assets/directed_adv.png)
+![](../../../assets/directed_adv.png)
 
 ## Connection Parameters
 
@@ -54,9 +54,9 @@ There are many parameters that affect connection behavior:
 - Slave latency allows the slave to not respond to the master in some connection events. For example, if slave latency is 2, the slave can respond to the master every two connection events.
 - The maximum interval between two data receptions is called supervision timeout. If no data is received within this interval, it indicates an abnormal connection. There are many reasons for timeout, such as one device being out of range, a device suddenly shutting down, or stack corruption.
 
-![](../../assets/connection_parameter.png) Connection Parameters
+![](../../../assets/connection_parameter.png) Connection Parameters
 
-![](../../assets/slave_latency.png) Slave Latency
+![](../../../assets/slave_latency.png) Slave Latency
 
 ## Throughput and Low Power Consumption
 
@@ -64,14 +64,14 @@ Throughput can be simply calculated by Dsize (data size transmitted in one conne
 Dcount is only determined by the connection interval; the smaller the interval, the larger the count. The minimum connection interval is 7.5 ms, and typically 15 - 48 ms for high throughput.
 Dsize is more complex, and users can improve it using the following methods:
 	- Ensure both master and slave support the Data Length Extension (DLE) feature, which is an optional feature after Bluetooth Core Specification 4.2. This feature allows the maximum packet size to increase from 27 bytes to 251 bytes. Each packet has certain headers, and when Dsize increases, the number of packets decreases, and header overhead is reduced.
-	![](../../assets/dle.png)
+	![](../../../assets/dle.png)
 	
 	- Ensure both master and slave support the 2M PHY feature supported by Bluetooth Core Specification 5.0. This feature allows the physical rate to increase from 1M to 2M.
 	
 	- Prepare sufficient data for transmission. From the connection parameter description, master and slave alternately send and receive data. If there is no more data to send, the connection event ends. Data requires some time to prepare;
 	if the controller has no data to transmit in sequence, data can only be transmitted in the next connection event. For example, if the host sends one packet and needs the slave to respond before sending the next packet, two connection events can only send one packet.
 	But if the host sends two packets and then needs the slave to respond, two connection events can send two packets.
-	![](../../assets/slave_respond.png)
+	![](../../../assets/slave_respond.png)
 	
 If no data needs to be transmitted, devices can change parameters to enter low-power transmission mode. There are 2 methods:
 	1. Use a larger connection interval, for example, changing the connection interval from 30 to 500 ms. This method can reduce both master and slave transmission power.
@@ -89,7 +89,7 @@ The Security Manager Profile (SMP) defines protocols and behaviors for generatin
 
 As shown in the SMP flow diagram, the master can initiate a pairing request to trigger the pairing procedure, while the slave can initiate a security request to request the master to initiate a pairing request.
 
-![](../../assets/smp_flow.png) SMP Flow
+![](../../../assets/smp_flow.png) SMP Flow
 
 In the SIFLI BLE SDK, for the slave role, most procedures are encapsulated in the stack, and users only need to handle #BLE_GAP_BOND_IND and #BLE_GAP_ENCRYPT_IND.
 
@@ -134,19 +134,19 @@ case CONNECTION_MANAGER_BOND_AUTH_INFOR:
 
 - Advertising procedure:
 
-![](../../assets/advertising.png)
+![](../../../assets/advertising.png)
 
 - Connection procedure:
 
-![](../../assets/connection.png)
+![](../../../assets/connection.png)
 
 - Connection parameter update procedure:
 
-![](../../assets/conn_update.png)
+![](../../../assets/conn_update.png)
 
 - Disconnection procedure:
 
-![](../../assets/disconnection.png)
+![](../../../assets/disconnection.png)
 
 ## Examples
 

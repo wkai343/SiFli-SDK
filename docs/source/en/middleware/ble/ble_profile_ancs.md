@@ -9,7 +9,7 @@ NP has 3 characteristics:
 - 1. Notification Source
 
     After NC enables CCCD, the notification source characteristic will send notifications with categoryID and count.
-    	![Notification Data Format](../../assets/formatOfGATTNotifications_2x.png)
+    	![Notification Data Format](../../../assets/formatOfGATTNotifications_2x.png)
     Event ID notifies NC whether a notification is added, modified, or removed.
 
     - EventFlags notify the specificity of the notification. NC can decide whether to notify the user or just filter.
@@ -22,27 +22,27 @@ NP has 3 characteristics:
 
   NC can write commands to the control point to interact with NP to get details or perform actions. There are 3 commands:
 
-  - Get Notification Attributes. This command allows NC to retrieve mode details of notifications from Notification.![Get Notification Attributes Command Format](../../assets/formatOfAGetNotificationAttributesCommand_2x.png)
+  - Get Notification Attributes. This command allows NC to retrieve mode details of notifications from Notification.![Get Notification Attributes Command Format](../../../assets/formatOfAGetNotificationAttributesCommand_2x.png)
 
   - - CommandID should be set to 0
        - NotificationUID from the notification source notification.
        - AttributeIDs are the notification attributes that NC wants to get more details about.
 
        
-       ![Response Format for Get Notification Attributes Command](../../assets/formatOfAResponseToAGetNotificationAttributesCommand_2x.png) 
+       ![Response Format for Get Notification Attributes Command](../../../assets/formatOfAResponseToAGetNotificationAttributesCommand_2x.png) 
 
        - CommandID, Notification UID, Attribute_ID are all the same as the Get Notification Attributes command.
        - Attribute length and attribute are the length and data associated with the attribute ID. The data includes details.
 
        - Get App Attributes. This command allows NC to retrieve details of installed apps.
-         ![Get App Attributes Command Format](../../assets/formatOfAGetAppAttributesCommand_2x.png) 
+         ![Get App Attributes Command Format](../../../assets/formatOfAGetAppAttributesCommand_2x.png) 
 
        - CommandID should be set to 1
 
        - APP Identifier is the string ID obtained from the notification APP_ID attribute. It represents the APP ID registered in iOS.
 
        - APP AttributeIDs are the APP attributes that NC wants to get more details about.
-         ![Response Format for Get App Attributes Command](../../assets/formatOfAResponseToAGetAppAttributesCommand_2x.png) 
+         ![Response Format for Get App Attributes Command](../../../assets/formatOfAResponseToAGetAppAttributesCommand_2x.png) 
 
        - CommandID, APP Identifier are the same as the Get APP Attributes command.
 

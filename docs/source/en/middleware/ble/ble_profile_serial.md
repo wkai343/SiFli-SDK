@@ -9,7 +9,7 @@ The service UUID is 7369666c-695f-7364-0000-0000000000000. It has two characteri
 The configuration characteristic has not been used yet.
 
 The data characteristic is used to transfer serial data. Its data format is:
-![](../../assets/ble_serail_data.png)
+![](../../../assets/ble_serail_data.png)
 	- CateID: categoryID for different users.
 	- Flag: for fragmentation.
 		- 0x00: Complete packet.

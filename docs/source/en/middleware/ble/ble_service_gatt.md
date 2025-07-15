@@ -13,7 +13,7 @@ An attribute data consists of 4 parts:
 - Attribute value: the data of the attribute.
 - Attribute permissions: indicate whether the attribute can be read or written.
 
-![](../../assets/att_format.png)
+![](../../../assets/att_format.png)
 
 Based on attributes, the service framework hierarchy is: profile, service, included service, and characteristic.
 - A profile is a high-level concept consisting of one or more services. It defines the behavior for accessing services.
@@ -21,12 +21,12 @@ Based on attributes, the service framework hierarchy is: profile, service, inclu
 - An included service refers to other service definitions that exist on the server.
 - A characteristic describes detailed data format and behavior. It contains characteristic declaration, characteristic value, and characteristic descriptors.
 
-![](../../assets/gatt_hierarchy.png)
+![](../../../assets/gatt_hierarchy.png)
 
 The following is an example of the Battery Service. The Battery Service is to notify clients of battery changes. Therefore, this service has a battery level characteristic with readable and notify properties.
 The client can write the Client Characteristic Configuration Descriptor (CCCD) to enable notifications. Then the Battery Service will notify battery level.
 
-![](../../assets/att_example.png)
+![](../../../assets/att_example.png)
 
 
 
@@ -186,16 +186,16 @@ void ble_bass_init(ble_bass_callback callback, uint8_t battery_lvl)
 
 - Read response in real-time
 
-![](../../assets/gatt_read_response_realtime.png)
+![](../../../assets/gatt_read_response_realtime.png)
 
 - Read response preset
 
-![](../../assets/gatt_read_response_preset.png)
+![](../../../assets/gatt_read_response_preset.png)
 
 - Write response
 
-![](../../assets/gatt_write.png)
+![](../../../assets/gatt_write.png)
 
 - Indication
 
-![](../../assets/gatt_indication.png)
+![](../../../assets/gatt_indication.png)

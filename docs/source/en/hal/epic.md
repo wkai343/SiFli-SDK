@@ -30,7 +30,7 @@ HAL EPIC module provides abstract software interface to operate hardware EPIC mo
 - Mirroring supports any anchor point and cannot be performed simultaneously with rotation and scaling.
 - The union of foreground, background, and output regions must not exceed 1024*1024 pixels (where foreground refers to the image region after transformation around any anchor point (including anchor point and pre-rotation image))
 >For example, after foreground image is rotated around external anchor point and enlarged, the union with background and output regions must not exceed 1024
-![](/docs/source/assets/epic_limitation.png) 
+![](../../assets/epic_limitation.png) 
 
 ```
 

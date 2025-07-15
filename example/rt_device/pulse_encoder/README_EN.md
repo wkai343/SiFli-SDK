@@ -15,8 +15,8 @@ Before running this example, you need to prepare a development board supported b
 
 ### menuconfig Configuration
 
-![Enable timer:](./assets/menuconfig1.png)
-![Enable timer:](./assets/menuconfig2.png)
+![Enable timer:](./assets/image2.png)
+![Enable timer:](./assets/image1.png)
 ## Example Usage
 ### Compilation and Programming
 Switch to the example project directory and run the scons command to execute compilation:
