@@ -1,46 +1,7 @@
-/**
-  ******************************************************************************
-  * @file   main.c
-  * @author Sifli software development team
-  ******************************************************************************
-*/
-/**
- * @attention
- * Copyright (c) 2021 - 2021,  Sifli Technology
+/*
+ * SPDX-FileCopyrightText: 2021-2021 SiFli Technologies(Nanjing) Co., Ltd
  *
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice, this
- *    list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form, except as embedded into a Sifli integrated circuit
- *    in a product or a software update for such product, must reproduce the above
- *    copyright notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *
- * 3. Neither the name of Sifli nor the names of its contributors may be used to endorse
- *    or promote products derived from this software without specific prior written permission.
- *
- * 4. This software, with or without modification, must only be used with a
- *    Sifli integrated circuit.
- *
- * 5. Any software provided in binary form under this license must not be reverse
- *    engineered, decompiled, modified and/or disassembled.
- *
- * THIS SOFTWARE IS PROVIDED BY SIFLI TECHNOLOGY "AS IS" AND ANY EXPRESS
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL SIFLI TECHNOLOGY OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
- * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * SPDX-License-Identifier: Apache-2.0
  */
 
 #include <rtthread.h>
@@ -111,7 +72,6 @@ static app_env_t *ble_app_get_env(void);
  * BOOT mode report generation.
  */
 
-
 enum
 {
     HIDS_REMOTE_WAKE = 1,
@@ -153,7 +113,6 @@ static struct hids_report input =
 
 static uint8_t ctrl_point;
 
-
 #ifdef HID_KEYBOARD
 
 /* Number of bytes in key report
@@ -163,8 +122,6 @@ static uint8_t ctrl_point;
  * rest - non-control keys
  */
 
-
-
 #define KEY_CTRL_CODE_MIN 224 /* Control key codes - required 8 of them */
 #define KEY_CTRL_CODE_MAX 231 /* Control key codes - required 8 of them */
 #define KEY_CODE_MIN      0   /* Normal key codes */
@@ -172,7 +129,6 @@ static uint8_t ctrl_point;
 #define KEY_PRESS_MAX     6   /* Maximum number of non-control keys pressed simultaneously*/
 
 #define INPUT_REPORT_KEYS_MAX_LEN (1 + 1 + KEY_PRESS_MAX)
-
 
 static struct keyboard_state
 {
@@ -239,17 +195,14 @@ enum
     HIDS_CTRL_BACK,
 };
 
-
 #define KEY_CODE_MIN      HIDS_CTRL_PLAY   /* Normal key codes */
 #define KEY_CODE_MAX      HIDS_CTRL_BACK /* Normal key codes */
-
 
 /* Report as bit..*/
 static struct consume_key_state
 {
     uint8_t key_state;
 } hid_consume_state;
-
 
 static const uint8_t report_map[] =
 {
@@ -285,7 +238,6 @@ static const uint8_t report_map[] =
 #error "Invalid config"
 #endif
 
-
 /// HID Service Attributes Indexes
 enum
 {
@@ -306,7 +258,6 @@ enum
     HIDS_IDX_CTRL_VAL,
     HDIS_ATT_NB
 };
-
 
 struct attm_desc hids_att_db[] =
 {
@@ -374,7 +325,6 @@ uint8_t *ble_hids_gatts_get_cbk(uint8_t conn_idx, uint8_t idx, uint16_t *len)
     }
     return ret_val;
 }
-
 
 uint8_t ble_hids_gatts_set_cbk(uint8_t conn_idx, sibles_set_cbk_t *para)
 {
@@ -532,9 +482,7 @@ void key_report_send(uint8_t *key_val, uint16_t key_val_len)
     }
 }
 
-
 /********************** End of HID Application *********************************/
-
 
 SIBLES_ADVERTISING_CONTEXT_DECLAR(g_app_advertising_bg_context);
 
@@ -559,7 +507,6 @@ static uint8_t ble_app_background_advertising_event(uint8_t event, void *context
     }
     return 0;
 }
-
 
 /* Enable advertise via advertising service. */
 static void ble_app_bg_advertising_start(void)
@@ -605,9 +552,6 @@ static void ble_app_bg_advertising_start(void)
     rt_free(para.adv_data.manufacturer_data);
 }
 
-
-
-
 SIBLES_ADVERTISING_CONTEXT_DECLAR(g_app_advertising_context);
 
 static uint8_t ble_app_advertising_event(uint8_t event, void *context, void *data)
@@ -638,7 +582,6 @@ static uint8_t ble_app_advertising_event(uint8_t event, void *context, void *dat
     }
     return 0;
 }
-
 
 #define DEFAULT_LOCAL_NAME "SIFLI_APP"
 /* Enable advertise via advertising service. */
@@ -763,7 +706,6 @@ static void key_button_init(void)
     int key_id = button_init(&key_cfg);
     if (key_id >= 0)button_enable(key_id);
 
-
 }
 #endif
 int main(void)
@@ -792,7 +734,6 @@ int main(void)
     }
     return RT_EOK;
 }
-
 
 static void ble_app_update_conn_param(uint8_t conn_idx, uint16_t inv_max, uint16_t inv_min, uint16_t timeout)
 {
@@ -866,7 +807,6 @@ int ble_app_event_handler(uint16_t event_id, uint8_t *data, uint16_t len, uint32
 }
 BLE_EVENT_REGISTER(ble_app_event_handler, NULL);
 
-
 #ifdef HIDS_TEST
 
 static rt_err_t test_hids(int argc, char **argv)
@@ -889,8 +829,4 @@ static rt_err_t test_hids(int argc, char **argv)
 FINSH_FUNCTION_EXPORT(test_hids, Test HIDS);
 MSH_CMD_EXPORT(test_hids, Test HIDS);
 #endif
-
-
-
-/************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
 

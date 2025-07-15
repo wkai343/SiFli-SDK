@@ -5,7 +5,6 @@
 #include "string.h"
 #include "rtthread.h"
 
-
 void delayms(unsigned short int ms)
 {
     HAL_Delay(ms);
@@ -14,7 +13,6 @@ void delayms(unsigned short int ms)
 /* i2c  */
 
 static I2C_HandleTypeDef i2c_Handle = {0};
-
 
 #define EEPROM_I2C_ADDRESS         0x50  // 7bit device address of EEPROM
 
@@ -37,8 +35,6 @@ uint8_t TEST_DATA[] =
     0x33,
     0x44
 };
-
-
 
 /// @brief Initialization work before power on EEPROM
 /// @param
@@ -99,7 +95,6 @@ void EEPROM_write_data(uint8_t addr, uint8_t data)
     __HAL_I2C_DISABLE(&i2c_Handle); // for master, disable it after transmit to reduce error status
 }
 
-
 void EEPROM_read_data(uint8_t addr, uint8_t *pdata)
 {
     HAL_StatusTypeDef ret;
@@ -122,7 +117,6 @@ void EEPROM_read_data(uint8_t addr, uint8_t *pdata)
     __HAL_I2C_DISABLE(&i2c_Handle); // for master, disable it after transmit to reduce error status
 }
 
-
 /// @brief read and write eeprom to test
 /// @param
 void EEPROM_test(void)
@@ -135,20 +129,17 @@ void EEPROM_test(void)
         delayms(5); //5ms delay for AT240C8SC write time cycle
     }
 
-
     for (i = 0; i < 4; i++)
     {
         EEPROM_read_data(TEST_ADDR[i], &RECEIVED);
     }
 }
 
-
 void  EEPROM_example(void)
 {
     EEPROM_init();
     EEPROM_test();
 }
-
 
 /**
   * @brief  Main program
@@ -163,6 +154,4 @@ int main(void)
     while (1)
         return 0;
 }
-
-/************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
 

@@ -17,7 +17,6 @@ extern "C" {
 
 int get_icon_transform_param(float x, float y, float icon_r, float *p_float_x, float *p_float_y, float *p_float_icon_r, float *p_float_pivot_r, float scr_width, float scr_height);
 
-
 /*Gauss interface*/
 typedef struct
 {
@@ -52,14 +51,9 @@ int gauss_deinit(void *gauss);
 */
 int gauss_start_IT(void *gauss, gauss_cbk cbk);
 
-
-
 #ifdef __cplusplus
 }
 #endif
 
 #endif /* __BF0_CP_HAL_H */
 
-
-
-/************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/

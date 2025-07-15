@@ -1,48 +1,7 @@
-/**
-  ******************************************************************************
-  * @file   audio_server.c
-  * @author Sifli software development team
-  * @brief SIFLI Manage different audio source.
+/*
+ * SPDX-FileCopyrightText: 2022-2022 SiFli Technologies(Nanjing) Co., Ltd
  *
-  ******************************************************************************
-*/
-/**
- * @attention
- * Copyright (c) 2022 - 2022,  Sifli Technology
- *
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice, this
- *    list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form, except as embedded into a Sifli integrated circuit
- *    in a product or a software update for such product, must reproduce the above
- *    copyright notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *
- * 3. Neither the name of Sifli nor the names of its contributors may be used to endorse
- *    or promote products derived from this software without specific prior written permission.
- *
- * 4. This software, with or without modification, must only be used with a
- *    Sifli integrated circuit.
- *
- * 5. Any software provided in binary form under this license must not be reverse
- *    engineered, decompiled, modified and/or disassembled.
- *
- * THIS SOFTWARE IS PROVIDED BY SIFLI TECHNOLOGY "AS IS" AND ANY EXPRESS
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL SIFLI TECHNOLOGY OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
- * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * SPDX-License-Identifier: Apache-2.0
  */
 
 #include <rtthread.h>
@@ -217,8 +176,6 @@ enum
 #define AUDIO_SPEAKER_NAME      "audprc"
 #define AUDIO_PRC_CODEC_NAME    "audcodec"
 
-
-
 /* -------------------------------------config------------------------------------------------------*/
 
 #define TYPE_TO_MIX_BIT(type)   (1<<(type))
@@ -240,7 +197,6 @@ enum
 #define MODEM_VOICE_MIX_WITH    0
 #define BT_MUSIC_MIX_WITH       (AUDIO_MIX_ALL)
 #define LOCAL_RECORD_MIX_WITH   (AUDIO_MIX_ALL)
-
 
 struct audio_client_base_t
 {
@@ -407,7 +363,6 @@ static struct rt_thread bt_downvoice_tid;
 static uint8_t *hfp_dev_input_buf;
 static uint32_t hfp_dev_input_buf_offset;
 static uint8_t g_ae_log = 0;
-
 
 /* dump debug control*/
 
@@ -683,7 +638,6 @@ static void inline speaker_update_volume(audio_device_speaker_t *my, int16_t spf
             else
                 volx2 = eq_get_music_volumex2(vol);
 
-
             if (volx2 == MUTE_UNDER_MIN_VOLUME)
             {
                 my->is_eq_mute_volume = 1;
@@ -758,7 +712,6 @@ static void inline speaker_update_volume(audio_device_speaker_t *my, int16_t spf
         }
     }
 }
-
 
 static inline void process_speaker_tx(audio_server_t *server, audio_device_speaker_t *my)
 {
@@ -1039,7 +992,6 @@ void speaker_ring_put(uint8_t *fifo, uint16_t fifo_size)
     rb = &client->ring_buf;
 
     audio_device_speaker_t *my = &g_server.device_speaker_private;
-
 
 #if ALL_CLK_USING_PLL
     //audio_pll_dynamic_regulation(my, fifo_size);
@@ -1931,7 +1883,6 @@ static int ble_bap_sink_device_input_callback(audio_server_callback_cmt_t cmd, c
     return 0;
 }
 
-
 static int hfp_device_input_callback(audio_server_callback_cmt_t cmd, const uint8_t *buffer, uint32_t size)
 {
     if (cmd == as_callback_cmd_cache_empty || cmd == as_callback_cmd_cache_half_empty)
@@ -2671,7 +2622,6 @@ static void audio_device_change(audio_server_t *server)
     }
 }
 
-
 bool audio_device_is_a2dp_sink()
 {
 #if (SOFTWARE_TX_MIX_ENABLE && TWS_MIX_ENABLE)
@@ -3020,7 +2970,6 @@ AUDIO_API int audio_hfp_uplink_write(audio_client_t handle, uint8_t *data, uint3
         LOG_D("hfp_write is suspend %d", handle->audio_type);
         return -1;
     }
-
 
 #ifdef BLUETOOTH
     msbc_encode_process(data, data_len);
@@ -3722,7 +3671,6 @@ static inline void ble_sink_adjust_pll(struct rt_ringbuffer *rb)
 }
 #endif
 
-
 /**
   * @brief  write pcm data to downlink cache buffer
   * @param  handle value return by audio_open
@@ -4171,7 +4119,6 @@ void set_speaker_volume(uint8_t volume)
             new_vol = 15;
     }
 
-
     LOG_I("set speaker volume: %d-->%d\n", volume, new_vol);
     g_server.private_volume[AUDIO_TYPE_BT_VOICE] = new_vol;
 }
@@ -4221,7 +4168,6 @@ void audio_dump_data(audio_dump_type_t type, uint8_t *fifo, uint32_t size)
 #endif
 }
 
-
 #if defined (AUDIO_DATA_CAPTURE_UART) && defined (RT_USING_FINSH)
 extern void log_pause(rt_bool_t pause);
 
@@ -4234,7 +4180,6 @@ static rt_err_t uart_tx_done(rt_device_t dev, void *buffer)
 
     return RT_EOK;
 }
-
 
 static void audio_data_start(uint32_t dump_num, bool log)
 {
@@ -4541,6 +4486,4 @@ MSH_CMD_EXPORT_ALIAS(ae_log, ae_log, ae_log);
 #endif
 
 #endif // SOC_BF0_HCPU
-
-/************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
 

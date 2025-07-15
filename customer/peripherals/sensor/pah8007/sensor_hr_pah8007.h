@@ -5,7 +5,6 @@
   ******************************************************************************
 */
 
-
 #ifndef SENSOR_HR_PAH8007_H__
 #define SENSOR_HR_PAH8007_H__
 
@@ -27,11 +26,10 @@ struct pah8007_device
     rt_uint8_t i2c_addr;
 };
 
-
 int rt_hw_pah8007_init(const char *name, struct rt_sensor_config *cfg);
 
 #ifdef __cplusplus
 }
 #endif
 #endif  // SENSOR_HR_PAH8007_H__
-/************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
+

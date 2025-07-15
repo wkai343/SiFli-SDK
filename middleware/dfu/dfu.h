@@ -1,46 +1,7 @@
-/**
-  ******************************************************************************
-  * @file   dfu.h
-  * @author Sifli software development team
-  ******************************************************************************
-*/
-/**
- * @attention
- * Copyright (c) 2019 - 2022,  Sifli Technology
+/*
+ * SPDX-FileCopyrightText: 2019-2022 SiFli Technologies(Nanjing) Co., Ltd
  *
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice, this
- *    list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form, except as embedded into a Sifli integrated circuit
- *    in a product or a software update for such product, must reproduce the above
- *    copyright notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *
- * 3. Neither the name of Sifli nor the names of its contributors may be used to endorse
- *    or promote products derived from this software without specific prior written permission.
- *
- * 4. This software, with or without modification, must only be used with a
- *    Sifli integrated circuit.
- *
- * 5. Any software provided in binary form under this license must not be reverse
- *    engineered, decompiled, modified and/or disassembled.
- *
- * THIS SOFTWARE IS PROVIDED BY SIFLI TECHNOLOGY "AS IS" AND ANY EXPRESS
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL SIFLI TECHNOLOGY OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
- * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * SPDX-License-Identifier: Apache-2.0
  */
 
 #ifndef DFU_H
@@ -48,7 +9,6 @@
 
 
 #include <rtconfig.h>
-
 
 #ifndef RT_USED
     #if defined (__IAR_SYSTEMS_ICC__)     /* for IAR Compiler */
@@ -86,7 +46,6 @@ extern "C" {
 #define CORE_HCPU               2
 #define CORE_BOOT               3
 #define CORE_MAX                (CORE_BOOT+1)
-
 
 #define DFU_FLASH_SEC_CONFIG    0         //for secure configurations
 #define DFU_FLASH_FACTORY_CAL   1         //for factory calibration data
@@ -126,9 +85,7 @@ extern "C" {
     #define DFU_FLASH_IMAGE_COMPRESS      22
     #define DFU_FLASH_FONT_COMPRESS       23
 
-
 #endif
-
 
 #define DFU_MAX_VERSION_LEN 18
 #define DFU_PART_VERSION_LEN 8
@@ -154,9 +111,7 @@ extern "C" {
     #define DFU_INFO_REGION_START_ADDR 0xFFFFFFFF
 #endif
 
-
 #define DFU_FLASH_IMG_IDX(flash_id)  ((flash_id)-(DFU_FLASH_IMG_LCPU))
-
 
 #define DFU_SING_IMG_START      (FLASH_TABLE_END_ADDR+1)
 
@@ -184,14 +139,11 @@ struct dfu_hdr_body
     uint32_t offset;
 };
 
-
-
 #ifdef BSP_USING_DFU_COMPRESS
 struct dfu_compress_hdr
 {
     uint8_t command; /** <command, refer to #DFU_IMG_HDR_COMPRESS */
 };
-
 
 typedef struct
 {
@@ -221,7 +173,6 @@ struct image_header_enc     // Total length 512, but only 296 bytes are useful i
     uint8_t     ver[DFU_VERSION_LEN];
     uint8_t     reserved[256 - DFU_KEY_SIZE - 8 - DFU_VERSION_LEN]; // Align to 256 bytes for flash erase.
 };
-
 
 struct image_header
 {
@@ -298,7 +249,6 @@ struct image_header_compress_resume
     uint16_t    pksize;
 };
 
-
 /* Image BODY packet encrypted
 --------------------------------------------------------------------------------------------------------------
 |DFU_CHANNEL(1B)|DFU_IMG_BODY(1B)|Core_ID(1B)|flags(1B)|hash(32B)|offset(4B)|image_body    |
@@ -315,7 +265,6 @@ struct dfu_end_hdr
 {
     uint8_t     sig[DFU_SIG_SIZE];
 };
-
 
 #endif
 struct flash_table
@@ -350,7 +299,6 @@ typedef struct
 #define DFU_CONFIG          7
 #define DFU_END_NO_ENC      8
 
-
 #ifdef BSP_USING_DFU_COMPRESS
     #define DFU_IMG_HDR_COMPRESS  1
     #define DFU_COMPRESS_RESUNME  2
@@ -377,7 +325,6 @@ typedef struct
 #define DFU_STATE_BIN_DOWNLOADED    3
 #define DFU_STATE_BIN_INSTALLING    4
 #define DFU_STATE_BIN_INSTALLED     5
-
 
 #define EFUSE_UID           DFU_CONFIG_UID
 #define EFUSE_ID_ROOT       DFU_CONFIG_ROOT
@@ -448,7 +395,6 @@ typedef struct
     uint8_t dfu_state;
 } dfu_ram_info;
 
-
 #ifdef BSP_USING_DFU_COMPRESS
 
 struct dfu_compress_flash_table
@@ -499,13 +445,11 @@ struct sec_efuse
 #else
 #endif
 
-
 extern struct sec_configuration *g_sec_config;
 
 #ifdef BSP_USING_DFU_COMPRESS
     extern volatile struct dfu_compress_configuration *g_dfu_compress_config;
 #endif
-
 
 void sec_flash_init(void);
 int  sec_flash_read(int flashid, uint32_t offset, uint8_t *data, uint32_t size);
@@ -529,7 +473,6 @@ void sifli_hw_enc(uint8_t *in_data, uint8_t *out_data, int size);
 void sifli_hw_enc_with_key(uint8_t *key, uint8_t *in_data, uint8_t *out_data, int size, uint32_t init_offset);
 void sifli_hw_init_xip_key(uint8_t *enc_img_key);
 
-
 void dfu_flash_init(void);
 int  dfu_receive_pkt(int len, uint8_t *data);
 void dfu_boot_img(int flashid);
@@ -552,7 +495,6 @@ extern flash_write_func g_flash_write;
 extern flash_erase_func g_flash_erase;
 extern dfu_efuse_read_hook_t g_dfu_efuse_read_hook;
 
-
 //#define FLASH_SIMULATE
 
 #ifdef __cplusplus
@@ -560,4 +502,3 @@ extern dfu_efuse_read_hook_t g_dfu_efuse_read_hook;
 #endif
 #endif
 
-/************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/

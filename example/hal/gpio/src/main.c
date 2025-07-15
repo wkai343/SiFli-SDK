@@ -25,12 +25,10 @@
     #define RCC_MOD_GPIO RCC_MOD_GPIO1
 #endif
 
-
 void delayms(unsigned short int ms)
 {
     HAL_Delay(ms);
 }
-
 
 /// @brief Initialization work before power on EEPROM
 /// @param
@@ -88,9 +86,6 @@ void gpio_test(void)
     rt_thread_mdelay(1000);
 }
 
-
-
-
 void HAL_GPIO_EXTI_Callback(GPIO_TypeDef *hgpio, uint16_t GPIO_Pin) // override the weak Callback to add user defined action, it's called by HAL_GPIO_EXTI_IRQHandler
 {
     if (GPIO_Pin == Pin_In)
@@ -102,7 +97,6 @@ void HAL_GPIO_EXTI_Callback(GPIO_TypeDef *hgpio, uint16_t GPIO_Pin) // override 
         rt_kprintf(" \n");
     }
 }
-
 
 /**
   * @brief  Main program
@@ -120,6 +114,4 @@ int main(void)
     }
     return 0;
 }
-
-/************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
 

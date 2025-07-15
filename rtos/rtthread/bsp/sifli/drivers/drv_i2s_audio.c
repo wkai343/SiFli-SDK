@@ -1,48 +1,7 @@
-/**
-  ******************************************************************************
-  * @file   drv_audio.c
-  * @author Sifli software development team
-  * @brief   Audio driver adaption layer
+/*
+ * SPDX-FileCopyrightText: 2019-2022 SiFli Technologies(Nanjing) Co., Ltd
  *
-  ******************************************************************************
-*/
-/**
- * @attention
- * Copyright (c) 2019 - 2022,  Sifli Technology
- *
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice, this
- *    list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form, except as embedded into a Sifli integrated circuit
- *    in a product or a software update for such product, must reproduce the above
- *    copyright notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *
- * 3. Neither the name of Sifli nor the names of its contributors may be used to endorse
- *    or promote products derived from this software without specific prior written permission.
- *
- * 4. This software, with or without modification, must only be used with a
- *    Sifli integrated circuit.
- *
- * 5. Any software provided in binary form under this license must not be reverse
- *    engineered, decompiled, modified and/or disassembled.
- *
- * THIS SOFTWARE IS PROVIDED BY SIFLI TECHNOLOGY "AS IS" AND ANY EXPRESS
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL SIFLI TECHNOLOGY OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
- * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * SPDX-License-Identifier: Apache-2.0
  */
 
 #include <rthw.h>
@@ -107,7 +66,6 @@ struct bf0_i2s_audio
     uint8_t *tx_pos;
 };
 
-
 #define AUDIO_DATA_SIZE 640 //480
 ALIGN(4) static uint8_t audio_data[AUDIO_DATA_SIZE];
 ALIGN(4) static uint8_t audio_tx_data[AUDIO_DATA_SIZE];
@@ -130,7 +88,6 @@ static CLK_DIV_T  txrx_clk_div[9]  = {{48000, 64, 64,  2}, {44100, 64, 64,  2}, 
     {16000, 96, 96,  3}, {12000, 256, 256, 8}, {11025, 256, 256, 8}, { 8000, 192, 192, 6}
 };
 #endif
-
 
 /**
  *  Register and use Mic device
@@ -158,7 +115,6 @@ static struct i2s_audio_cfg_t bf0_i2s_audio_obj[] =
 };
 
 static struct bf0_i2s_audio h_i2s_audio[sizeof(bf0_i2s_audio_obj) / sizeof(bf0_i2s_audio_obj[0])];
-
 
 static void audio_debug_out_i2sr()
 {
@@ -276,7 +232,6 @@ static rt_err_t bf0_audio_getcaps(struct rt_audio_device *audio, struct rt_audio
 
     return result;
 }
-
 
 /**
   * @brief  Config audio device.
@@ -487,7 +442,6 @@ static rt_err_t bf0_audio_configure(struct rt_audio_device *audio, struct rt_aud
     return result;
 }
 
-
 /**
   * @brief  Initialize audio device.
   * @param[in]  audio: audio device handle.
@@ -507,7 +461,6 @@ static rt_err_t bf0_audio_shutdown(struct rt_audio_device *audio)
 {
     return RT_EOK;
 }
-
 
 /**
   * @brief  Start audio device for recording/playback.
@@ -622,7 +575,6 @@ static rt_err_t bf0_audio_start(struct rt_audio_device *audio, int stream)
 #endif /* I2S3_TX_DMA_IRQ */
 #endif /* !DMA_SUPPORT_DYN_CHANNEL_ALLOC */
             LOG_I("bf0_audio_start enable irq\n");
-
 
             audio_debug_out_i2st();
             audio_debug_out_txdma();
@@ -857,7 +809,6 @@ static rt_size_t bf0_audio_trans(struct rt_audio_device *audio, const void *writ
     return size;
 }
 
-
 static const struct rt_audio_ops       _g_audio_ops =
 {
     .getcaps    = bf0_audio_getcaps,
@@ -966,7 +917,6 @@ int rt_bf0_i2s_audio_init(void)
             hi2s->Init.rx_cfg.bclk = 800000;
             hi2s->Init.rx_cfg.extern_intf = 0;
 
-
             hi2s->Init.tx_cfg.data_dw = 16;
             hi2s->Init.tx_cfg.bus_dw = 32;
             hi2s->Init.tx_cfg.pcm_dw = 16;
@@ -1000,8 +950,6 @@ INIT_DEVICE_EXPORT(rt_bf0_i2s_audio_init);
 
 /// @} drv_audio
 /// @} bsp_driver
-
-
 
 /** @addtogroup bsp_sample BSP driver sample commands.
   * @{
@@ -1174,13 +1122,11 @@ void HAL_I2S_ErrorCallback(I2S_HandleTypeDef *hi2s)
 }
 #endif
 
-
 //#define DRV_TEST
 #if defined(DRV_TEST) || defined (APP_BSP_TEST)
 
 #include "drv_flash.h"
 #include "ipc/ringbuffer.h"
-
 
 //#define ATEST_LOOPBACK
 
@@ -1191,7 +1137,6 @@ Then use cmd "mkfs -t elm sd0" to create FS,this step only need once if do not f
 After FS created success, use cmd "mountfs -t elm sd0 /" to mount FS to root.
 File system used, uart do not need any more, 2 choose 1
 **/
-
 
 #define AUDIO_SAVE2RAM      // save to mem, if not define, save to file
 #define AUDIO_LOADRAM       // load from ram, if not define, load from file
@@ -1207,7 +1152,6 @@ File system used, uart do not need any more, 2 choose 1
 #define AUDIO_BUF_SIZE  1920
 #define AUDIO_TEST_HNAME        "i2s2"
 #define AUD_TEST_FLEN       (0x7f000)
-
 
 static rt_device_t g_mic;
 static uint8_t g_pipe_data[AUDIO_BUF_SIZE];
@@ -1274,7 +1218,6 @@ typedef struct
     uint8_t data[4];
     uint32_t size2;
 } AUD_WAV_HDR_T;
-
 
 static void atest_fill_header(uint32_t sr, uint16_t channel, uint16_t bps)
 {
@@ -1409,7 +1352,6 @@ void bf0_audio_tx_entry(void *param)
         //LOG_I("filled %d\n", cnt);
     }
 }
-
 
 /**
 * @brief  Audio receiving thread.
@@ -1697,5 +1639,3 @@ FINSH_FUNCTION_EXPORT_ALIAS(cmd_audio, __cmd_audio, Test audio driver);
 
 #endif  /* BSP_USING_I2S */
 
-
-/************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/

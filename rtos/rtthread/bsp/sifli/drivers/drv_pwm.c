@@ -1,48 +1,7 @@
-/**
-  ******************************************************************************
-  * @file   drv_pwm.c
-  * @author Sifli software development team
-  * @brief PWM BSP driver
-  * @{
-  ******************************************************************************
-*/
-/**
- * @attention
- * Copyright (c) 2019 - 2022,  Sifli Technology
+/*
+ * SPDX-FileCopyrightText: 2019-2022 SiFli Technologies(Nanjing) Co., Ltd
  *
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice, this
- *    list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form, except as embedded into a Sifli integrated circuit
- *    in a product or a software update for such product, must reproduce the above
- *    copyright notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *
- * 3. Neither the name of Sifli nor the names of its contributors may be used to endorse
- *    or promote products derived from this software without specific prior written permission.
- *
- * 4. This software, with or without modification, must only be used with a
- *    Sifli integrated circuit.
- *
- * 5. Any software provided in binary form under this license must not be reverse
- *    engineered, decompiled, modified and/or disassembled.
- *
- * THIS SOFTWARE IS PROVIDED BY SIFLI TECHNOLOGY "AS IS" AND ANY EXPRESS
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL SIFLI TECHNOLOGY OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
- * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * SPDX-License-Identifier: Apache-2.0
  */
 
 #include <board.h>
@@ -61,7 +20,6 @@
 #if defined(BSP_USING_PWM) || defined(_SIFLI_DOXYGEN_)
 
 #include "drv_config.h"
-
 
 //#define DRV_DEBUG
 #define LOG_TAG             "drv.pwm"
@@ -118,8 +76,6 @@ struct bf0_pwm
     char *name;                         /*!<Device name*/
     struct bf0_pwm_dma *pwm_cc_dma[4];
 };
-
-
 
 static struct bf0_pwm bf0_pwm_obj[] =
 {
@@ -622,7 +578,6 @@ void PWMA1_CC4_DMA_IRQHandler(void)
 #endif
 #endif
 
-
 /** @defgroup pwm_device PWM device functions registered to OS
  * @ingroup drv_pwm
  * @{
@@ -633,7 +588,6 @@ static struct rt_pwm_ops drv_ops =
 {
     drv_pwm_control
 };
-
 
 /**
 * @brief  Enable/disable a PWM device.
@@ -723,7 +677,6 @@ static rt_err_t drv_pwm_get(struct bf0_pwm *pwm, struct rt_pwm_configuration *co
 #endif
         GPT_clock = HAL_RCC_GetPCLKFreq(htim->core, 1);
 
-
     /* Convert nanosecond to frequency and duty cycle. 1s = 1 * 1000 * 1000 * 1000 ns */
     GPT_clock /= 1000000UL;
     configuration->period = (__HAL_GPT_GET_AUTORELOAD(htim) + 1) * (htim->Instance->PSC + 1) * 1000UL / GPT_clock;
@@ -791,7 +744,6 @@ static rt_err_t drv_pwm_set(struct bf0_pwm *pwm, struct rt_pwm_configuration *co
     }
 
     __HAL_GPT_SET_COMPARE(htim, channel, pulse - 1);
-
 
     //pulse compute conversion
     if (configuration->use_percentage)//If you need to perform ratio calculation on pulse
@@ -872,7 +824,6 @@ static rt_err_t drv_pwm_set_break_dead(struct bf0_pwm *pwm, struct rt_pwm_config
     RT_ASSERT((configuration != NULL) && (htim != NULL))
     struct rt_pwm_break_dead *bkd = (struct rt_pwm_break_dead *)&configuration->break_dead;
     rt_uint32_t GPT_clock = 0, dead_time = 0;
-
 
 #ifdef SF32LB52X
     if (htim->Instance == hwp_gptim2)
@@ -1031,7 +982,6 @@ static void bf0_hw_pwm_config_dma(struct bf0_pwm *device)
     }
 }
 
-
 /**
 * @brief PWM device driver initialization.
 * This is entry function of PWM device driver.
@@ -1165,7 +1115,6 @@ _exit:
     return result;
 }
 MSH_CMD_EXPORT(pwm_disable, pwm_disable pwm3 1);
-
 
 /**
 * @brief Setup pwm device.
@@ -1317,6 +1266,5 @@ MSH_CMD_EXPORT(pwm_play, pwm_play     pwm3 1 1000 07 00010203040506);
 
 /// @} bsp_sample
 
-
 /// @} file
-/************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
+

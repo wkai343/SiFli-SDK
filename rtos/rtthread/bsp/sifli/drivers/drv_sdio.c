@@ -1,48 +1,7 @@
-/**
-  ******************************************************************************
-  * @file   drv_sdio.c
-  * @author Sifli software development team
-  * @brief SDIO BSP driver
-  * @{
-  ******************************************************************************
-*/
-/**
- * @attention
- * Copyright (c) 2019 - 2022,  Sifli Technology
+/*
+ * SPDX-FileCopyrightText: 2019-2022 SiFli Technologies(Nanjing) Co., Ltd
  *
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice, this
- *    list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form, except as embedded into a Sifli integrated circuit
- *    in a product or a software update for such product, must reproduce the above
- *    copyright notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *
- * 3. Neither the name of Sifli nor the names of its contributors may be used to endorse
- *    or promote products derived from this software without specific prior written permission.
- *
- * 4. This software, with or without modification, must only be used with a
- *    Sifli integrated circuit.
- *
- * 5. Any software provided in binary form under this license must not be reverse
- *    engineered, decompiled, modified and/or disassembled.
- *
- * THIS SOFTWARE IS PROVIDED BY SIFLI TECHNOLOGY "AS IS" AND ANY EXPRESS
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL SIFLI TECHNOLOGY OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
- * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * SPDX-License-Identifier: Apache-2.0
  */
 
 #include "board.h"
@@ -114,7 +73,6 @@ ALIGN(SDIO_ALIGN_LEN)
 //static rt_uint8_t cache_buf[SDIO_BUFF_SIZE];
 HAL_RETM_BSS_SECT(cache_buf, static rt_uint8_t cache_buf[SDIO_BUFF_SIZE]);
 
-
 static rt_uint32_t sifli_sdio_clk_get(SD_TypeDef *hw_sdio)
 {
     return SDIO_CLOCK_FREQ;
@@ -184,7 +142,6 @@ static int get_order(rt_uint32_t data)
     return order;
 }
 
-
 #define _DUMP_REG_DEBUG         (0)
 #define _SDHCI_DUMP_RCNT        (23)
 static uint32_t sdhci_reg_arr[_SDHCI_DUMP_RCNT];
@@ -241,7 +198,6 @@ void rt_hw_sdio_timeout_handle(void)
     rt_thread_mdelay(1);
     recov_sdio_reg();
 }
-
 
 /**
   * @brief  This function wait sdio completed.
@@ -477,7 +433,6 @@ static void rthw_sdio_transfer_by_cpu(struct rthw_sdio *sdio, struct sdio_pkg *p
     }
 #endif
 }
-
 
 /**
   * @brief  This function send command.
@@ -1014,7 +969,6 @@ struct rt_mmcsd_host *sdio_host_create(struct sifli_sdio_des *sdio_des)
 
     rt_event_init(&sdio->event, "sdio", RT_IPC_FLAG_FIFO);
     rt_mutex_init(&sdio->mutex, "sdio", RT_IPC_FLAG_FIFO);
-
 
     /* set host defautl attributes */
     host->ops = &ops;
@@ -1561,4 +1515,3 @@ FINSH_FUNCTION_EXPORT_ALIAS(cmd_sdcard, __cmd_sdcard, Test hw sdcard);
 /// @} bsp_driver
 /// @} file
 
-/************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/

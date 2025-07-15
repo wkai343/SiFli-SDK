@@ -1,46 +1,7 @@
-/**
-  ******************************************************************************
-  * @file   dfu_sec.c
-  * @author Sifli software development team
-  ******************************************************************************
-*/
-/**
- * @attention
- * Copyright (c) 2021 - 2021,  Sifli Technology
+/*
+ * SPDX-FileCopyrightText: 2021-2021 SiFli Technologies(Nanjing) Co., Ltd
  *
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice, this
- *    list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form, except as embedded into a Sifli integrated circuit
- *    in a product or a software update for such product, must reproduce the above
- *    copyright notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *
- * 3. Neither the name of Sifli nor the names of its contributors may be used to endorse
- *    or promote products derived from this software without specific prior written permission.
- *
- * 4. This software, with or without modification, must only be used with a
- *    Sifli integrated circuit.
- *
- * 5. Any software provided in binary form under this license must not be reverse
- *    engineered, decompiled, modified and/or disassembled.
- *
- * THIS SOFTWARE IS PROVIDED BY SIFLI TECHNOLOGY "AS IS" AND ANY EXPRESS
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL SIFLI TECHNOLOGY OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
- * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * SPDX-License-Identifier: Apache-2.0
  */
 
 #include <stdio.h>
@@ -73,7 +34,6 @@ static uint8_t dfu_hash[DFU_SIG_HASH_SIZE];
 /** encoded key */
 ALIGN(4)
 static uint8_t dfu_key[DFU_KEY_SIZE];
-
 
 ALIGN(4)
 static uint8_t g_aes_ctr_iv[DFU_IV_LEN];
@@ -159,7 +119,6 @@ static uint8_t *dfu_get_public_key(void)
     // return &g_sec_config->sig_pub_key[0];
 }
 
-
 static uint8_t dfu_secure_boot_check()
 {
     uint8_t pattern;
@@ -219,7 +178,6 @@ void dfu_sec_init(void)
         LOG_I("dfu_secure_boot_check");
         g_dfu_efuse_read_hook = dfu_get_efuse_hook;
     }
-
 
 }
 
@@ -298,7 +256,6 @@ void dump_config()
 }
 MSH_CMD_EXPORT(dump_config, Dump system configuration.);
 
-
 uint8_t *dfu_get_counter(uint32_t offset)
 {
     int i;
@@ -368,7 +325,6 @@ int8_t dfu_integrate_verify(uint8_t *in_data, int size, uint8_t *hash)
     return 0;
 #endif
 }
-
 
 uint8_t dfu_img_verification(dfu_ctrl_env_t *env)
 {
@@ -524,7 +480,6 @@ uint8_t dfu_img_verification_ext(dfu_ctrl_ext_env_t *env)
 #endif
 }
 
-
 int dfu_encrypt_packet(dfu_image_header_int_t *header, uint32_t offset, uint8_t *data, uint32_t size, uint8_t *dfu_key)
 {
 #ifdef OTA_55X
@@ -535,7 +490,6 @@ int dfu_encrypt_packet(dfu_image_header_int_t *header, uint32_t offset, uint8_t 
     return DFU_SUCCESS;
 #endif
 }
-
 
 int8_t dfu_ctrl_ctrl_header_sig_verify(dfu_ctrl_env_t *env, uint8_t *packet, uint16_t total_len, uint8_t *sig)
 {
@@ -675,7 +629,6 @@ void dfu_update_img_header_ext(dfu_ctrl_ext_env_t *env)
     free((uint8_t *)cache);
 }
 
-
 void dfu_bootjump_sec_config(dfu_ctrl_env_t *env, uint8_t *dest)
 {
 #if OTA_55X
@@ -780,4 +733,3 @@ uint32_t crc32_update(uint32_t crc, const uint8_t *data, size_t len)
     return crc;
 }
 
-/************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/

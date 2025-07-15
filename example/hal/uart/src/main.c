@@ -10,8 +10,6 @@
 #include "uart_config.h"
 #include "dma_config.h"
 
-
-
 #if defined(BSP_USING_BOARD_SF32LB52_LCD_N16R8)
     #define UART2_DMA_RX_IRQHandler          DMAC1_CH6_IRQHandler
 #elif defined (BSP_USING_BOARD_SF32LB58_LCD_N16R64N4)
@@ -29,7 +27,6 @@
 #define UART_RX_DMA_REQUEST     UART2_RX_DMA_REQUEST
 #define UART_RX_DMA_IRQ         UART2_RX_DMA_IRQ
 #define UART_RX_DMA_IRQ_HANDLER UART2_DMA_RX_IRQHandler
-
 
 /* UART handler declaration */
 UART_HandleTypeDef UartHandle;
@@ -63,9 +60,6 @@ int _write(int fd, char *ptr, int len)
 static DMA_HandleTypeDef dma_rx_handle;
 static uint8_t buffer[BUFFER_SIZE];
 
-
-
-
 static int last_index = 0;
 static int last_index2 = 0;
 
@@ -78,7 +72,6 @@ typedef enum
 } ReceiveState;
 // 当前接收状态
 ReceiveState currentState = STATE_UNFULL;
-
 
 // 数据处理函数
 void processData(uint8_t *data, uint16_t start, uint16_t length)
@@ -99,7 +92,6 @@ void UART_IRQ_HANDLER(void)
             (__HAL_UART_GET_IT_SOURCE(&UartHandle, UART_IT_IDLE) != RESET))
     {
 
-
         // printf("UART_IRQ_HANDLER");
 
         int recv_total_index = BUFFER_SIZE - __HAL_DMA_GET_COUNTER(&dma_rx_handle);
@@ -110,8 +102,6 @@ void UART_IRQ_HANDLER(void)
         {
 
             int count = __HAL_DMA_GET_COUNTER(&dma_rx_handle);
-
-
 
             switch (currentState)
             {
@@ -145,8 +135,6 @@ void UART_IRQ_HANDLER(void)
 
         // 重置缓冲区和DMA计数器以准备下一次接收
         last_index = recv_total_index;
-
-
 
     }
 
@@ -225,7 +213,6 @@ int main(void)
 
     /* Output a message on console using printf function */
 
-
     /*##-1- Configure the UART peripheral ######################################*/
     /* Put the USART peripheral in the Asynchronous mode (UART Mode) */
     /* UART configured as follows:
@@ -299,6 +286,4 @@ int main(void)
     while (1);
     return 0;
 }
-
-/************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
 

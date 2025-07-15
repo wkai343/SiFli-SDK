@@ -1,46 +1,7 @@
-/**
-  ******************************************************************************
-  * @file   main.c
-  * @author Sifli software development team
-  ******************************************************************************
-*/
-/**
- * @attention
- * Copyright (c) 2021 - 2021,  Sifli Technology
+/*
+ * SPDX-FileCopyrightText: 2021-2021 SiFli Technologies(Nanjing) Co., Ltd
  *
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice, this
- *    list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form, except as embedded into a Sifli integrated circuit
- *    in a product or a software update for such product, must reproduce the above
- *    copyright notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *
- * 3. Neither the name of Sifli nor the names of its contributors may be used to endorse
- *    or promote products derived from this software without specific prior written permission.
- *
- * 4. This software, with or without modification, must only be used with a
- *    Sifli integrated circuit.
- *
- * 5. Any software provided in binary form under this license must not be reverse
- *    engineered, decompiled, modified and/or disassembled.
- *
- * THIS SOFTWARE IS PROVIDED BY SIFLI TECHNOLOGY "AS IS" AND ANY EXPRESS
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL SIFLI TECHNOLOGY OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
- * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * SPDX-License-Identifier: Apache-2.0
  */
 
 #include <rtthread.h>
@@ -51,9 +12,6 @@
 #include "mem_section.h"
 #include "drv_epic.h"
 
-
-
-
 #define BUF_WIDTH  LCD_HOR_RES_MAX
 #define BUF_HEIGHT (LCD_VER_RES_MAX/16)
 
@@ -61,7 +19,6 @@
 #define BUF_PIXEL_BYTES  3
 
 #define BUF_TOTAL_BYTES (BUF_WIDTH * BUF_HEIGHT *BUF_PIXEL_BYTES)
-
 
 #if defined(SF32LB56X)  && defined(HPSYS_RAM0_SIZE)
     #define SLOW_SPEED_SRAM HPSYS_RAM0_SIZE
@@ -89,8 +46,6 @@ const static uint8_t ezip_data_argb565[] =
 void dummy_func(void)
 {
 }
-
-
 
 #include "drv_lcd.h"
 static struct rt_semaphore lcd_sema;
@@ -128,17 +83,14 @@ static rt_device_t open_lcd(uint8_t *pixel_align)
         }
     }
 
-
     *pixel_align = 1;
     return NULL;
 }
-
 
 static void lcd_flush(rt_device_t dev, const EPIC_LayerConfigTypeDef *dst)
 {
     lcd_flush_info_t flush_info;
     rt_err_t err;
-
 
     flush_info.cmpr_rate = 0;
     flush_info.pixel      = dst->data;
@@ -208,7 +160,6 @@ static void draw_fill(drv_epic_render_buf *p_buf)
     drv_epic_operation *o = drv_epic_alloc_op(p_buf);
     RT_ASSERT(o != NULL);
 
-
     o->op = DRV_EPIC_DRAW_FILL;
     o->clip_area.x0 = 0;
     o->clip_area.y0 = 0;
@@ -225,12 +176,10 @@ static void draw_fill(drv_epic_render_buf *p_buf)
     drv_epic_commit_op(o);
 }
 
-
 static void draw_img(drv_epic_render_buf *p_buf)
 {
     drv_epic_operation *o = drv_epic_alloc_op(p_buf);
     RT_ASSERT(o != NULL);
-
 
     o->op = DRV_EPIC_DRAW_IMAGE;
     o->clip_area.x0 = 0;
@@ -261,7 +210,6 @@ static void draw_ezip_img(drv_epic_render_buf *p_buf)
     drv_epic_operation *o = drv_epic_alloc_op(p_buf);
     RT_ASSERT(o != NULL);
 
-
     o->op = DRV_EPIC_DRAW_IMAGE;
     o->clip_area.x0 = 0;
     o->clip_area.y0 = 0;
@@ -286,7 +234,6 @@ static void draw_ezip_img(drv_epic_render_buf *p_buf)
     drv_epic_commit_op(o);
 }
 
-
 static void draw_rects(drv_epic_render_buf *p_buf)
 {
     int16_t w = LCD_HOR_RES_MAX - 30;
@@ -297,7 +244,6 @@ static void draw_rects(drv_epic_render_buf *p_buf)
         drv_epic_operation *o = drv_epic_alloc_op(p_buf);
         RT_ASSERT(o != NULL);
 
-
         o->op = DRV_EPIC_DRAW_RECT;
         o->clip_area.x0 = 5;
         o->clip_area.y0 = y;
@@ -306,15 +252,12 @@ static void draw_rects(drv_epic_render_buf *p_buf)
 
         HAL_EPIC_LayerConfigInit(&o->mask);
 
-
         o->desc.rectangle.area = o->clip_area;
-
 
         o->desc.rectangle.radius = 20;
         o->desc.rectangle.top_fillet = 1;
         o->desc.rectangle.bot_fillet = 1;
         o->desc.rectangle.argb8888 = 0xFF808080;
-
 
         drv_epic_commit_op(o);
     }
@@ -357,7 +300,6 @@ static void draw_arcs(drv_epic_render_buf *p_buf)
         drv_epic_operation *o = drv_epic_alloc_op(p_buf);
         RT_ASSERT(o != NULL);
 
-
         o->op = DRV_EPIC_DRAW_ARC;
 
         HAL_EPIC_LayerConfigInit(&o->mask);
@@ -382,7 +324,6 @@ static void draw_arcs(drv_epic_render_buf *p_buf)
         drv_epic_commit_op(o);
     }
 }
-
 
 static void draw_lines(drv_epic_render_buf *p_buf)
 {
@@ -421,7 +362,6 @@ static void draw_lines(drv_epic_render_buf *p_buf)
         drv_epic_operation *o = drv_epic_alloc_op(p_buf);
         RT_ASSERT(o != NULL);
 
-
         o->op = DRV_EPIC_DRAW_LINE;
         HAL_EPIC_LayerConfigInit(&o->mask);
 
@@ -431,7 +371,6 @@ static void draw_lines(drv_epic_render_buf *p_buf)
         o->desc.line.p2.y = LCD_VER_RES_MAX - 30;
         o->desc.line.width = 20;
 
-
         o->desc.line.dash_width = 0;
         o->desc.line.dash_gap = 0;
 
@@ -439,7 +378,6 @@ static void draw_lines(drv_epic_render_buf *p_buf)
         o->desc.line.round_end = 1;
         o->desc.line.raw_end = 0;
         o->desc.line.argb8888 = 0xFF0000FF;
-
 
         int16_t  half_w = o->desc.line.width >> 1;
         o->clip_area.x0 = o->desc.line.p1.x - half_w - 1;
@@ -449,13 +387,10 @@ static void draw_lines(drv_epic_render_buf *p_buf)
         drv_epic_commit_op(o);
     }
 
-
-
     //Skew line
     {
         drv_epic_operation *o = drv_epic_alloc_op(p_buf);
         RT_ASSERT(o != NULL);
-
 
         o->op = DRV_EPIC_DRAW_LINE;
         HAL_EPIC_LayerConfigInit(&o->mask);
@@ -466,7 +401,6 @@ static void draw_lines(drv_epic_render_buf *p_buf)
         o->desc.line.p2.y = LCD_VER_RES_MAX - 40;
         o->desc.line.width = 20;
 
-
         o->desc.line.dash_width = 0;
         o->desc.line.dash_gap = 0;
 
@@ -474,7 +408,6 @@ static void draw_lines(drv_epic_render_buf *p_buf)
         o->desc.line.round_end = 1;
         o->desc.line.raw_end = 0;
         o->desc.line.argb8888 = 0xFFFFFF00;
-
 
         int16_t  half_w = o->desc.line.width >> 1;
         o->clip_area.x0 = o->desc.line.p1.x - half_w - 1;
@@ -485,7 +418,6 @@ static void draw_lines(drv_epic_render_buf *p_buf)
     }
 
 }
-
 
 static void draw_letters(drv_epic_render_buf *p_buf)
 {
@@ -547,7 +479,6 @@ static void draw_polygon(drv_epic_render_buf *p_buf)
     o->desc.polygon.points[4].y = 200;
     o->desc.polygon.points[5].x = 50;
     o->desc.polygon.points[5].y = 150;
-
 
     o->desc.polygon.argb8888 = 0xFF00FF00;
 
@@ -632,7 +563,6 @@ static void draw_img_3d_rotated(drv_epic_render_buf *p_buf)
     drv_epic_commit_op(o);
 }
 
-
 static void draw_img_3d_rotated_2(drv_epic_render_buf *p_buf)
 {
     static int16_t angle_v = 0;
@@ -660,7 +590,6 @@ static void draw_img_3d_rotated_2(drv_epic_render_buf *p_buf)
     //Align to the center of screen
     p_src_layer->x_offset = (LCD_HOR_RES_MAX - p_src_layer->width) >> 1;
     p_src_layer->y_offset = (LCD_VER_RES_MAX - p_src_layer->height) >> 1;
-
 
     p_src_layer->transform_cfg.type = 2;
     p_src_layer->transform_cfg.scale_x = EPIC_INPUT_SCALE_NONE;
@@ -706,7 +635,6 @@ static void draw_arc_anim(drv_epic_render_buf *p_buf)
         o->clip_area.x1 = o->desc.arc.center_x + r + 1;
         o->clip_area.y1 = o->desc.arc.center_y + r + 1;
         drv_epic_commit_op(o);
-
 
         //Draw fg
         o = drv_epic_alloc_op(p_buf);
@@ -774,12 +702,8 @@ static void generate_image(unsigned char *buffer, uint32_t cf, int HOR_MAX, int 
         areas[i].x1 = start_x + width - 1;
         areas[i].y1 = start_y + height - 1;
 
-
         remaining_area -= area;
     }
-
-
-
 
     //2. Fill the areas
     drv_epic_render_buf render_buf;
@@ -867,7 +791,6 @@ int main(void)
         BUF_TOTAL_BYTES);
     rt_sem_init(&render_done_sema, "rd_done_sema", 0, RT_IPC_FLAG_FIFO);
 
-
     rt_kprintf("generate_image start\r\n");
     generate_image((uint8_t *)&test_image[0], TEST_IMAGE_COLOR_FORMAT, TEST_IMAGE_WIDTH, TEST_IMAGE_HEIGHT);
     rt_kprintf("generate_image done\r\n");
@@ -880,7 +803,6 @@ int main(void)
     virtual_render_buf.area.x1 = LCD_HOR_RES_MAX - 1;
     virtual_render_buf.area.y1 = LCD_VER_RES_MAX - 1;
 
-
     while (1)
     {
         /*Allocate new render list*/
@@ -888,7 +810,6 @@ int main(void)
         EPIC_AreaTypeDef ow_area;
         rl = drv_epic_alloc_render_list(&virtual_render_buf, &ow_area);
         RT_ASSERT(rl != NULL);
-
 
         /*Draw somthing*/
         draw_fill(&virtual_render_buf);
@@ -905,7 +826,6 @@ int main(void)
         //draw_img_3d_rotated(&virtual_render_buf);
         //draw_img_3d_rotated_2(&virtual_render_buf);
         //draw_arc_anim(&virtual_render_buf);
-
 
         /*Start rendering  and show the result on LCD*/
         EPIC_MsgTypeDef msg;
@@ -941,12 +861,6 @@ int main(void)
         }
     }
 
-
     return RT_EOK;
 }
-
-
-
-
-/************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
 

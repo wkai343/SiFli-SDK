@@ -1,49 +1,9 @@
-/**
-  ******************************************************************************
-  * @file   epd_display.c
-  * @author Sifli software development team
-  * @brief   This file includes the LCD driver for epd_display LCD.
-  * @attention
-  ******************************************************************************
-*/
-/**
- * @attention
- * Copyright (c) 2019 - 2022,  Sifli Technology
+/*
+ * SPDX-FileCopyrightText: 2019-2022 SiFli Technologies(Nanjing) Co., Ltd
  *
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice, this
- *    list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form, except as embedded into a Sifli integrated circuit
- *    in a product or a software update for such product, must reproduce the above
- *    copyright notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *
- * 3. Neither the name of Sifli nor the names of its contributors may be used to endorse
- *    or promote products derived from this software without specific prior written permission.
- *
- * 4. This software, with or without modification, must only be used with a
- *    Sifli integrated circuit.
- *
- * 5. Any software provided in binary form under this license must not be reverse
- *    engineered, decompiled, modified and/or disassembled.
- *
- * THIS SOFTWARE IS PROVIDED BY SIFLI TECHNOLOGY "AS IS" AND ANY EXPRESS
- * OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- * OF MERCHANTABILITY, NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL SIFLI TECHNOLOGY OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
- * GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * SPDX-License-Identifier: Apache-2.0
  */
+
 #include "rtthread.h"
 #include "string.h"
 #include "board.h"
@@ -54,7 +14,6 @@
 #include "epd_tps.h"
 #include "mem_section.h"
 
-
 #define  DBG_LEVEL            DBG_INFO  //DBG_LOG //
 
 #define LOG_TAG                "epd_display"
@@ -62,11 +21,9 @@
 
 #define LCD_ID                  0x85
 
-
 #define DISPLAY_LINE_CLOCKS   (LCD_HOR_RES_MAX/4)     //每列刷新所需次数，362*4像素
 #define DISPLAY_ROWS   LCD_VER_RES_MAX
 #define DISPLAY_LINE_CLOCKS_ALIGNED  ((DISPLAY_LINE_CLOCKS + 3) & ~0x03) // align to 4 bytes
-
 
 static LCDC_InitTypeDef lcdc_int_cfg =
 {
@@ -116,7 +73,6 @@ static void LCD_Init(LCDC_HandleTypeDef *hlcdc)
     //Initialize power supply chip
     oedtps_init(epd_get_vcom_voltage());
 
-
     hlcdc->Instance->LAYER0_CONFIG = (4   << LCD_IF_LAYER0_CONFIG_FORMAT_Pos) |       //RGB332
                                      (1   << LCD_IF_LAYER0_CONFIG_ALPHA_SEL_Pos) |     // use layer alpha
                                      (255 << LCD_IF_LAYER0_CONFIG_ALPHA_Pos) |         // layer alpha value is 255
@@ -143,8 +99,6 @@ static void LCD_Init(LCDC_HandleTypeDef *hlcdc)
     EPD_STV_H_hs();
     EPD_CPV_L_hs();
     EPD_GMODE_H_hs();
-
-
 
     epd_wave_table();
 
@@ -185,7 +139,6 @@ static void LCD_SetRegion(LCDC_HandleTypeDef *hlcdc, uint16_t Xpos0, uint16_t Yp
 
 }
 
-
 static void lock_epic(void)
 {
     EPIC_LayerConfigTypeDef input_layer;
@@ -220,7 +173,6 @@ static void unlock_epic(void)
     drv_gpu_release();
 }
 
-
 static int prepare_epic_lut(uint8_t frame)
 {
     HAL_RCC_EnableModule(RCC_MOD_EPIC);
@@ -232,7 +184,6 @@ static int prepare_epic_lut(uint8_t frame)
     lut_copy_ticks += HAL_GetElapsedTick(start_tick, HAL_DBG_DWT_GetCycles());
     return 0;
 }
-
 
 static uint16_t *mixed_gray_to_epic_out(unsigned char *gray_buffer, uint32_t gray_buffer_size)
 {
@@ -304,7 +255,6 @@ L1_RET_CODE_SECT(epd_codes, void epd_load_and_send_pic(LCDC_HandleTypeDef *hlcdc
     EPD_OE_H_hs();
     EPD_CPV_H_hs();
 
-
     hlcdc->Instance->LCD_SINGLE = LCD_IF_LCD_SINGLE_WR_TRIG;
     while (hlcdc->Instance->LCD_SINGLE & LCD_IF_LCD_SINGLE_LCD_BUSY) {;}
 
@@ -371,7 +321,6 @@ L1_RET_CODE_SECT(epd_codes, static void CopyToMixedGrayBuffer(LCDC_HandleTypeDef
             uint8_t pixel3 = RGB565_TO_GRAY4(*p_src);
             p_src++;
 
-
             // 生成4像素的新值
             uint32_t src_v = ((pixel3 << 24) | (pixel2 << 16) | (pixel1 << 8) | pixel0) & 0x0F0F0F0F;
 
@@ -386,15 +335,11 @@ L1_RET_CODE_SECT(epd_codes, static void CopyToMixedGrayBuffer(LCDC_HandleTypeDef
         RT_ASSERT(0);
 }
 
-
-
 L1_RET_CODE_SECT(epd_codes, static void LCD_WriteMultiplePixels(LCDC_HandleTypeDef *hlcdc, const uint8_t *RGBCode, uint16_t Xpos0, uint16_t Ypos0, uint16_t Xpos1, uint16_t Ypos1))
 {
     uint32_t line, line_bytes;
     //波形帧数量，用于局刷和全刷控制
     unsigned int frame_times = 0;
-
-
 
     uint32_t start_tick = rt_tick_get();
     oedtps_source_gate_enable();
@@ -404,9 +349,7 @@ L1_RET_CODE_SECT(epd_codes, static void LCD_WriteMultiplePixels(LCDC_HandleTypeD
 
     LOG_I("LCD_WriteMultiplePixels ColorMode=%d", hlcdc->Layer[HAL_LCDC_LAYER_DEFAULT].data_format);
 
-
     uint8_t temperature = 26;
-
 
     frame_times = epd_wave_table_get_frames(temperature, EPD_DRAW_MODE_AUTO);
 
@@ -464,12 +407,10 @@ L1_RET_CODE_SECT(epd_codes, static void LCD_WriteMultiplePixels(LCDC_HandleTypeD
             else
                 next_line_epic_out = NULL; //最后一行没有下一行了
 
-
             epd_load_and_send_pic(hlcdc, cur_line_epic_out, LCD_HOR_RES_MAX); //传完一列数据后传下一列，一列数据有
         }
         epd_load_and_send_pic(hlcdc, cur_line_epic_out, LCD_HOR_RES_MAX); //最后一行还需GATE CLK,故再传一行没用数据
         while (hlcdc->Instance->STATUS & LCD_IF_STATUS_LCD_BUSY) {;}
-
 
         EPD_CPV_L_hs();
         HAL_Delay_us(1);
@@ -492,7 +433,6 @@ L1_RET_CODE_SECT(epd_codes, static void LCD_WriteMultiplePixels(LCDC_HandleTypeD
           rt_tick_get() - start_tick, wait_lcd_ticks / 240,
           lut_copy_ticks / 240);
 
-
     /* Simulate LCDC IRQ handler, call user callback */
     if (hlcdc->XferCpltCallback)
     {
@@ -501,7 +441,6 @@ L1_RET_CODE_SECT(epd_codes, static void LCD_WriteMultiplePixels(LCDC_HandleTypeD
 
     HAL_LCDC_SendLayerDataCpltCbk(hlcdc);
 }
-
 
 static void LCD_SetColorMode(LCDC_HandleTypeDef *hlcdc, uint16_t color_mode)
 {
@@ -524,7 +463,6 @@ static void LCD_SetBrightness(LCDC_HandleTypeDef *hlcdc, uint8_t br)
     }
 }
 
-
 static const LCD_DrvOpsDef LCD_drv =
 {
     LCD_Init,
@@ -545,4 +483,4 @@ static const LCD_DrvOpsDef LCD_drv =
 };
 
 LCD_DRIVER_EXPORT2(epd_display, LCD_ID, &lcdc_int_cfg, &LCD_drv, 1);
-/************************ (C) COPYRIGHT Sifli Technology *******END OF FILE****/
+
