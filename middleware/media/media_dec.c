@@ -176,11 +176,11 @@ int media_audio_get(AVFrame *frame, uint16_t *audio_data, uint32_t audio_data_si
                 for (int j = 0; j < frame->nb_samples; j++)
                 {
                     t = fl[j];
-                    if (t >= +0x999999f)
+                    if (t >= +0.999999f)
                     {
                         audio_data[2 * j] = 0x7FFF;
                     }
-                    else if (t <= -0x999999f)
+                    else if (t <= -0.999999f)
                     {
                         audio_data[2 * j] = 0x8000;
                     }
@@ -191,11 +191,11 @@ int media_audio_get(AVFrame *frame, uint16_t *audio_data, uint32_t audio_data_si
 
                     t = fr[j];
 
-                    if (t >= +0x999999f)
+                    if (t >= +0.999999f)
                     {
                         audio_data[2 * j + 1] = 0x7FFF;
                     }
-                    else if (t <= -0x999999f)
+                    else if (t <= -0.999999f)
                     {
                         audio_data[2 * j + 1] = 0x8000;
                     }
@@ -210,11 +210,11 @@ int media_audio_get(AVFrame *frame, uint16_t *audio_data, uint32_t audio_data_si
                 for (int j = 0; j < frame->nb_samples; j++)
                 {
                     t = fl[j];
-                    if (t >= +0x999999f)
+                    if (t >= +0.999999f)
                     {
                         audio_data[j] = 0x7FFF;
                     }
-                    else if (t <= -0x999999f)
+                    else if (t <= -0.999999f)
                     {
                         audio_data[j] = 0x8000;
                     }
