@@ -157,6 +157,6 @@ The board configuration includes several aspects:
         ```
     - Files like `bsp_pinmux.c` configure pin functions and pull-up/down properties through functions such as `BSP_PIN_Init` and the `HAL_PIN_Set` interface.
 
-2. Memory partition table (`ptab.json`): This file describes the memory partitioning information, including NOR Flash, NAND Flash, PSRAM, internal SRAM, SD cards, etc. During compilation, `ptab.json` generates a `ptab.h` file in the build directory, which defines macros like `_START_ADDR`, `_OFFSET`, and `_SIZE` for each partition. These macros can be used in the code to access partition information.
+2. Memory partition table (`ptab.json`): This file describes the memory partitioning information, including NOR Flash, NAND Flash, PSRAM, internal SRAM, SD cards, etc. During compilation, `ptab.json` generates a `ptab.h` file in the build directory, which defines macros like `_START_ADDR`, `_OFFSET`, and `_SIZE` for each partition. These macros can be used in the code to access partition information. For the partition table syntax, please refer to [](/middleware/partition_table.md).
 
-For more information, refer to [common_project.md](../app_note/common_project.md).
+For more information, refer to [](../app_note/common_project.md).

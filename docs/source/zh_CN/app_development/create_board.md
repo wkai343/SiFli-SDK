@@ -150,6 +150,7 @@
     - `bsp_pinmux.c`等文件通过实现BSP_PIN_Init等函数，配置管脚的功能与上下拉属性（使用`HAL_PIN_Set`接口）
 1. memory分区表ptab.json\
     该文件可以描述所有memory的分区信息，包括NOR Flash、NAND Flash、PSRAM、片内SRAM、SD卡等。
-    编译时会由ptab.json生成`ptab.h`到build目录下，`ptab.h`中定义了一组以`_START_ADDR`、`_OFFSET`、`_SIZE`为后缀的宏，代码中可以使用这些宏获取分区信息
+    编译时会由ptab.json生成`ptab.h`到build目录下，`ptab.h`中定义了一组以`_START_ADDR`、`_OFFSET`、`_SIZE`为后缀的宏，代码中可以使用这些宏获取分区信息。
+    分区表的语法参考[](/middleware/partition_table.md)。
 
 更多信息可参考[](/app_note/common_project.md)
