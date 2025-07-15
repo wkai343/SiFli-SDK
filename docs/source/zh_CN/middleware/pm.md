@@ -17,7 +17,8 @@ Butterfli 中包含三个子系统（电源域），即 HPSYS（HCPU 内部）�
 下面是空闲循环的时序图。
 ![图 1：空闲循环](../../assets/idle_loop.png)
 
-pm_request 示例，演示了即使满足睡眠时间条件，如何禁止进入更高的低功耗模式。
+## pm_request 示例
+下面的示例代码演示了如何禁止进入更高的低功耗模式，即使已经满足了某个睡眠模式的时间条件。
 ```c
 rt_device_t uart_device;
 rt_err_t tx_done(rt_device_t dev, void *buffer)
@@ -46,7 +47,9 @@ void start_tx(void)
 };
 ```
 
-下面是默认的 pm 策略表。 阈值小于休眠时间的最高功耗模式被选为低功耗模式。 
+## 默认的PM策略表
+
+下面是默认的 PM 策略表。 阈值小于休眠时间的最高功耗模式被选为低功耗模式。 
 休眠时间是根据操作系统计时器计算的，即查询最近的操作系统计时器超时滴答并将其与当前滴答进行比较（使用 rt_timer_next_timeout_tick() 和 rt_tick_get()）。 
 例如，如果睡眠时间为 20ms，超过 15ms（PM_SLEEP_MODE_LIGHT 的阈值）但小于 25ms（PM_SLEEP_MODE_DEEP 的阈值），则选择 PM_SLEEP_MODE_LIGHT 作为低功耗模式。 
 如果休眠时间为50ms，同时超过15ms和25ms，则进入`PM_SLEEP_MODE_DEEP`模式。

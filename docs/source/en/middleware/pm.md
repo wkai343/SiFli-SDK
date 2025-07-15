@@ -19,7 +19,7 @@ Below is the timing diagram of the idle loop.
 
 ![Figure 1: Idle Loop](../../assets/idle_loop.png)
 
-### pm_request Example
+## pm_request Example
 The following example demonstrates how to prevent the system from entering higher low-power modes, even when sleep time conditions are met.
 
 ```c
@@ -50,8 +50,8 @@ void start_tx(void)
 };
 ```
 
-### Default pm Policy Table
-The threshold for sleep time is used to determine the highest power mode for low-power selection. The sleep time is calculated based on the operating system timer, i.e., the most recent timer timeout tick is compared with the current tick (using `rt_timer_next_timeout_tick()` and `rt_tick_get()`).
+## Default PM Policy Table
+Following is default PM Policy Table. The threshold for sleep time is used to determine the highest power mode for low-power selection. The sleep time is calculated based on the operating system timer, i.e., the most recent timer timeout tick is compared with the current tick (using `rt_timer_next_timeout_tick()` and `rt_tick_get()`).
 For example, if the sleep time is 20ms, which is greater than 15ms (threshold for `PM_SLEEP_MODE_LIGHT`) but less than 25ms (threshold for `PM_SLEEP_MODE_DEEP`), `PM_SLEEP_MODE_LIGHT` is selected as the low-power mode.
 If the sleep time is 50ms, exceeding both 15ms and 25ms, the system enters `PM_SLEEP_MODE_DEEP`.
 
