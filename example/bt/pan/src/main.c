@@ -250,7 +250,9 @@ static void pan_cmd(int argc, char **argv)
         bt_app_connect_pan_timeout_handle(NULL);
     else if (strcmp(argv[1], "ota_pan") == 0)
     {
+#ifdef OTA_55X
         bt_dfu_pan_download(URL);
+#endif
     }
 }
 MSH_CMD_EXPORT(pan_cmd, Connect PAN to last paired device);

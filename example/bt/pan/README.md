@@ -90,6 +90,9 @@ please input the serial port num:5
 例程可以通过连接手机的PAN协议，获取特定网址的天气信息。
 
 ## 异常诊断
+1. 如果遇到所选芯片类型没有配置OTA的ptab.json导致编译不过，可以按如下关闭DFU功能:
+![dfu_sub](./assets/dfu_sub.png)
+![dfu](./assets/dfu.png)
 
 
 ## 参考文档
