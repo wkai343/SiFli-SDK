@@ -16,7 +16,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
+#undef LOG_TAG
 #define LOG_TAG "ble_app"
 
 
