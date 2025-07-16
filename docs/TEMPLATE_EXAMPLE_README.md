@@ -8,6 +8,9 @@ _Example Title should use the word "example" instead of "demo", "test" or any si
 
 (For general overview of examples and their usage, see the `README.md` file in the upper level 'examples' directory.)
 
+_Give example source code path in the following format_
+Source code path: example/xxxxx
+
 _What is this example? What does it do?_
 
 _What feature(s) of SiFli-SDK does this example use? Briefly introduce them and give a link to the API reference(s)._
