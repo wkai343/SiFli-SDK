@@ -313,7 +313,7 @@ static inline void lv_obj_move_background(lv_obj_t * obj)
 
 static inline uint32_t lv_img_buf_get_img_size(lv_coord_t w, lv_coord_t h, uint8_t cf)
 {
-    return lv_draw_buf_width_to_stride(w, cf) * h;
+    return lv_draw_buf_width_to_stride(w, (lv_color_format_t)cf) * h;
 }
 
 /**********************
